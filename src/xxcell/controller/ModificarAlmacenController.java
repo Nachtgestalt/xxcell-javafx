@@ -1,0 +1,1035 @@
+package xxcell.controller;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
+import javax.imageio.ImageIO;
+import xxcell.Conexion.Conexion;
+import xxcell.model.Productos;
+import org.controlsfx.control.textfield.TextFields;
+import xxcell.model.LogReport;
+
+public class ModificarAlmacenController implements Initializable {
+    Conexion conn = new Conexion();   
+    
+    LogReport log;
+    Window window;
+
+    Productos aux;
+
+    String sqlStmt = "SELECT * FROM productos";
+    String StmtSq;
+    String query;
+    
+    @FXML
+    private JFXComboBox<String> Tipo;
+
+    @FXML
+    private JFXTextField buscar;
+        
+    @FXML
+    private JFXComboBox<String> Marca;
+    
+    //botones
+    @FXML
+    private JFXButton filtrar;
+    @FXML
+    private JFXButton reset;
+    @FXML
+    private JFXButton Modificar;
+    @FXML
+    private JFXButton Eliminar;
+    @FXML
+    private JFXButton btnAddFoto;
+    @FXML
+    private JFXButton btnEliminarFoto;
+    @FXML
+    private JFXButton btnResetFoto;
+    
+    //Image View para la Foto de Producto
+    @FXML
+    private ImageView imageViewFoto;
+    //Variables para la Imagen/Foto
+    File file = null;
+    FileInputStream fin = null;
+    boolean BanderaImagen = false;
+    boolean BanHasImage = false;
+    boolean BanDeleteImage = false;
+    
+    //Variables para la Tabla creada
+    @FXML
+    private TableView<Productos> Tabla;
+    @FXML
+    private TableColumn<Productos, String> IDCol; //COLUMNA ID
+    @FXML
+    private TableColumn<Productos, String> ModCol; //COLUMNA MODELO
+    @FXML
+    private TableColumn<Productos, String> MarcaCol; //COLUMNA MARCA
+    @FXML
+    private TableColumn<Productos, Number> PrPubCol; //COLUMNA PRECIO PUBLICO ***
+    @FXML
+    private TableColumn<Productos, Number> DispCol; //COLUMNA DISPONIBILIDAD ****
+    @FXML
+    private TableColumn<Productos, String> TipoCol; //COLUMNA TIPO
+    @FXML
+    private TableColumn<Productos, String> NomCol; //COLUMNA NOMBRE
+    @FXML
+    private TableColumn<Productos, Number> PrDisCol; //COLUMNA PRECIO DISTRIBUIDOR***
+    @FXML
+    private TableColumn<Productos, Number> L58Col; //COLUMNA DISPONIBILIDAD EN LOCAL 58 ****
+    @FXML
+    private TableColumn<Productos, Number> L64Col; //COLUMNA DISPONIBILIDAD EN LOCAL 64****
+    @FXML
+    private TableColumn<Productos, Number> L127Col; //COLUMNA DISPONIBILIDAD EN LOCAL 127****
+    
+    
+    //Lista para Llenar la tabla de productos;
+    ObservableList<Productos> productos = FXCollections.observableArrayList();
+    
+    //Datos para Editar los algún campo
+     //TEXTFIELDS
+    @FXML
+    private JFXTextField IDTxt;
+    @FXML
+    private JFXTextField MarcaTxt;
+    @FXML
+    private JFXTextField ModeloTxt;    
+    @FXML
+    private JFXTextField PreDtxt;
+    @FXML
+    private JFXTextField PrecPtxt;
+    @FXML
+    private JFXTextField Tipotxt;
+    @FXML
+    private JFXTextField Nomtxt;
+    @FXML
+    private TextField TFL127;
+    @FXML
+    private TextField TFL64;
+    @FXML
+    private TextField TFL58;
+    //FIN TEXTFIELD
+    //Area para la Descripcion
+    @FXML
+    private JFXTextArea DescTxt;
+    //LABEL DE ERROR PARA LA VALIDACIÓN DE LOS TEXTFIELDS
+    @FXML
+    private Label lblEID;
+    @FXML
+    private Label lblEModelo;
+    @FXML
+    private Label lblEMarca;
+    @FXML
+    private Label lblESum;
+    @FXML
+    private Label lblEnumero;
+    @FXML
+    private Label lbl127Dispon;
+    @FXML
+    private Label lbl64Dispon;
+    @FXML
+    private Label lbl58Dispon;
+    @FXML
+    private Label lblDispon;
+    @FXML
+    private Label lblErrorImagen;
+    
+    //Listas para los automecompleatos en los textfields de Marca, Tipo y Modelo
+    
+    //Lista para el autocompletado de JFXTextField buscar
+    Set<String> hs_Marca = new HashSet<>(); // HashSet Para quitar elementos repetidos de POSSIBLEWORDS
+    Set<String> hs_Tipo = new HashSet<>(); // HashSet Para quitar elementos repetidos de POSSIBLEWORDS
+    Set<String> hs_Modelo = new HashSet<>(); // HashSet Para quitar elementos repetidos de POSSIBLEWORDS
+    Set<String> hs_Identificador = new HashSet<>(); // HashSet Para quitar elementos repetidos de POSSIBLEWORDS
+     
+    boolean ban;
+    
+     //Función para llenar el TableView con los datos que el usuario indique
+    public ObservableList<Productos> ObtenerProd(String STSQL) throws SQLException{
+        String Mod, Marc, DI, Nom, Tip, Dep;   
+        int Disp, L58,L64,L127;
+        double PPub, PDist;
+        if(conn.QueryExecute(STSQL))
+        {
+            while (conn.setResult.next())
+            {
+                DI = conn.setResult.getString("ID");
+                Marc = conn.setResult.getString("Marca");
+                Mod = conn.setResult.getString("Modelo");
+                Nom = conn.setResult.getString("Identificador");
+                PPub = conn.setResult.getDouble("PrecPub");
+                PDist = conn.setResult.getDouble("PrecDist");
+                Tip = conn.setResult.getString("Tipo");
+                Dep = conn.setResult.getString("Descrip");
+                Disp = conn.setResult.getInt("CantidadActual");
+                L58 = conn.setResult.getInt("L58");
+                L64 = conn.setResult.getInt("L64");
+                L127 = conn.setResult.getInt("L127");
+                productos.add(new Productos(DI,Marc,Mod,Nom,PPub,PDist,Tip,Dep,Disp, L58,L64,L127));
+            }    
+        }
+        return productos;
+    }
+    
+    public void Autocompletar()
+    {
+        query = "SELECT DISTINCT Modelo FROM productos";
+        if(conn.QueryExecute(query)){
+            try {
+                while(conn.setResult.next()){
+                    hs_Modelo.add(conn.setResult.getString("Modelo"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        }
+        query = "SELECT DISTINCT Tipo FROM productos";
+        if(conn.QueryExecute(query)){
+            try {
+                while(conn.setResult.next()){
+                    hs_Tipo.add(conn.setResult.getString("Tipo"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        }
+        query = "SELECT DISTINCT Marca FROM productos";
+        if(conn.QueryExecute(query)){
+            try {
+                while(conn.setResult.next()){
+                    hs_Modelo.add(conn.setResult.getString("Marca"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        }
+        query = "SELECT DISTINCT Identificador FROM productos";
+        if(conn.QueryExecute(query)){
+            try {
+                while(conn.setResult.next()){
+                    hs_Modelo.add(conn.setResult.getString("Identificador"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        }
+    }    
+    
+     //Inicia los elementos de los ComboBox para las Marcas y los tipos de Objetos
+    public void iniciarComboBox()
+    {
+        //inicia el combobox Marca
+        query = "SELECT DISTINCT Marca FROM productos ORDER BY Marca";
+        if(conn.QueryExecute(query))
+        {
+            try {
+                while(conn.setResult.next()){
+                    Marca.getItems().add(conn.setResult.getString("Marca"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        }
+        //Inicia el Combobox Tipo
+        query = "SELECT DISTINCT Tipo FROM productos ORDER BY Tipo";
+        if(conn.QueryExecute(query))
+        {
+            try {
+                while(conn.setResult.next()){
+                    Tipo.getItems().add(conn.setResult.getString("Tipo"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        }
+    }
+    
+    //Funcion para eliminar un producto
+    void EliminarProd(){
+        Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
+        incompleteAlert.setTitle("Eliminar Producto");
+        incompleteAlert.setHeaderText(null);
+        aux = Tabla.getSelectionModel().getSelectedItem();
+        StmtSq = "DELETE FROM productos WHERE ID='"+aux.getID()+"'";                  
+        if(conn.QueryUpdate(StmtSq))
+        {
+            String mensaje = "Producto Eliminado \n";
+            incompleteAlert.setContentText(mensaje);
+            incompleteAlert.initOwner(Eliminar.getScene().getWindow());
+            incompleteAlert.showAndWait();
+        }
+        else
+        {
+            String mensaje = "Producto No se ha podido eliminar \n";
+            incompleteAlert.setContentText(mensaje);
+            incompleteAlert.initOwner(Eliminar.getScene().getWindow());
+            incompleteAlert.showAndWait();
+        }
+   }
+    
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        
+        Platform.runLater(() -> {
+            window = Modificar.getScene().getWindow();             
+            log = new LogReport(window);
+        });
+        
+        deshabilitar();
+        Autocompletar();
+        
+        TextFields.bindAutoCompletion(buscar, hs_Modelo);
+        TextFields.bindAutoCompletion(ModeloTxt, hs_Modelo);
+        TextFields.bindAutoCompletion(MarcaTxt, hs_Marca);
+        TextFields.bindAutoCompletion(Tipotxt, hs_Tipo);
+        
+        btnAddFoto.setOnAction(btnLoadEventListener);
+        //Botón Reset imagen
+        btnEliminarFoto.setOnAction((ActionEvent e) -> {       
+            EliminarFoto();
+        }); 
+        btnResetFoto.setOnAction((ActionEvent e) -> {       
+            ResetImagen();
+        }); 
+         
+        Tabla.setOnMousePressed(new EventHandler<MouseEvent>() {
+             @Override 
+             public void handle(MouseEvent event) {
+                if(!Tabla.getSelectionModel().isEmpty()){
+                    aux = Tabla.getSelectionModel().getSelectedItem();
+                    llenado(aux);
+                }
+            }
+        });
+    //FIN DE TEXFIELDS******
+ //**********************************************BOTON EDITAR*******************************
+        Modificar.setOnAction((ActionEvent e) -> {
+            if(Tabla.getSelectionModel().isEmpty()){
+                    String mensaje = "No se ha seleccionado ningun producto. \n";
+                    Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
+                    incompleteAlert.setTitle("Eliminar Producto");
+                    incompleteAlert.setHeaderText(null);
+                    incompleteAlert.setContentText(mensaje);
+                    incompleteAlert.initOwner(Modificar.getScene().getWindow());
+                    incompleteAlert.showAndWait();
+            }
+            else
+            {
+                int  y, z, w;
+                int conta = 0;    
+                ban=true;
+//*******************Validación de ID *************************
+                if(IDTxt.getText().length() == 0 || IDTxt.getText().length() > 13) {
+                    lblEID.setText("ID debe ser mayor a 0 y Menor a 14 caracteres");
+                    IDTxt.requestFocus();
+                    ban = false;
+                }
+                else{
+                    lblEID.setText("");
+                    if(IDTxt.getText().equals(aux.getID())){
+                        conta++;
+                        lblEID.setText("Sin Modificaciones");
+                    }
+                }
+//*******************Validación de Modelo***************************
+                if(ModeloTxt.getText().length() == 0 || ModeloTxt.getText().length() > 15) {
+                    lblEModelo.setText("Modelo debe ser mayor a 0 y Menor a 15 caracteres");
+                    ModeloTxt.requestFocus();
+                    ban = false;
+                }
+                else{
+                    lblEModelo.setText("");
+                    if(ModeloTxt.getText().equals(aux.getModelo())){
+                        conta++;
+                        lblEModelo.setText("Sin Modificaciones");
+                    }
+                }
+//*******************Validación para Marca************************************
+                if(MarcaTxt.getText().length() == 0 || MarcaTxt.getText().length() > 15) {
+                    lblEMarca.setText("Marca debe ser mayor a 0 y Menor a 15 caracteres");
+                    MarcaTxt.requestFocus();
+                    ban = false;
+                }
+                else{
+                    lblEMarca.setText("");
+                    if(MarcaTxt.getText().equals(aux.getMarca()))
+                    {
+                        lblEMarca.setText("Sin Modificaciones");
+                        conta++;
+                    }
+                }
+//*******************Validación para el local 64**************************************
+                if(esnumero(TFL64.getText()))
+                {
+                    lblESum.setText("");
+                    if(TFL64.getText().length() == 0) {
+                        TFL64.setText("0");
+                        w=0;
+                    }
+                    else
+                        w = Integer.parseInt(TFL64.getText());
+                    
+                    if(w == 0)
+                        conta++;
+                }
+                else
+                {
+                    ban=false;
+                    lblEnumero.setText("Los datos deben ser números (Error en local 64)");
+                    w=0;
+                }
+ //*******************Validación para el local 127**********************************
+                if(esnumero(TFL127.getText()))
+                {
+                    if(TFL127.getText().length() == 0) {
+                        TFL127.setText("0");
+                        y=0;
+                    }
+                    else
+                        y = Integer.parseInt(TFL127.getText());
+                    
+                    if(y==0)
+                        conta++;
+                }
+                else
+                {
+                    ban=false;
+                    lblEnumero.setText("Los datos deben ser números (Error en local 127)");
+                    y=0;
+                }
+//*******************Validación para el local 58************************************
+                if(esnumero(TFL58.getText()))
+                {
+                    if(TFL58.getText().length() == 0) {
+                        TFL58.setText("0");
+                        z=0;
+                    }
+                    else
+                        z = Integer.parseInt(TFL58.getText());
+                    if(z==0)
+                        conta++;
+                }
+                else
+                {
+                    ban=false;
+                    lblEnumero.setText("Los datos deben ser números (Error en local 58)");
+                    z=0;
+                }
+//***************************************** Validación para la imagen **************************************************
+                if(BanderaImagen){
+                    conta--;
+                }
+                //Acceso a Query
+                if(ban)
+                {
+                    if(conta==7){
+                        String mensaje = "¡Debe hacer al menos una modificacion! \n";
+                        Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
+                        incompleteAlert.setTitle("Gestión de Productos");
+                        incompleteAlert.setHeaderText(null);
+                        incompleteAlert.setContentText(mensaje);
+                        incompleteAlert.initOwner(Modificar.getScene().getWindow());
+                        incompleteAlert.showAndWait();
+                    }else{
+                        try {
+                            AgregarSQL(aux);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+                            String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                            String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                            log.SendLogReport(ex, msjHeader, msjText);
+                        }
+                        ReinicioTxtFields();
+                        conta = 0;
+                    }
+                }
+            }//FIN ELSE
+        });//*********************************************** FIN BOTON MODIFICAR **********************************
+        iniciarComboBox();
+        IDCol.setCellValueFactory(cellData -> cellData.getValue().idProperty());
+        MarcaCol.setCellValueFactory(cellData -> cellData.getValue().marcaProperty());
+        ModCol.setCellValueFactory(cellData -> cellData.getValue().modeloProperty());
+        TipoCol.setCellValueFactory(cellData -> cellData.getValue().tipoProperty());
+        NomCol.setCellValueFactory(cellData -> cellData.getValue().nombreProperty());
+        PrPubCol.setCellValueFactory(cellData -> cellData.getValue().preciopubProperty());
+        PrDisCol.setCellValueFactory(cellData -> cellData.getValue().preciodistProperty());
+        DispCol.setCellValueFactory(cellData -> cellData.getValue().disponProperty());
+        DispCol.setCellFactory( column -> {
+            return new TableCell<Productos, Number>(){
+                @Override
+                protected void updateItem(Number num, boolean empty){
+                    super.updateItem(num, empty);
+                    
+                    if(num == null){
+                        setText("");
+                        setStyle("");
+                    }else{
+                        setText(String.valueOf(num));
+                        if(num.intValue() <= 0){
+                            setTextFill(Color.BLACK);
+                            setStyle("-fx-background-color: #FF9980");
+                        }
+                        if(num.intValue() < 6 && num.intValue() > 0){
+                            setTextFill(Color.CHOCOLATE);
+                            setStyle("-fx-background-color: #FFFF9F");
+                        }
+                    }
+                }
+            };
+        });
+        L58Col.setCellValueFactory(cellData -> cellData.getValue().l58Property());
+        L58Col.setCellFactory( column -> {
+            return new TableCell<Productos, Number>(){
+                @Override
+                protected void updateItem(Number num, boolean empty){
+                    super.updateItem(num, empty);
+                    
+                    if(num == null){
+                        setText("");
+                        setStyle("");
+                    }else{
+                        setText(String.valueOf(num));
+                        if(num.intValue() <= 0){
+                            setTextFill(Color.BLACK);
+                            setStyle("-fx-background-color: #FF9980");
+                        }
+                        if(num.intValue() < 2 && num.intValue() > 0){
+                            setTextFill(Color.CHOCOLATE);
+                            setStyle("-fx-background-color: #FFFF9F");
+                        }
+                    }
+                }
+            };
+        });
+        L64Col.setCellValueFactory(cellData -> cellData.getValue().l64Property());
+        L64Col.setCellFactory( column -> {
+            return new TableCell<Productos, Number>(){
+                @Override
+                protected void updateItem(Number num, boolean empty){
+                    super.updateItem(num, empty);
+                    
+                    if(num == null){
+                        setText("");
+                        setStyle("");
+                    }else{
+                        setText(String.valueOf(num));
+                        if(num.intValue() <= 0){
+                            setTextFill(Color.BLACK);
+                            setStyle("-fx-background-color: #FF9980");
+                        }
+                        if(num.intValue() < 2 && num.intValue() > 0){
+                            setTextFill(Color.CHOCOLATE);
+                            setStyle("-fx-background-color: #FFFF9F");
+                        }
+                    }
+                }
+            };
+        });
+        L127Col.setCellValueFactory(cellData -> cellData.getValue().l127Property());
+        L127Col.setCellFactory( column -> {
+            return new TableCell<Productos, Number>(){
+                @Override
+                protected void updateItem(Number num, boolean empty){
+                    super.updateItem(num, empty);
+                    
+                    if(num == null){
+                        setText("");
+                        setStyle("");
+                    }else{
+                        setText(String.valueOf(num));
+                        if(num.intValue() <= 0){
+                            setTextFill(Color.BLACK);
+                            setStyle("-fx-background-color: #FF9980");
+                        }
+                        if(num.intValue() < 2 && num.intValue() > 0){
+                            setTextFill(Color.CHOCOLATE);
+                            setStyle("-fx-background-color: #FFFF9F");
+                        }
+                    }
+                }
+            };
+        });
+        
+        //Función para el comboBox Marca; Esté llenara el TableView dependiendo la Opción que el usuario Ingrese
+        Marca.setOnAction(e -> {
+            buscar.clear();
+            StmtSq = "Select * FROM productos "; 
+            StmtSq += "WHERE Marca='"+Marca.getValue()+"'";
+            try {   
+                Tabla.refresh();
+                productos.removeAll(productos);
+                Tabla.setItems(ObtenerProd(StmtSq));
+            } catch (SQLException ex) {
+                Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        });//FIN DE LAMBDA MARCA       
+        
+        //Función para el combobox Tipo
+        Tipo.setOnAction(e -> {
+            buscar.clear();
+            StmtSq = "Select * FROM productos "; 
+            StmtSq += "WHERE Tipo='"+Tipo.getValue()+"'";
+            try {   
+                Tabla.refresh();
+                productos.removeAll(productos);
+                Tabla.setItems(ObtenerProd(StmtSq));
+            } catch (SQLException ex) {
+                Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            } 
+        });//FIN DE LAMBDA   
+        //Función para el autocompletado del Textfield Buscar
+        buscar.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            StmtSq = "Select * FROM productos ";
+            StmtSq += "WHERE Modelo='"+buscar.getText()+"'";
+            System.out.println(StmtSq);
+            try {   
+                Tabla.refresh();
+                productos.removeAll(productos);
+                Tabla.setItems(ObtenerProd(StmtSq));
+            } catch (SQLException ex) {
+                Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        });   
+        
+        filtrar.setOnAction((ActionEvent e) -> { 
+            StmtSq = "Select * FROM productos ";
+            StmtSq += "WHERE Tipo='"+Tipo.getValue()+"' AND Marca = '"+Marca.getValue()+"'";
+            try {   
+                Tabla.refresh();
+                productos.removeAll(productos);
+                Tabla.setItems(ObtenerProd(StmtSq));
+            } catch (SQLException ex) {
+                Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        });
+        
+        reset.setOnAction((ActionEvent e) -> { 
+            sqlStmt = "SELECT * FROM productos";
+            try {
+                Tabla.refresh();
+                productos.removeAll(productos);
+                Tabla.setItems(ObtenerProd(sqlStmt));
+                ReinicioTxtFields();
+            } catch (SQLException ex) {
+                Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        });//FIN RESET
+        
+        Eliminar.setOnAction((ActionEvent e) -> { 
+            String resetStmt;
+            if(Tabla.getSelectionModel().isEmpty()){
+                    String mensaje = "No se ha seleccionado ningun producto. \n";
+                    Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
+                    incompleteAlert.setTitle("Eliminar Producto");
+                    incompleteAlert.setHeaderText(null);
+                    incompleteAlert.setContentText(mensaje);
+                    incompleteAlert.initOwner(Eliminar.getScene().getWindow());
+                    incompleteAlert.showAndWait();
+            }else {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Eliminar producto");
+                        //alert.setHeaderText("¿Desea realmente salir del sistema?");
+                alert.setContentText("¿Desea realmente eliminar el producto seleccionado?");
+                alert.initOwner(buscar.getScene().getWindow());
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK){
+                    EliminarProd();
+                }         
+                try {
+                    resetStmt = "SELECT * FROM productos";
+                    Tabla.refresh();
+                    productos.removeAll(productos);
+                    Tabla.setItems(ObtenerProd(sqlStmt));
+                    ReinicioTxtFields();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+                    String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                    String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                    log.SendLogReport(ex, msjHeader, msjText);
+                }
+            }
+        });//FIN ELIMINAR
+    }//Fin de INIT  
+    
+    //FUNCIÓN PARA VALIDAR SI LOS DATOS INGRESADOS EN "MERCANCIA ENTRANTE, Y LOS 3 LOCALES SON NUMEROS
+    boolean esnumero (String x)
+    {
+        
+        double number = 0;
+        if(x.isEmpty())
+        {
+            return true;
+        }
+        else
+        {
+            try {
+                number = Double.parseDouble(x);
+                return true;
+            } catch (NumberFormatException ex) {
+                return false;
+            }
+        }
+    }
+    
+    
+    //Funcion para agregar a la base de datos el producto que desee
+    public void AgregarSQL(Productos Prod) throws SQLException {
+        double PrecioPublico = Double.parseDouble(PrecPtxt.getText());
+        double PrecioDistribuidor = Double.parseDouble(PreDtxt.getText());
+        int l58 = Integer.parseInt(TFL58.getText());
+        int l64 = Integer.parseInt(TFL64.getText());
+        int l127 = Integer.parseInt(TFL127.getText());
+
+        //Sino Existe, agregará uno Nuevo
+        if(BanderaImagen){
+            query =  "Update productos set ID = ?, Modelo = ?, Identificador = ?, PrecPub = ?, "
+            + "Marca = ?, Tipo = ?, PrecDist = ?, ";
+            query += "Descrip = ?, L58 = ?, L64 = ?, L127 = ?, imagenProducto = ? "
+            + "WHERE ID = '"+Prod.getID()+"'";
+            if(BanDeleteImage){
+                conn.preparedStatement(query);
+                conn.stmt.setString(1, IDTxt.getText());
+                conn.stmt.setString(2, ModeloTxt.getText());
+                conn.stmt.setString(3, Nomtxt.getText());
+                conn.stmt.setDouble(4, PrecioPublico);
+                conn.stmt.setString(5, MarcaTxt.getText());
+                conn.stmt.setString(6, Tipotxt.getText());
+                conn.stmt.setDouble(7, PrecioDistribuidor);
+                conn.stmt.setString(8, DescTxt.getText());
+                conn.stmt.setInt(9, l58);
+                conn.stmt.setInt(10, l64);
+                conn.stmt.setInt(11, l127);   
+                conn.stmt.setNull(12, java.sql.Types.BLOB);
+            }else{
+                conn.preparedStatement(query);
+                conn.stmt.setString(1, IDTxt.getText());
+                conn.stmt.setString(2, ModeloTxt.getText());
+                conn.stmt.setString(3, Nomtxt.getText());
+                conn.stmt.setDouble(4, PrecioPublico);
+                conn.stmt.setString(5, MarcaTxt.getText());
+                conn.stmt.setString(6, Tipotxt.getText());
+                conn.stmt.setDouble(7, PrecioDistribuidor);
+                conn.stmt.setString(8, DescTxt.getText());
+                conn.stmt.setInt(9, l58);
+                conn.stmt.setInt(10, l64);
+                conn.stmt.setInt(11, l127);
+                conn.stmt.setBinaryStream(12, fin,(int)file.length());    
+            }
+            
+        }else{
+            query =  "Update productos set ID = ?, Modelo = ?, Identificador = ?, PrecPub = ?, "
+                    + "Marca = ?, Tipo = ?, PrecDist = ?, ";
+            query += "Descrip = ?, L58 = ?, L64 = ?, L127 = ? "
+                    + "WHERE ID = '"+Prod.getID()+"'";
+            conn.preparedStatement(query);
+            conn.stmt.setString(1, IDTxt.getText());
+            conn.stmt.setString(2, ModeloTxt.getText());
+            conn.stmt.setString(3, Nomtxt.getText());
+            conn.stmt.setDouble(4, PrecioPublico);
+            conn.stmt.setString(5, MarcaTxt.getText());
+            conn.stmt.setString(6, Tipotxt.getText());
+            conn.stmt.setDouble(7, PrecioDistribuidor);
+            conn.stmt.setString(8, DescTxt.getText());
+            conn.stmt.setInt(9, l58);
+            conn.stmt.setInt(10, l64);
+            conn.stmt.setInt(11, l127);
+        }
+        int succes = conn.stmt.executeUpdate();
+        if(succes == 1){
+            String mensaje = "Producto Modificado \n";
+            Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
+            incompleteAlert.setTitle("Gestión de Productos");
+            incompleteAlert.setHeaderText(null);
+            incompleteAlert.setContentText(mensaje);
+            incompleteAlert.initOwner(Eliminar.getScene().getWindow());
+            incompleteAlert.showAndWait();
+            ReinicioTxtFields();
+            ResetImagen();
+        }else{
+            String mensaje = "Producto NO PUDO SER añadido \n";
+            Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
+            incompleteAlert.setTitle("Gestión de Productos");
+            incompleteAlert.setHeaderText(null);
+            incompleteAlert.setContentText(mensaje);
+            incompleteAlert.initOwner(Eliminar.getScene().getWindow());
+            incompleteAlert.showAndWait();
+        }
+    }
+    
+    
+    //FUNCION QUE AUTOCOMPLETA LOS TEXFIELDS CUANDO SE DA DOBLE CLICK A UNA FILA
+    public void llenado(Productos Prod)
+    {
+        //Variables para las Imagenes
+        Blob blob = null;
+        double height, width;
+        byte[] data = null;
+        BufferedImage img = null;
+        WritableImage image = null;
+        //*************************
+        String query = "Select imagenProducto FROM productos WHERE ID = '"+Prod.getID()+"'";
+        conn.QueryExecute(query);
+        try {
+            if(conn.setResult.first()) {
+                if(conn.setResult.getBlob("ImagenProducto") != null){
+                    blob = conn.setResult.getBlob("ImagenProducto");
+                    BanHasImage = true;
+                    data = blob.getBytes(1, (int)blob.length());
+                    try{
+                        img = ImageIO.read(new ByteArrayInputStream(data));
+                        image = SwingFXUtils.toFXImage(img, null);
+                        imageViewFoto.setImage(image);
+                    }catch(IOException ex){
+                        Logger.getLogger(ModificarEmpleadoController.class.getName()).log(Level.SEVERE, null, ex);
+                        String msjHeader = "¡ERROR IO! <Modificar Almacen>";
+                    String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                    log.SendLogReport(ex, msjHeader, msjText);
+                    }
+                }else{
+                    BanHasImage = false;
+                    ResetImagen();
+                }   
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PopUpImagenController.class.getName()).log(Level.SEVERE, null, ex);
+            String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+            String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+            log.SendLogReport(ex, msjHeader, msjText);
+        }
+        habilitar();
+        String cadena;
+        IDTxt.setText(Prod.getID());
+        MarcaTxt.setText(Prod.getMarca());
+        ModeloTxt.setText(Prod.getModelo());
+        Nomtxt.setText(Prod.getNombre());
+        Tipotxt.setText(Prod.getTipo());
+        DescTxt.setText(Prod.getDescrip());
+        cadena = String.valueOf(Prod.getPrecioPub());
+        PrecPtxt.setText(cadena);
+        cadena = String.valueOf(Prod.getPrecioDist());
+        PreDtxt.setText(cadena);
+        cadena = String.valueOf(Prod.getDispon());
+        lblDispon.setText(" "+cadena);
+        cadena = String.valueOf(Prod.getL127());
+        lbl127Dispon.setText(" "+cadena);
+        TFL127.setText("0");
+        cadena = String.valueOf(Prod.getL58());
+        lbl58Dispon.setText(" "+cadena);
+        TFL58.setText("0");
+        cadena = String.valueOf(Prod.getL64());
+        lbl64Dispon.setText(" "+cadena);
+        TFL64.setText("0");
+    }
+    
+    public void ReinicioTxtFields(){
+        IDTxt.setText("");
+        MarcaTxt.setText("");
+        ModeloTxt.setText("");
+        Nomtxt.setText("");
+        Tipotxt.setText("");
+        DescTxt.setText("");
+        PrecPtxt.setText("");
+        PreDtxt.setText("");
+        TFL127.setText("");
+        TFL58.setText("");
+        TFL64.setText("");
+        lblEID.setText("");
+        lblEModelo.setText("");
+        lblEMarca.setText("");
+        lblESum.setText("");
+        lblEnumero.setText("");
+        lbl127Dispon.setText("");
+        lbl64Dispon.setText("");
+        lbl58Dispon.setText("");
+        lblDispon.setText("");
+        lblErrorImagen.setText("");
+        BanderaImagen = false;
+        BanHasImage = false;
+        BanDeleteImage = false;
+        deshabilitar();
+        ResetImagen();
+    }
+    
+    public void deshabilitar(){
+        IDTxt.setDisable(true);
+        MarcaTxt.setDisable(true);
+        ModeloTxt.setDisable(true);
+        Nomtxt.setDisable(true);
+        Tipotxt.setDisable(true);
+        DescTxt.setDisable(true);
+        TFL127.setDisable(true);
+        TFL58.setDisable(true);
+        TFL64.setDisable(true);
+        PrecPtxt.setDisable(true);
+        PreDtxt.setDisable(true);
+    }
+    
+    public void habilitar(){
+        IDTxt.setDisable(false);
+        MarcaTxt.setDisable(false);
+        ModeloTxt.setDisable(false);
+        Nomtxt.setDisable(false);
+        Tipotxt.setDisable(false);
+        DescTxt.setDisable(false);
+        TFL127.setDisable(false);
+        TFL58.setDisable(false);
+        TFL64.setDisable(false);
+        PrecPtxt.setDisable(false);
+        PreDtxt.setDisable(false);
+    }
+    
+    //Manejador de eventos para seleccion de imagen Foto
+    EventHandler<ActionEvent> btnLoadEventListener
+    = new EventHandler<ActionEvent>(){
+ 
+        @Override
+        public void handle(ActionEvent t) {
+            FileChooser fileChooser = new FileChooser();
+             
+            //Set extension filter
+            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
+            FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
+            FileChooser.ExtensionFilter extFilterJPEG = new FileChooser.ExtensionFilter("JPEG files (*.jpeg)", "*.JPEG");
+            FileChooser.ExtensionFilter JPEG = new FileChooser.ExtensionFilter("JPEG files (*.jpeg)", "*.JPEG");
+            fileChooser.getExtensionFilters().addAll(JPEG, extFilterJPG, extFilterPNG);
+              
+            //Show open file dialog
+            file = fileChooser.showOpenDialog(btnAddFoto.getScene().getWindow());
+            if(file == null){
+                String mensaje = "No ha seleccionado ninguna Imagen/Foto \n";
+                Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
+                incompleteAlert.setTitle("Imagen de Producto");
+                incompleteAlert.setHeaderText(null);
+                incompleteAlert.setContentText(mensaje);
+                incompleteAlert.initOwner(btnAddFoto.getScene().getWindow());
+                incompleteAlert.showAndWait();
+            }
+            else {
+                try {
+                    fin = new FileInputStream(file);
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(AltaEmpleadoController.class.getName()).log(Level.SEVERE, null, ex);
+                    String msjHeader = "¡File not Found! <Modificar Almacen>";
+                    String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                    log.SendLogReport(ex, msjHeader, msjText);
+                }
+                catch( Error e){
+                    String msjHeader = "¡ERROR e! <Modificar Almacen>";
+                    String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                    log.SendLogReport(e, msjHeader, msjText);
+                }          
+                BufferedImage bufferedImage = null;
+                try {
+                    bufferedImage = ImageIO.read(file);
+                } catch (IOException ex) {
+                    Logger.getLogger(AltaEmpleadoController.class.getName()).log(Level.SEVERE, null, ex);
+                    String msjHeader = "¡ERROR IO! <Modificar Almacen>";
+                    String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                    log.SendLogReport(ex, msjHeader, msjText);
+                }
+                WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
+                imageViewFoto.autosize();
+                imageViewFoto.setImage(image);
+                BanderaImagen = true;
+            }
+        }
+    };
+    
+    public void ResetImagen() {
+        if(BanHasImage == false){
+            BanderaImagen = false;
+            File fileReset = new File("src/xxcell/Images/producto-sin-foto.jpg");
+            Image imageReset = new Image(fileReset.toURI().toString());  
+            imageViewFoto.setImage(imageReset);
+            lblErrorImagen.setText("");
+        }
+    }
+    
+    public void EliminarFoto(){
+        if(BanHasImage){
+            BanderaImagen = true;
+            BanDeleteImage = true;
+            File fileReset = new File("src/xxcell/Images/producto-sin-foto.jpg");
+            Image imageReset = new Image(fileReset.toURI().toString());  
+            imageViewFoto.setImage(imageReset); 
+            lblErrorImagen.setText("");
+        }else{
+            lblErrorImagen.setText("No hay imagen Registrada");
+        }
+    }
+    
+    
+}

@@ -1,0 +1,373 @@
+package xxcell.controller;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXTextField;
+import java.net.URL;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
+import xxcell.Conexion.Conexion;
+import xxcell.model.Detalles;
+import xxcell.model.Empleados;
+
+public class NominaEmpleadosController implements Initializable {
+
+    //Varibales para las conexiones y los querys
+    Conexion conn = new Conexion();
+    String qry = "SELECT * FROM empleado";
+    
+    float TotalVenta, totalvendido = 0;
+    
+    Date fechaHoy = new Date();
+    
+    Empleados aux = new Empleados();
+    int cantidadproductos = 0;
+    
+    //Buttons
+    @FXML
+    private JFXButton ObtenerSalario;
+    @FXML
+    private JFXButton ImprimirNomina;
+    
+    //textfield
+    @FXML
+    private JFXTextField txtDescuento;
+    
+    // Labels
+    @FXML
+    private Label lblCantidad;
+    @FXML
+    private Label lblPorcentaje;
+    @FXML
+    private Label NombreEmpleado;
+    @FXML
+    private Label NumeroEmpleado;
+    @FXML
+    private Label lblSueldo;
+    @FXML
+    private Label lblFechaFin;
+    @FXML
+    private Label lblError;
+    
+    //CheckBox
+    @FXML
+    private JFXCheckBox Lunes;
+    @FXML
+    private JFXCheckBox Martes;
+    @FXML
+    private JFXCheckBox Miercoles;
+    @FXML
+    private JFXCheckBox Jueves;
+    @FXML
+    private JFXCheckBox Viernes;
+    @FXML
+    private JFXCheckBox Sabado;
+    @FXML
+    private JFXCheckBox Domingo;
+    
+    //DatePickers
+    @FXML
+    private JFXDatePicker FechaInicial;
+    @FXML
+    private JFXDatePicker FechaFinal;
+    
+    
+    @FXML
+    private TableView<Detalles> TablaVentas;
+    @FXML
+    private TableColumn<Detalles, Number> Folio;
+    @FXML
+    private TableColumn<Detalles, String> colCodigo;
+    @FXML
+    private TableColumn<Detalles, Number> Cantidad;
+    @FXML
+    private TableColumn<Detalles, Number> Total;
+    
+    //Lista para Llenar la tabla de Detalles;
+    ObservableList<Detalles> detalles = FXCollections.observableArrayList();
+    
+    //Variables de TableView para la Tabla Empleados
+    @FXML
+    private TableView<Empleados> TablaEmpleados;
+    @FXML
+    private TableColumn<Empleados, String> Nombre;
+    @FXML
+    private TableColumn<Empleados, String> Apellido;  
+    
+    //Lista para Llenar la tabla de Empleados;
+    ObservableList<Empleados> empleados = FXCollections.observableArrayList();
+    
+     //Función que obtendrá los objetos empleados para ingresarlos al tableview
+    public ObservableList<Empleados> ObtenerEmpleados() throws SQLException{
+        String nom, apel, usuar;
+        int numEmp;
+                
+        if(conn.QueryExecute(qry))
+        {
+            while(conn.setResult.next())
+            {
+                usuar = conn.setResult.getString("usuario");
+                nom = conn.setResult.getString("Nombre");
+                apel = conn.setResult.getString("Apellido");
+                numEmp = conn.setResult.getInt("NumEmpleado");
+                empleados.add(new Empleados(usuar, nom, apel, numEmp, conn.setResult.getInt("Nivel")));
+            }
+        }
+        return empleados;
+    }
+    
+    
+    //Función que obtendrá los objetos detalle de Ventas para ingresarlos al tableview
+    public ObservableList<Detalles> ObtenerDetalles() throws SQLException{
+        String codigo, producto, cadena, STSQL, TooltipText;
+        int folio, cantidad;
+        LocalDate FechaInit, FinalFecha;
+        FechaInit = FechaInicial.getValue();
+        FinalFecha = FechaFinal.getValue();
+        float total;
+       
+        STSQL =  "SELECT tblventas.ventaFolio, productos.ID, ";
+        STSQL += "tblventadetalle.ventaCantidad, tblventadetalle.productoPrecio, tblventas.CodigoDistribuidor, ";
+        STSQL += "productos.Marca, productos.Modelo, productos.Tipo, productos.Identificador ";
+        STSQL += "from tblventas ";
+        STSQL +=    "INNER JOIN tblventadetalle ";
+        STSQL +=        "ON tblventas.ventaFolio = tblventadetalle.ventaFolio ";
+        STSQL +=    "INNER JOIN productos ";
+        STSQL +=        "ON tblventadetalle.productoCodigo = productos.ID ";
+        STSQL += "AND tblventas.NumEmpleado = '"+aux.getNumEmp()+"' ";
+        STSQL += "WHERE tblventas.ventaFecha BETWEEN '"+FechaInit+"' and '"+FinalFecha.plusDays(1)+"'";
+        System.out.println(STSQL);
+        if(conn.QueryExecute(STSQL))
+        {
+            while (conn.setResult.next())
+            {
+                if(conn.setResult.getString("CodigoDistribuidor") == null){
+                    TooltipText = conn.setResult.getString("Marca");
+                    TooltipText += " " + conn.setResult.getString("Modelo");
+                    TooltipText += " " + conn.setResult.getString("Tipo");
+                    TooltipText += " " + conn.setResult.getString("Identificador");
+                    folio = conn.setResult.getInt("ventaFolio");
+                    codigo = conn.setResult.getString("ID");
+                    cantidad = conn.setResult.getInt("ventaCantidad");
+                    total = (conn.setResult.getFloat("productoPrecio"))*cantidad;
+                    cantidadproductos = cantidadproductos + cantidad;
+                    totalvendido = totalvendido + total;
+                    cadena = aux.getNombre();
+                    cadena += " " + aux.getApellido();
+                    lblCantidad.setText(String.valueOf(cantidadproductos));
+                    TotalVenta = totalvendido;
+                    NombreEmpleado.setText(cadena);
+                    NumeroEmpleado.setText(String.valueOf(aux.getNumEmp()));
+                    detalles.add(new Detalles(folio, codigo, cantidad, total, TooltipText));
+                }
+            } 
+        }  
+        return detalles;
+    }
+    
+    public void Salario() throws SQLException{
+        int cantidadMeta, faltas;
+        float descuento = 0, sueldo = 0, txtdescuento;
+        boolean flag = true;
+        String mensaje = "";
+        
+        if(FechaFinal.getValue() == null && FechaFinal.getValue() == null){
+            flag = false;
+            mensaje += "¡Error! Seleccione Fechas  \n";
+
+        }
+        if(TablaEmpleados.getSelectionModel().isEmpty()){
+            flag = false;
+            mensaje += "¡Error! Seleccione un empleado\n ";
+        }
+        if(!flag){
+            Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
+            incompleteAlert.setTitle("Nomimas");
+            incompleteAlert.setHeaderText(null);
+            incompleteAlert.setContentText(mensaje);
+            incompleteAlert.initOwner(ObtenerSalario.getScene().getWindow());
+            incompleteAlert.showAndWait();
+        }
+       if(flag){
+            String qrySueldo = "SELECT * FROM sueldos where Nivel = '"+aux.getNivel()+"'";
+            conn.QueryExecute(qrySueldo);
+            if(conn.setResult.first()){
+                faltas = obtenerFaltas();
+                if(txtDescuento.getText().length() == 0){
+                        txtdescuento = 0;
+                    }
+                else{
+                    txtdescuento = Float.valueOf(txtDescuento.getText());
+                }
+                if(faltas>1){
+                    faltas--;
+                    descuento = faltas * conn.setResult.getFloat("DescuentoFalta");
+                }
+                if(faltas == 0){
+                    sueldo += conn.setResult.getFloat("DiaExtra");
+                }
+                cantidadMeta = conn.setResult.getInt("NumVentas");
+                if(cantidadproductos > cantidadMeta){
+                    lblPorcentaje.setText(".04%");
+                    sueldo = (totalvendido * conn.setResult.getFloat("ComisionMeta")) + sueldo;
+                    
+                }
+                else{
+                    lblPorcentaje.setText(".02%");               
+                    sueldo = (totalvendido * conn.setResult.getFloat("ComisionBase"))+sueldo; 
+                }
+                sueldo = sueldo + conn.setResult.getFloat("Base");
+                sueldo = sueldo - descuento;
+                sueldo = sueldo - txtdescuento;
+                lblSueldo.setText(Float.toString(sueldo));
+            } 
+        }
+        
+    }
+    
+    private int obtenerFaltas() {
+        int faltas=0;
+        if(Lunes.selectedProperty().get() == true){
+            faltas++;
+        }
+        if(Martes.selectedProperty().get() == true){
+            faltas++;
+        }
+        if(Miercoles.selectedProperty().get() == true){
+            faltas++;
+        }
+        if(Jueves.selectedProperty().get() == true){
+            faltas++;
+        }
+        if(Viernes.selectedProperty().get() == true){
+            faltas++;
+        }
+        if(Sabado.selectedProperty().get() == true){
+            faltas++;
+        }
+        if(Domingo.selectedProperty().get() == true){
+            faltas++;
+        }
+        return faltas;
+    }
+  
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        
+        SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
+        lblFechaFin.setText(formato.format(fechaHoy));
+
+        Nombre.setCellValueFactory(cellData -> cellData.getValue().NombreProperty());
+        Apellido.setCellValueFactory(cellData -> cellData.getValue().ApellidoProperty());
+        try {
+            TablaEmpleados.setItems(ObtenerEmpleados());
+        } catch (SQLException ex) {
+            Logger.getLogger(ModificarEmpleadoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        Folio.setCellValueFactory(cellData -> cellData.getValue().FolioProperty());
+        colCodigo.setCellValueFactory(cellData -> cellData.getValue().CodigoProperty());
+        Cantidad.setCellValueFactory(cellData -> cellData.getValue().CantidadProperty());
+        Total.setCellValueFactory(cellData -> cellData.getValue().TotalProperty());
+        
+        Tooltip tooltip = new Tooltip();
+        TablaVentas.setRowFactory(tv -> new TableRow<Detalles>() {
+            private Tooltip tooltip = new Tooltip();
+            @Override
+            public void updateItem(Detalles detalle, boolean empty) {
+                super.updateItem(detalle, empty);
+                if (detalle == null) {
+                    setTooltip(null);
+                } else {
+                    tooltip.setText(detalle.getTooltipText());
+                    setTooltip(tooltip);
+                }
+            }
+        });
+        
+        //Seleccionar un objeto con doble click
+        TablaEmpleados.setOnMousePressed(new EventHandler<MouseEvent>() {
+             @Override 
+             public void handle(MouseEvent event) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 1) {
+                    if(TablaEmpleados.getSelectionModel().getSelectedItem() != null ){
+                        aux = TablaEmpleados.getSelectionModel().getSelectedItem();
+                        try {
+                            
+                            if(FechaInicial.getValue() == null && FechaFinal.getValue() == null){
+                                lblError.setText("Seleccione las fechas");
+                            }
+                            else{
+                                lblError.setText("");
+                                TablaVentas.refresh();
+                                detalles.removeAll(detalles);
+                                TablaVentas.setItems(ObtenerDetalles());
+                               Salario(); 
+                            }
+                        } catch (SQLException ex) {
+                            Logger.getLogger(ConsultasController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+        });
+        
+        ObtenerSalario.setOnAction((ActionEvent e) -> {  
+            if(esnumero(txtDescuento.getText())){
+                try {
+                    Salario();
+                } catch (SQLException ex) {
+                    Logger.getLogger(NominaEmpleadosController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            else{
+                String mensaje = "¡Debe ingresar un número! \n";
+                Alert incompleteAlert = new Alert(Alert.AlertType.ERROR);
+                incompleteAlert.setTitle("Nomina");
+                incompleteAlert.setHeaderText(null);
+                incompleteAlert.setContentText(mensaje);
+                incompleteAlert.initOwner(ObtenerSalario.getScene().getWindow());
+                incompleteAlert.showAndWait();
+            }
+        });
+        
+    }//FIN INITIALIZE      
+    
+        //FUNCIÓN PARA VALIDAR SI LOS DATOS INGRESADOS EN "MERCANCIA ENTRANTE, Y LOS 3 LOCALES SON NUMEROS
+    boolean esnumero (String x)
+    {  
+        double number = 0;
+        if(x.isEmpty())
+        {
+            return true;
+        }
+        else
+        {
+            try {
+                number = Double.parseDouble(x);
+                return true;
+            } catch (NumberFormatException ex) {
+                return false;
+            }
+        }
+    }
+}

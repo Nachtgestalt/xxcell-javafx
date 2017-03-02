@@ -1,0 +1,13 @@
+INSERT INTO `productos`(`ID`, `Modelo`, `Identificador`, `PrecPub`, `Costo`, `Marca`, `Tipo`, `PrecDist`, `Descrip`, `CantidadActual`, `Entradas`, `Salidas`, `L58`, `L64`, `L127`, `imagenProducto`) VALUES ("ZTEIGLROJ","","ROJO",'150.00','0',"ZTE","IGLOW",'95.00',"",'0','0','0','0','0','0',NULL);
+
+INSERT INTO `productos`(`ID`, `Modelo`, `Identificador`, `PrecPub`, `Costo`, `Marca`, `Tipo`, `PrecDist`, `Descrip`, `CantidadActual`, `Entradas`, `Salidas`, `L58`, `L64`, `L127`, `imagenProducto`) VALUES ("ZTEIGLROS","","ROSA",'150.00','0',"ZTE","IGLOW",'95.00',"",'0','0','0','0','0','0',NULL);
+
+INSERT INTO `productos`(`ID`, `Modelo`, `Identificador`, `PrecPub`, `Costo`, `Marca`, `Tipo`, `PrecDist`, `Descrip`, `CantidadActual`, `Entradas`, `Salidas`, `L58`, `L64`, `L127`, `imagenProducto`) VALUES ("ZTEIGLAZU","","AZUL",'150.00','0',"ZTE","IGLOW",'95.00',"",'0','0','0','0','0','0',NULL);
+
+INSERT INTO `productos`(`ID`, `Modelo`, `Identificador`, `PrecPub`, `Costo`, `Marca`, `Tipo`, `PrecDist`, `Descrip`, `CantidadActual`, `Entradas`, `Salidas`, `L58`, `L64`, `L127`, `imagenProducto`) VALUES ("ZTEIGLVER","","VERDE",'150.00','0',"ZTE","IGLOW",'95.00',"",'0','0','0','0','0','0',NULL);
+
+INSERT INTO `productos`(`ID`, `Modelo`, `Identificador`, `PrecPub`, `Costo`, `Marca`, `Tipo`, `PrecDist`, `Descrip`, `CantidadActual`, `Entradas`, `Salidas`, `L58`, `L64`, `L127`, `imagenProducto`) VALUES ("ZTEIGLBLA","","BLANCO",'150.00','0',"ZTE","IGLOW",'95.00',"",'0','0','0','0','0','0',NULL);
+
+INSERT INTO `productos`(`ID`, `Modelo`, `Identificador`, `PrecPub`, `Costo`, `Marca`, `Tipo`, `PrecDist`, `Descrip`, `CantidadActual`, `Entradas`, `Salidas`, `L58`, `L64`, `L127`, `imagenProducto`) VALUES ("ZTEIGLNEG","","NEGRO",'150.00','0',"ZTE","IGLOW",'95.00',"",'0','0','0','0','0','0',NULL);
+
+
