@@ -44,7 +44,6 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.view.JasperViewer;
 import xxcell.Conexion.Conexion;
 import xxcell.XCELL;
 import xxcell.model.EnvioCorreo;
@@ -121,6 +120,10 @@ public class PrincipalController implements Initializable {
                 } catch (SQLException ex) {
                     /*  Creación de Log en caso de fallo  */
                     String msjHeader = "¡Error de SQL!";
+                    String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                    log.SendLogReport(ex, msjHeader, msjText);
+                } catch (JRException ex) {
+                    String msjHeader = "¡Error de Reporte!";
                     String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
                     log.SendLogReport(ex, msjHeader, msjText);
                 }
@@ -274,7 +277,11 @@ public class PrincipalController implements Initializable {
                                 String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
                                  
                                 log.SendLogReport(ex, msjHeader, msjText);
-                            }
+                            } catch (SQLException ex) {
+                            Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (JRException ex) {
+                            Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                             
                         }
                     }
@@ -426,8 +433,7 @@ public class PrincipalController implements Initializable {
                     break;
                 }
             }
-        });
-        
+        });   
     }
       
     private void mostrarVenta() throws IOException {   
@@ -622,11 +628,30 @@ public class PrincipalController implements Initializable {
         drawer.setContent(Almacen);
     }
  
-    private void mostrarLogin() throws IOException{
+    private void mostrarLogin() throws IOException, SQLException, JRException{
         Variables_Globales.Rol = null;
         Stage stage;
-        stage = (Stage) drawer.getScene().getWindow();
-        stage.close();
+        
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        
+        
+        alert.setTitle("Salir del sistema");
+        alert.setContentText("¿Desea realmente salir del sistema?");
+        alert.initOwner(borderPane.getScene().getWindow());
+        
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == ButtonType.OK){
+            obtenerParametros();
+            if(cantidadproductos>0){
+                crearReporte();
+                sendMail.EnviarCorreoPDF();
+            }
+            else
+                sendMail.EnviarCorreo();
+            stage = (Stage) drawer.getScene().getWindow();
+            stage.close();
+        }         
         
         this.primaryStage = new Stage();
         
@@ -650,51 +675,29 @@ public class PrincipalController implements Initializable {
         drawer.setContent(MostrarDistribuidores);
     }
 
-    private void cerrar() throws SQLException {
-        LocalDate today = LocalDate.now();
-        LocalDate tomorrow = today.plusDays(1);
-        Conexion conn = new Conexion();
+    private void cerrar() throws SQLException, JRException {
+        long TInicio, TFin, tiempo; //Variables para determinar el tiempo de ejecución
         Alert alert = new Alert(AlertType.CONFIRMATION);
         
-        long TInicio, TFin, tiempo; //Variables para determinar el tiempo de ejecución
         
         alert.setTitle("Salir del sistema");
-                //alert.setHeaderText("¿Desea realmente salir del sistema?");
         alert.setContentText("¿Desea realmente salir del sistema?");
         alert.initOwner(borderPane.getScene().getWindow());
         
         Optional<ButtonType> result = alert.showAndWait();
-        
-        if (result.get() == ButtonType.OK){
-            try {
-                TInicio = System.currentTimeMillis();
-                //Parametros para llenar Jasper
-                obtenerParametros();
-                Map parametro = new HashMap();
-                if(cantidadproductos>0){
-                    Date fechaHoy = new Date();
-                    SimpleDateFormat formato = new SimpleDateFormat("yy-MM-dd");
-                    parametro.put("Local", Variables_Globales.local);
-                    parametro.put("Today", String.valueOf(today));
-                    parametro.put("Tomorrow", String.valueOf(tomorrow)); 
-                    parametro.put("NumVentas", String.valueOf(cantidadproductos));
-                    parametro.put("CantidadVentas", String.valueOf(totalvendido));
 
-                    JasperReport myreport = (JasperReport) JRLoader.loadObjectFromFile("src/xxcell/Reportes/ReporteDia.jasper");
-                    JasperPrint myPrint = JasperFillManager.fillReport(myreport, parametro, conn.JasperConexion());
-                    JasperExportManager.exportReportToPdfFile(myPrint, "src/xxcell/Reportes/VentaDia_58_"+ formato.format(fechaHoy) +".pdf");
-                }
-                sendMail.EnviarCorreo();
-                TFin = System.currentTimeMillis();
-                tiempo = TFin - TInicio;
-                System.out.println("Tiempo de ejecución en milisegundos: " + tiempo);
-            } catch (JRException ex) {
-                Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
-                /*  Creación de Log en caso de fallo  */
-                String msjHeader = "¡Error en la creación de Reporte PDF!";
-                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
-                log.SendLogReport(ex, msjHeader, msjText);
+        if (result.get() == ButtonType.OK){
+            TInicio = System.currentTimeMillis(); /*  Creación de Log en caso de fallo  */
+            obtenerParametros();
+            if(cantidadproductos>0){
+                crearReporte();
+                sendMail.EnviarCorreoPDF();
             }
+            else
+                sendMail.EnviarCorreo();
+            TFin = System.currentTimeMillis();
+            tiempo = TFin - TInicio;
+            System.out.println("Tiempo de ejecución en milisegundos: " + tiempo);
             borderPane.getScene().getWindow().hide();
         }         
     }
@@ -725,5 +728,25 @@ public class PrincipalController implements Initializable {
                 totalvendido = totalvendido + total;
             }
         }
+    }
+    
+    private void crearReporte() throws SQLException, JRException{
+        LocalDate today = LocalDate.now();
+        LocalDate tomorrow = today.plusDays(1);
+        Date fechaHoy = new Date();
+        SimpleDateFormat formato = new SimpleDateFormat("yy-MM-dd");
+        Map parametro = new HashMap();
+        Conexion conn = new Conexion();
+        
+        //Parametros para llenar Jasper
+        parametro.put("Local", Variables_Globales.local);
+        parametro.put("Today", String.valueOf(today));
+        parametro.put("Tomorrow", String.valueOf(tomorrow)); 
+        parametro.put("NumVentas", String.valueOf(cantidadproductos));
+        parametro.put("CantidadVentas", String.valueOf(totalvendido));
+
+        JasperReport myreport = (JasperReport) JRLoader.loadObjectFromFile("src/xxcell/Reportes/ReporteDia.jasper");
+        JasperPrint myPrint = JasperFillManager.fillReport(myreport, parametro, conn.JasperConexion());
+        JasperExportManager.exportReportToPdfFile(myPrint, "src/xxcell/Reportes/VentaDia_58_"+ formato.format(fechaHoy) +".pdf");
     }
 }

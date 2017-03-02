@@ -21,6 +21,7 @@ public class EnvioCorreo {
     String user = "noaydeh@gmail.com";
     String pass = "lacrimamosa123";
     String from = "noaydeh@gmail.com";
+    String destinatario = "nachtgestalt06@gmail.com";
     
     long TInicio, TFin, tiempo; //Variables para determinar el tiempo de ejecución
     
@@ -52,7 +53,7 @@ public class EnvioCorreo {
             MimeMessage message = new MimeMessage(session);
             
             // Quien envia el correo
-            message.setFrom(new InternetAddress("noaydeh@gmail.com"));
+            message.setFrom(new InternetAddress(destinatario));
             // A quien va dirigido
             message.addRecipient(Message.RecipientType.TO, new InternetAddress("noaydeh@hotmail.com"));
             message.setSubject("Cierre de Local " + Variables_Globales.localPublico);
@@ -62,6 +63,7 @@ public class EnvioCorreo {
             t.connect(user,pass);
             t.sendMessage(message,message.getAllRecipients());
             t.close();
+            System.out.println("Enviado mensaje sin archivo adjunto");
             
         }catch(MessagingException ex){
             String msjHeader = "¡ERROR!";
@@ -98,7 +100,7 @@ public class EnvioCorreo {
             
             //Archivo Adjunto
             BodyPart adjunto = new MimeBodyPart(); //C:\\Users\\XXCELL_L127\\Documents\\Reportes\\VentaDia_127.pdf
-            adjunto.setDataHandler(new DataHandler(new FileDataSource("src/xxcell/Reportes/VentaDia_127_"+ formato.format(fechaHoy) +".pdf")));
+            adjunto.setDataHandler(new DataHandler(new FileDataSource("src/xxcell/Reportes/VentaDia_58_"+ formato.format(fechaHoy) +".pdf")));
             // Mi maquína adjunto.setDataHandler(new DataHandler(new FileDataSource("D:\\Punto de Venta\\XCELLBeta2\\src\\xxcell\\Reportes\\VentaDia.pdf")));
             //D:\Punto de Venta\XCELLBeta2\src\xxcell\Reportes\VentaDia.pdf
             //C:\\Users\\Adrián Pérez\\Documents\\Reportes\\VentaDia_127.pdf -- src/xxcell/Reportes/
@@ -115,7 +117,7 @@ public class EnvioCorreo {
             message.setFrom(new InternetAddress(from));
             message.addRecipient(
                 Message.RecipientType.TO,
-                new InternetAddress("nachtgestalt06@gmail.com"));
+                new InternetAddress(destinatario));
             message.setSubject("Prueba con Archivo");
             message.setContent(multiParte);
             
@@ -132,6 +134,7 @@ public class EnvioCorreo {
             TFin = System.currentTimeMillis();
             tiempo = TFin - TInicio;
             System.out.println("Tiempo de ejecución en milisegundos: " + tiempo);
+            System.out.println("Enviado mensaje con archivo adjunto");
         }catch(MessagingException ex){
             String msjHeader = "¡ERROR!";
             String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
