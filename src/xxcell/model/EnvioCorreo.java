@@ -1,10 +1,7 @@
 package xxcell.model;
-import com.jfoenix.controls.JFXButton;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.stage.Window;
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -24,6 +21,8 @@ public class EnvioCorreo {
     String user = "noaydeh@gmail.com";
     String pass = "lacrimamosa123";
     String from = "noaydeh@gmail.com";
+    
+    long TInicio, TFin, tiempo; //Variables para determinar el tiempo de ejecución
     
     public EnvioCorreo(){
          Platform.runLater(()-> {
@@ -64,7 +63,7 @@ public class EnvioCorreo {
             t.sendMessage(message,message.getAllRecipients());
             t.close();
             
-        }catch(Exception ex){
+        }catch(MessagingException ex){
             String msjHeader = "¡ERROR!";
             String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
             log.SendLogReport(ex, msjHeader, msjText);
@@ -74,7 +73,8 @@ public class EnvioCorreo {
     //Correos por PDF
     
     public void EnviarCorreoPDF() {
-        try{         
+        try{  
+            TInicio = System.currentTimeMillis();
             boolean sessionDebug = false;
 
             //  Propiedades de la conexión
@@ -115,7 +115,7 @@ public class EnvioCorreo {
             message.setFrom(new InternetAddress(from));
             message.addRecipient(
                 Message.RecipientType.TO,
-                new InternetAddress("noaydeh@hotmail.com"));
+                new InternetAddress("nachtgestalt06@gmail.com"));
             message.setSubject("Prueba con Archivo");
             message.setContent(multiParte);
             
@@ -129,7 +129,10 @@ public class EnvioCorreo {
             transport.sendMessage(message, message.getAllRecipients());
             //cerrar la conexión
             transport.close();
-        }catch(Exception ex){
+            TFin = System.currentTimeMillis();
+            tiempo = TFin - TInicio;
+            System.out.println("Tiempo de ejecución en milisegundos: " + tiempo);
+        }catch(MessagingException ex){
             String msjHeader = "¡ERROR!";
             String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
             log.SendLogReport(ex, msjHeader, msjText);

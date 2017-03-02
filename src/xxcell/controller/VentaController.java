@@ -1124,7 +1124,7 @@ public class VentaController implements Initializable {
     private boolean GrabaVentaEncabezado(){
         boolean result = false;
         String sqlStmt;
-        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd k:mm:ss");
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd H:mm:ss");
         Date fechaHoy = new Date();
         String fecha = formato.format(fechaHoy);
         System.out.println(txtCodDistribuidor.getText());

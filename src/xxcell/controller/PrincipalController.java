@@ -656,6 +656,8 @@ public class PrincipalController implements Initializable {
         Conexion conn = new Conexion();
         Alert alert = new Alert(AlertType.CONFIRMATION);
         
+        long TInicio, TFin, tiempo; //Variables para determinar el tiempo de ejecución
+        
         alert.setTitle("Salir del sistema");
                 //alert.setHeaderText("¿Desea realmente salir del sistema?");
         alert.setContentText("¿Desea realmente salir del sistema?");
@@ -665,6 +667,7 @@ public class PrincipalController implements Initializable {
         
         if (result.get() == ButtonType.OK){
             try {
+                TInicio = System.currentTimeMillis();
                 //Parametros para llenar Jasper
                 obtenerParametros();
                 Map parametro = new HashMap();
@@ -679,10 +682,12 @@ public class PrincipalController implements Initializable {
 
                     JasperReport myreport = (JasperReport) JRLoader.loadObjectFromFile("src/xxcell/Reportes/ReporteDia.jasper");
                     JasperPrint myPrint = JasperFillManager.fillReport(myreport, parametro, conn.JasperConexion());
-                    
                     JasperExportManager.exportReportToPdfFile(myPrint, "src/xxcell/Reportes/VentaDia_58_"+ formato.format(fechaHoy) +".pdf");
                 }
                 sendMail.EnviarCorreo();
+                TFin = System.currentTimeMillis();
+                tiempo = TFin - TInicio;
+                System.out.println("Tiempo de ejecución en milisegundos: " + tiempo);
             } catch (JRException ex) {
                 Logger.getLogger(PrincipalController.class.getName()).log(Level.SEVERE, null, ex);
                 /*  Creación de Log en caso de fallo  */
