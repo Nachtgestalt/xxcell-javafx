@@ -314,7 +314,6 @@ public class EstadisticasProductosController implements Initializable {
         cmbModelo.getItems().clear();
         cmbModelo.setVisible(true);
         query = "SELECT DISTINCT Modelo FROM productos Where Marca = '"+cmbMarca.getValue()+"' ORDER BY Modelo";
-        System.out.println(query);
         if(conn.QueryExecute(query))
         {
             try {

@@ -60,15 +60,19 @@ public class ModificarAlmacenController implements Initializable {
     String StmtSq;
     String query;
     
+    //Combobox
     @FXML
-    private JFXComboBox<String> Tipo;
+    private JFXComboBox<String> cmbTipo;
+    @FXML
+    private JFXComboBox<String> cmbModelo;
+    @FXML
+    private JFXComboBox<String> cmbMarca;
+    @FXML
+    private JFXComboBox<String> cmbIdentificador;
 
     @FXML
     private JFXTextField buscar;
-        
-    @FXML
-    private JFXComboBox<String> Marca;
-    
+
     //botones
     @FXML
     private JFXButton filtrar;
@@ -173,9 +177,9 @@ public class ModificarAlmacenController implements Initializable {
     @FXML
     private Label lblErrorImagen;
     
-    //Listas para los automecompleatos en los textfields de Marca, Tipo y Modelo
     
     //Lista para el autocompletado de JFXTextField buscar
+    Set<String> hs_Buscar = new HashSet<>();
     Set<String> hs_Marca = new HashSet<>(); // HashSet Para quitar elementos repetidos de POSSIBLEWORDS
     Set<String> hs_Tipo = new HashSet<>(); // HashSet Para quitar elementos repetidos de POSSIBLEWORDS
     Set<String> hs_Modelo = new HashSet<>(); // HashSet Para quitar elementos repetidos de POSSIBLEWORDS
@@ -212,11 +216,13 @@ public class ModificarAlmacenController implements Initializable {
     
     public void Autocompletar()
     {
-        query = "SELECT DISTINCT Modelo FROM productos";
+        
+        query = "SELECT DISTINCT Modelo FROM productos ORDER BY Modelo";
         if(conn.QueryExecute(query)){
             try {
                 while(conn.setResult.next()){
                     hs_Modelo.add(conn.setResult.getString("Modelo"));
+                    hs_Buscar.add(conn.setResult.getString("Modelo"));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
@@ -225,7 +231,20 @@ public class ModificarAlmacenController implements Initializable {
                 log.SendLogReport(ex, msjHeader, msjText);
             }
         }
-        query = "SELECT DISTINCT Tipo FROM productos";
+        query = "SELECT DISTINCT ID FROM productos ORDER BY ID";
+        if(conn.QueryExecute(query)){
+            try {
+                while(conn.setResult.next()){
+                    hs_Buscar.add(conn.setResult.getString("ID"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        }
+        query = "SELECT DISTINCT Tipo FROM productos ORDER BY Tipo";
         if(conn.QueryExecute(query)){
             try {
                 while(conn.setResult.next()){
@@ -275,7 +294,7 @@ public class ModificarAlmacenController implements Initializable {
         {
             try {
                 while(conn.setResult.next()){
-                    Marca.getItems().add(conn.setResult.getString("Marca"));
+                    cmbMarca.getItems().add(conn.setResult.getString("Marca"));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
@@ -290,7 +309,7 @@ public class ModificarAlmacenController implements Initializable {
         {
             try {
                 while(conn.setResult.next()){
-                    Tipo.getItems().add(conn.setResult.getString("Tipo"));
+                    cmbTipo.getItems().add(conn.setResult.getString("Tipo"));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
@@ -299,6 +318,48 @@ public class ModificarAlmacenController implements Initializable {
                 log.SendLogReport(ex, msjHeader, msjText);
             }
         }
+    }
+    
+    public void IniciarcmbOcultos(String Tipo){
+        switch (Tipo){
+            case "Identificador":
+                cmbIdentificador.getSelectionModel().clearSelection();
+                cmbIdentificador.getItems().clear();
+                query = "SELECT DISTINCT Identificador FROM productos WHERE Tipo = '"+cmbTipo.getValue()+"' ORDER BY Identificador";
+                if(conn.QueryExecute(query))
+                {
+                    try {
+                        while(conn.setResult.next()){
+                           cmbIdentificador.getItems().add(conn.setResult.getString("Identificador"));
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ConsultasController.class.getName()).log(Level.SEVERE, null, ex);
+                        String msjHeader = "¡ERROR!";
+                        String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                        log.SendLogReport(ex, msjHeader, msjText);
+                    }
+                }
+            break;
+            case "Modelo":
+                cmbModelo.getSelectionModel().clearSelection();
+                cmbModelo.getItems().clear();
+                query = "SELECT DISTINCT Modelo FROM productos WHERE Marca = '"+cmbMarca.getValue()+"' ORDER BY Modelo";
+                if(conn.QueryExecute(query))
+                {
+                    try {
+                        while(conn.setResult.next()){
+                           cmbModelo.getItems().add(conn.setResult.getString("Modelo"));
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ConsultasController.class.getName()).log(Level.SEVERE, null, ex);
+                        String msjHeader = "¡ERROR!";
+                        String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                        log.SendLogReport(ex, msjHeader, msjText);
+                    }
+                }
+            break;
+        }
+            
     }
     
     //Funcion para eliminar un producto
@@ -335,7 +396,7 @@ public class ModificarAlmacenController implements Initializable {
         deshabilitar();
         Autocompletar();
         
-        TextFields.bindAutoCompletion(buscar, hs_Modelo);
+        TextFields.bindAutoCompletion(buscar, hs_Buscar);
         TextFields.bindAutoCompletion(ModeloTxt, hs_Modelo);
         TextFields.bindAutoCompletion(MarcaTxt, hs_Marca);
         TextFields.bindAutoCompletion(Tipotxt, hs_Tipo);
@@ -608,10 +669,11 @@ public class ModificarAlmacenController implements Initializable {
         });
         
         //Función para el comboBox Marca; Esté llenara el TableView dependiendo la Opción que el usuario Ingrese
-        Marca.setOnAction(e -> {
+        cmbMarca.setOnAction(e -> {
+            IniciarcmbOcultos("Modelo");
             buscar.clear();
             StmtSq = "Select * FROM productos "; 
-            StmtSq += "WHERE Marca='"+Marca.getValue()+"'";
+            StmtSq += "WHERE Marca='"+cmbMarca.getValue()+"'";
             try {   
                 Tabla.refresh();
                 productos.removeAll(productos);
@@ -625,10 +687,11 @@ public class ModificarAlmacenController implements Initializable {
         });//FIN DE LAMBDA MARCA       
         
         //Función para el combobox Tipo
-        Tipo.setOnAction(e -> {
+        cmbTipo.setOnAction(e -> {
+            IniciarcmbOcultos("Identificador");
             buscar.clear();
             StmtSq = "Select * FROM productos "; 
-            StmtSq += "WHERE Tipo='"+Tipo.getValue()+"'";
+            StmtSq += "WHERE Tipo='"+cmbTipo.getValue()+"'";
             try {   
                 Tabla.refresh();
                 productos.removeAll(productos);
@@ -643,8 +706,7 @@ public class ModificarAlmacenController implements Initializable {
         //Función para el autocompletado del Textfield Buscar
         buscar.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             StmtSq = "Select * FROM productos ";
-            StmtSq += "WHERE Modelo='"+buscar.getText()+"'";
-            System.out.println(StmtSq);
+            StmtSq += "WHERE Modelo='"+buscar.getText()+"' OR  ID='"+buscar.getText()+"'";
             try {   
                 Tabla.refresh();
                 productos.removeAll(productos);
@@ -658,33 +720,14 @@ public class ModificarAlmacenController implements Initializable {
         });   
         
         filtrar.setOnAction((ActionEvent e) -> { 
-            StmtSq = "Select * FROM productos ";
-            StmtSq += "WHERE Tipo='"+Tipo.getValue()+"' AND Marca = '"+Marca.getValue()+"'";
-            try {   
-                Tabla.refresh();
-                productos.removeAll(productos);
-                Tabla.setItems(ObtenerProd(StmtSq));
-            } catch (SQLException ex) {
-                Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
-                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
-                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
-                log.SendLogReport(ex, msjHeader, msjText);
-            }
+            filtrar();
         });
         
         reset.setOnAction((ActionEvent e) -> { 
-            sqlStmt = "SELECT * FROM productos";
-            try {
-                Tabla.refresh();
-                productos.removeAll(productos);
-                Tabla.setItems(ObtenerProd(sqlStmt));
-                ReinicioTxtFields();
-            } catch (SQLException ex) {
-                Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
-                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
-                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
-                log.SendLogReport(ex, msjHeader, msjText);
-            }
+            Tabla.refresh();
+            productos.removeAll(productos);
+            ReinicioTxtFields();
+            iniciarComboBox();
         });//FIN RESET
         
         Eliminar.setOnAction((ActionEvent e) -> { 
@@ -708,18 +751,10 @@ public class ModificarAlmacenController implements Initializable {
                 if (result.get() == ButtonType.OK){
                     EliminarProd();
                 }         
-                try {
-                    resetStmt = "SELECT * FROM productos";
-                    Tabla.refresh();
-                    productos.removeAll(productos);
-                    Tabla.setItems(ObtenerProd(sqlStmt));
-                    ReinicioTxtFields();
-                } catch (SQLException ex) {
-                    Logger.getLogger(ModificarAlmacenController.class.getName()).log(Level.SEVERE, null, ex);
-                    String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
-                    String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
-                    log.SendLogReport(ex, msjHeader, msjText);
-                }
+                resetStmt = "SELECT * FROM productos";
+                Tabla.refresh();
+                productos.removeAll(productos);
+                ReinicioTxtFields();
             }
         });//FIN ELIMINAR
     }//Fin de INIT  
@@ -895,6 +930,15 @@ public class ModificarAlmacenController implements Initializable {
     }
     
     public void ReinicioTxtFields(){
+        cmbIdentificador.getSelectionModel().clearSelection();
+        cmbIdentificador.getItems().clear();
+        cmbModelo.getSelectionModel().clearSelection();
+        cmbModelo.getItems().clear();
+        cmbMarca.getSelectionModel().clearSelection();
+        cmbMarca.getItems().clear();
+        cmbTipo.getSelectionModel().clearSelection();
+        cmbTipo.getItems().clear();
+        
         IDTxt.setText("");
         MarcaTxt.setText("");
         ModeloTxt.setText("");
@@ -921,6 +965,7 @@ public class ModificarAlmacenController implements Initializable {
         BanDeleteImage = false;
         deshabilitar();
         ResetImagen();
+        buscar.clear();
     }
     
     public void deshabilitar(){
@@ -1031,5 +1076,95 @@ public class ModificarAlmacenController implements Initializable {
         }
     }
     
-    
+    public void filtrar(){
+        String queryFiltrar;  
+        int CmbNoNulos = 0;
+        if(cmbMarca.getValue() != null)
+            CmbNoNulos++;
+        if(cmbTipo.getValue() != null)
+            CmbNoNulos++;
+        if(cmbIdentificador.getValue() != null)
+            CmbNoNulos++;
+        if(cmbModelo.getValue() != null)
+            CmbNoNulos++;
+        System.out.println(CmbNoNulos);
+        if(cmbMarca.getValue() != null && cmbTipo.getValue() != null && cmbIdentificador.getValue() == null && cmbModelo.getValue() == null){
+            queryFiltrar = "Select * FROM productos ";
+            queryFiltrar += "WHERE Tipo='"+cmbTipo.getValue()+"' AND Marca = '"+cmbMarca.getValue()+"'";
+            System.out.println(queryFiltrar);
+            try {   
+                Tabla.refresh();
+                productos.removeAll(productos);
+                Tabla.setItems(ObtenerProd(queryFiltrar));
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultasController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡Error!";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        }
+        
+        if(cmbMarca.getValue() != null && cmbTipo.getValue() == null && cmbIdentificador.getValue() == null && cmbModelo.getValue() != null){
+            queryFiltrar = "Select * FROM productos ";
+            queryFiltrar += "WHERE Modelo='"+cmbModelo.getValue()+"' AND Marca = '"+cmbMarca.getValue()+"'";
+            System.out.println(queryFiltrar);
+            try {   
+                Tabla.refresh();
+                productos.removeAll(productos);
+                Tabla.setItems(ObtenerProd(queryFiltrar));
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultasController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡Error!";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        }
+        if(cmbMarca.getValue() == null && cmbTipo.getValue() != null && cmbIdentificador.getValue() != null && cmbModelo.getValue() == null){
+            queryFiltrar = "Select * FROM productos ";
+            queryFiltrar += "WHERE Tipo='"+cmbTipo.getValue()+"' AND Identificador = '"+cmbIdentificador.getValue()+"'";
+            System.out.println(queryFiltrar);
+            try {   
+                Tabla.refresh();
+                productos.removeAll(productos);
+                Tabla.setItems(ObtenerProd(queryFiltrar));
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultasController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡Error!";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        }
+        if(cmbMarca.getValue() != null && cmbTipo.getValue() != null && cmbIdentificador.getValue() != null && cmbModelo.getValue() != null){
+            queryFiltrar = "Select * FROM productos ";
+            queryFiltrar += "WHERE Tipo='"+cmbTipo.getValue()+"' AND Identificador = '"+cmbIdentificador.getValue()+"' ";
+            queryFiltrar += "AND Modelo='"+cmbModelo.getValue()+"' AND Marca = '"+cmbMarca.getValue()+"'";
+            System.out.println(queryFiltrar);
+            try {   
+                Tabla.refresh();
+                productos.removeAll(productos);
+                Tabla.setItems(ObtenerProd(queryFiltrar));
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultasController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡Error!";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        }
+        if(cmbMarca.getValue() != null && cmbTipo.getValue() != null && cmbIdentificador.getValue() != null && cmbModelo.getValue() == null){
+            queryFiltrar = "Select * FROM productos ";
+            queryFiltrar += "WHERE Tipo='"+cmbTipo.getValue()+"' AND Identificador = '"+cmbIdentificador.getValue()+"' ";
+            queryFiltrar += " AND Marca = '"+cmbMarca.getValue()+"'";
+            System.out.println(queryFiltrar);
+            try {   
+                Tabla.refresh();
+                productos.removeAll(productos);
+                Tabla.setItems(ObtenerProd(queryFiltrar));
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultasController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡Error!";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        }
+    }
 }

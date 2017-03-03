@@ -645,7 +645,8 @@ public class PrincipalController implements Initializable {
             obtenerParametros();
             if(cantidadproductos>0){
                 crearReporte();
-                sendMail.EnviarCorreoPDF();
+                sendMail.EnviarCorreo();
+                //sendMail.EnviarCorreoPDF();
             }
             else
                 sendMail.EnviarCorreo();
@@ -691,7 +692,8 @@ public class PrincipalController implements Initializable {
             obtenerParametros();
             if(cantidadproductos>0){
                 crearReporte();
-                sendMail.EnviarCorreoPDF();
+                sendMail.EnviarCorreo();
+                //sendMail.EnviarCorreoPDF();
             }
             else
                 sendMail.EnviarCorreo();

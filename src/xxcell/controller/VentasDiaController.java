@@ -152,7 +152,6 @@ public class VentasDiaController implements Initializable {
                     fecha = conn.setResult.getTimestamp("ventaFecha");
                     Format horaformatter = new SimpleDateFormat("k:mm");
                     hora = horaformatter.format(fecha);
-                    System.out.println(hora);
                     cantidadproductos = cantidadproductos + cantidad;
                     totalvendido = totalvendido + total;
                     detalles.add(new Detalles(folio, null, empleado, cantidad, total, null,hora));

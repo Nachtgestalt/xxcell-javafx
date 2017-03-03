@@ -43,7 +43,7 @@ public class EnvioCorreo {
             // Puerto de gmail para envio de correos
             props.setProperty("mail.smtp.port","587");
             // Nombre del usuario
-            props.setProperty("mail.smtp.user", "noaydeh@gmail.com");
+            props.setProperty("mail.smtp.user", user);
             // Si requiere o no usuario y password para conectarse.
             props.setProperty("mail.smtp.auth", "true");
             
@@ -53,9 +53,9 @@ public class EnvioCorreo {
             MimeMessage message = new MimeMessage(session);
             
             // Quien envia el correo
-            message.setFrom(new InternetAddress(destinatario));
+            message.setFrom(new InternetAddress(from));
             // A quien va dirigido
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress("noaydeh@hotmail.com"));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));
             message.setSubject("Cierre de Local " + Variables_Globales.localPublico);
             message.setText("Se cerro a las : " + formato.format(fechaHoy) +" " +formatohora.format(fechaHoy));
             

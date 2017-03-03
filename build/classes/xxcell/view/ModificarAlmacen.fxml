@@ -19,10 +19,12 @@
       <AnchorPane BorderPane.alignment="CENTER">
          <children>
             <JFXTextField fx:id="buscar" layoutX="14.0" layoutY="14.0" maxWidth="246.0" minWidth="246.0" prefHeight="30.0" prefWidth="250.0" promptText="Producto" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="15.0" />
-            <JFXComboBox fx:id="Marca" layoutX="25.0" layoutY="42.0" prefHeight="25.0" prefWidth="138.0" promptText="Marca" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="60.0" />
-            <JFXComboBox fx:id="Tipo" layoutX="223.0" layoutY="60.0" prefHeight="25.0" prefWidth="155.0" promptText="Tipo" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="60.0" />
-            <JFXButton fx:id="filtrar" alignment="CENTER" layoutX="585.0" layoutY="41.0" prefWidth="70.0" style="-fx-background-color: #FC80A5;" styleClass="text-button" text="Filtrar" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="450.0" AnchorPane.topAnchor="60.0" />
-            <JFXButton fx:id="reset" layoutX="1308.0" layoutY="48.0" prefWidth="70.0" style="-fx-background-color: #FC80A5;" styleClass="text-button" text="Reiniciar" textFill="#eeeeee" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="300.0" />
+            <JFXComboBox fx:id="cmbMarca" layoutX="25.0" layoutY="42.0" prefHeight="25.0" prefWidth="138.0" promptText="Marca" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="60.0" />
+            <JFXComboBox fx:id="cmbTipo" layoutX="223.0" layoutY="60.0" prefHeight="25.0" prefWidth="155.0" promptText="Tipo" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="385.0" AnchorPane.topAnchor="60.0" />
+            <JFXButton fx:id="filtrar" alignment="CENTER" layoutX="585.0" layoutY="41.0" prefWidth="70.0" style="-fx-background-color: #FC80A5;" styleClass="text-button" text="Filtrar" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="60.0" />
+            <JFXButton fx:id="reset" layoutX="1308.0" layoutY="48.0" prefWidth="70.0" style="-fx-background-color: #FC80A5;" styleClass="text-button" text="Reiniciar" textFill="#eeeeee" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="50.0" />
+            <JFXComboBox fx:id="cmbModelo" layoutX="470.0" layoutY="62.0" prefHeight="25.0" prefWidth="155.0" promptText="Modelo" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="200.0" />
+            <JFXComboBox fx:id="cmbIdentificador" layoutX="934.0" layoutY="62.0" prefHeight="25.0" prefWidth="155.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="570.0" />
          </children>
       </AnchorPane>
    </top>
