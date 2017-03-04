@@ -53,14 +53,14 @@ public class EstadisticasProductosController implements Initializable {
     @FXML
     private JFXButton btnAceptar;
 
-    //BarChart, muestrá de forma gráfica las estadisticas
+    //PieChart, muestrá de forma gráfica las estadisticas
     @FXML
     private PieChart pieChartProductos;
-    ObservableList<PieChart.Data> pieChartDataTipo = FXCollections.observableArrayList();
-    //BarChart
+    ObservableList<PieChart.Data> DataTipopieChart = FXCollections.observableArrayList();
+    //PieChart
     @FXML
     private PieChart pieChartMarca;
-    ObservableList<PieChart.Data> pieChartDataMarca = FXCollections.observableArrayList();
+    ObservableList<PieChart.Data> DataMarcapieChart = FXCollections.observableArrayList();
 
     //Tabla para mostrar el número de ventas que se realizo por producto
     @FXML
@@ -153,13 +153,13 @@ public class EstadisticasProductosController implements Initializable {
             }//Para evitar confusiones: ¡Fin While!    
         }
         for(int i = 0 ; i<dataProductosTipo.size() ; i++){
-            pieChartDataTipo.add(new PieChart.Data(dataProductosTipo.get(i).getTipo(), dataProductosTipo.get(i).getventasTotales()));      
+            DataTipopieChart.add(new PieChart.Data(dataProductosTipo.get(i).getTipo(), dataProductosTipo.get(i).getventasTotales()));      
         }
         for(int i = 0 ; i<dataProductosMarca.size() ; i++){
-            pieChartDataMarca.add(new PieChart.Data(dataProductosMarca.get(i).getMarca(), dataProductosMarca.get(i).getventasTotales()));      
+            DataMarcapieChart.add(new PieChart.Data(dataProductosMarca.get(i).getMarca(), dataProductosMarca.get(i).getventasTotales()));      
         }       
         int x;
-        pieChartDataTipo.forEach(data ->
+        DataTipopieChart.forEach(data ->
             data.nameProperty().bind(
                 Bindings.concat(
                     data.getName(), " ", data.pieValueProperty(), ""
@@ -167,7 +167,7 @@ public class EstadisticasProductosController implements Initializable {
             )
               
         );
-        pieChartDataMarca.forEach(data ->
+        DataMarcapieChart.forEach(data ->
             data.nameProperty().bind(
                 Bindings.concat(
                     data.getName(), " ", data.pieValueProperty(), ""
@@ -256,13 +256,13 @@ public class EstadisticasProductosController implements Initializable {
             }    
         }
         for(int i = 0 ; i<dataProductosTipo.size() ; i++){
-            pieChartDataTipo.add(new PieChart.Data(dataProductosTipo.get(i).getTipo(), dataProductosTipo.get(i).getventasTotales()));      
+            DataTipopieChart.add(new PieChart.Data(dataProductosTipo.get(i).getTipo(), dataProductosTipo.get(i).getventasTotales()));      
         }
         for(int i = 0 ; i<dataProductosMarca.size() ; i++){
-            pieChartDataMarca.add(new PieChart.Data(dataProductosMarca.get(i).getMarca(), dataProductosMarca.get(i).getventasTotales()));      
+            DataMarcapieChart.add(new PieChart.Data(dataProductosMarca.get(i).getMarca(), dataProductosMarca.get(i).getventasTotales()));      
         }       
         int x;
-        pieChartDataTipo.forEach(data ->
+        DataTipopieChart.forEach(data ->
             data.nameProperty().bind(
                 Bindings.concat(
                     data.getName(), " ", data.pieValueProperty(), ""
@@ -270,7 +270,7 @@ public class EstadisticasProductosController implements Initializable {
             )
               
         );
-        pieChartDataMarca.forEach(data ->
+        DataMarcapieChart.forEach(data ->
             data.nameProperty().bind(
                 Bindings.concat(
                     data.getName(), " ", data.pieValueProperty(), ""
@@ -383,10 +383,10 @@ public class EstadisticasProductosController implements Initializable {
                 //Inicializa la Tabla y piecharts
                 try {
                     tblProductos.setItems(ObtenerProd());
-                    pieChartMarca.setData(pieChartDataMarca);
+                    pieChartMarca.setData(DataMarcapieChart);
                     pieChartMarca.setLabelLineLength(10);
                     pieChartMarca.setLegendSide(Side.TOP);
-                    pieChartProductos.setData(pieChartDataTipo);
+                    pieChartProductos.setData(DataTipopieChart);
                     pieChartProductos.setLabelLineLength(10);
                     pieChartProductos.setLegendSide(Side.TOP);
                 } catch (SQLException ex) {
@@ -401,10 +401,10 @@ public class EstadisticasProductosController implements Initializable {
             try {
                 clearPieChart();
                 tblProductos.setItems(ObtenerProd());
-                pieChartMarca.setData(pieChartDataMarca);
+                pieChartMarca.setData(DataMarcapieChart);
                 pieChartMarca.setLabelLineLength(10);
                 pieChartMarca.setLegendSide(Side.TOP);
-                pieChartProductos.setData(pieChartDataTipo);
+                pieChartProductos.setData(DataTipopieChart);
                 pieChartProductos.setLabelLineLength(10);
                 pieChartProductos.setLegendSide(Side.TOP);
             } catch (SQLException ex) {
@@ -423,10 +423,13 @@ public class EstadisticasProductosController implements Initializable {
     
     public void clearPieChart(){
         productos.removeAll(productos);
-        pieChartDataTipo.removeAll(pieChartDataTipo);
-        pieChartProductos.setData(pieChartDataTipo);
-        pieChartDataMarca.removeAll(pieChartDataMarca);
-        pieChartMarca.setData(pieChartDataMarca);
+        
+        DataTipopieChart.removeAll(DataTipopieChart);
+        pieChartProductos.setData(DataTipopieChart);
+        
+        DataMarcapieChart.removeAll(DataMarcapieChart);
+        pieChartMarca.setData(DataMarcapieChart);
+        
         dataProductosMarca.removeAll(dataProductosMarca);
         dataProductosTipo.removeAll(dataProductosTipo);
     }
@@ -443,11 +446,6 @@ public class EstadisticasProductosController implements Initializable {
         DatePFin.setValue(null);
         DatePInicio.setValue(null);
         tblProductos.refresh();
-        productos.removeAll(productos);
-        pieChartDataTipo.removeAll(pieChartDataTipo);
-        pieChartProductos.setData(pieChartDataTipo);
-        pieChartMarca.setData(pieChartDataMarca);
-        dataProductosMarca.removeAll(dataProductosMarca);
-        dataProductosTipo.removeAll(dataProductosTipo);
+        clearPieChart();
     }
 }

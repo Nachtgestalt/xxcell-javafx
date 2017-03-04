@@ -12,8 +12,8 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="671.0" prefWidth="615.0" style="-fx-background-color: #93DFB8;" stylesheets="@../resources/AgregarProducto.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xxcell.controller.AgregarProductoController">
    <children>
-      <JFXButton fx:id="Agregar" layoutX="22.0" layoutY="594.0" prefHeight="45.0" prefWidth="75.0" style="-fx-background-color: #01786F;" styleClass="text-button" text="Agregar" textFill="#f2f2f2" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="20.0" />
-      <JFXButton fx:id="Cancelar" layoutX="315.0" layoutY="596.0" prefHeight="45.0" prefWidth="75.0" style="-fx-background-color: #FD5B78;" styleClass="text-button" text="Cancelar" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="30.0" />
+      <JFXButton fx:id="Agregar" layoutX="145.0" layoutY="600.0" prefHeight="45.0" prefWidth="75.0" style="-fx-background-color: #01786F;" styleClass="text-button" text="Agregar" textFill="#f2f2f2" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="145.0" />
+      <JFXButton fx:id="Cancelar" layoutX="372.0" layoutY="611.0" prefHeight="45.0" prefWidth="75.0" style="-fx-background-color: #FD5B78;" styleClass="text-button" text="Cancelar" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="375.0" />
       <JFXTextField fx:id="txtICodigo" alignment="CENTER" focusColor="#6b3298" layoutX="237.0" layoutY="24.0" promptText="Código" unFocusColor="#2fa166" AnchorPane.topAnchor="5.0" />
       <JFXTextField fx:id="txtMarca" focusColor="#fc5fad" layoutX="237.0" layoutY="68.0" promptText="Marca" unFocusColor="#2fa166" AnchorPane.topAnchor="40.0" />
       <JFXTextField fx:id="txtModelo" focusColor="#fd9f5c" layoutX="237.0" layoutY="123.0" promptText="Modelo" unFocusColor="#2fa166" AnchorPane.topAnchor="75.0" />
@@ -102,5 +102,6 @@
       <JFXButton fx:id="btnImageProducto" layoutX="429.0" layoutY="288.0" prefHeight="45.0" prefWidth="155.0" style="-fx-background-color: #01786F;" styleClass="text-button" text="Imagen" textFill="WHITE" AnchorPane.rightAnchor="30.0" />
       <JFXButton fx:id="btnResetImagen" layoutX="459.0" layoutY="366.0" prefHeight="45.0" prefWidth="155.0" style="-fx-background-color: #FD5B78;" styleClass="text-button" text="Borrar Imagen" AnchorPane.rightAnchor="30.0" />
       <JFXButton fx:id="btnGalery" layoutX="430.0" layoutY="445.0" prefHeight="45.0" prefWidth="155.0" style="-fx-background-color: #29AB87;" styleClass="text-button" text="Galeria" textFill="WHITE" AnchorPane.rightAnchor="30.0" />
+      <JFXButton fx:id="btnReiniciar" layoutX="237.0" layoutY="611.0" prefHeight="45.0" prefWidth="75.0" style="-fx-background-color: #29AB87;" styleClass="text-button" text="Reiniciar" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="260.0" />
    </children>
 </AnchorPane>

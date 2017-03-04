@@ -33,8 +33,7 @@ public class NominaEmpleadosController implements Initializable {
 
     //Varibales para las conexiones y los querys
     Conexion conn = new Conexion();
-    String qry = "SELECT * FROM empleado";
-    
+
     float TotalVenta, totalvendido = 0;
     
     Date fechaHoy = new Date();
@@ -45,8 +44,6 @@ public class NominaEmpleadosController implements Initializable {
     //Buttons
     @FXML
     private JFXButton ObtenerSalario;
-    @FXML
-    private JFXButton ImprimirNomina;
     
     //textfield
     @FXML
@@ -118,6 +115,7 @@ public class NominaEmpleadosController implements Initializable {
     
      //Función que obtendrá los objetos empleados para ingresarlos al tableview
     public ObservableList<Empleados> ObtenerEmpleados() throws SQLException{
+        String qry = "SELECT usuario, Nombre, Apellido, NumEmpleado, Nivel FROM empleado";
         String nom, apel, usuar;
         int numEmp;
                 
@@ -129,7 +127,9 @@ public class NominaEmpleadosController implements Initializable {
                 nom = conn.setResult.getString("Nombre");
                 apel = conn.setResult.getString("Apellido");
                 numEmp = conn.setResult.getInt("NumEmpleado");
-                empleados.add(new Empleados(usuar, nom, apel, numEmp, conn.setResult.getInt("Nivel")));
+                if(conn.setResult.getInt("Nivel") != 0){
+                    empleados.add(new Empleados(usuar, nom, apel, numEmp, conn.setResult.getInt("Nivel")));
+                }
             }
         }
         return empleados;
@@ -155,7 +155,6 @@ public class NominaEmpleadosController implements Initializable {
         STSQL +=        "ON tblventadetalle.productoCodigo = productos.ID ";
         STSQL += "AND tblventas.NumEmpleado = '"+aux.getNumEmp()+"' ";
         STSQL += "WHERE tblventas.ventaFecha BETWEEN '"+FechaInit+"' and '"+FinalFecha.plusDays(1)+"'";
-        System.out.println(STSQL);
         if(conn.QueryExecute(STSQL))
         {
             while (conn.setResult.next())
@@ -168,7 +167,7 @@ public class NominaEmpleadosController implements Initializable {
                     folio = conn.setResult.getInt("ventaFolio");
                     codigo = conn.setResult.getString("ID");
                     cantidad = conn.setResult.getInt("ventaCantidad");
-                    total = (conn.setResult.getFloat("productoPrecio"))*cantidad;
+                    total = conn.setResult.getFloat("productoPrecio");
                     cantidadproductos = cantidadproductos + cantidad;
                     totalvendido = totalvendido + total;
                     cadena = aux.getNombre();
@@ -200,7 +199,7 @@ public class NominaEmpleadosController implements Initializable {
             mensaje += "¡Error! Seleccione un empleado\n ";
         }
         if(!flag){
-            Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
+            Alert incompleteAlert = new Alert(Alert.AlertType.ERROR);
             incompleteAlert.setTitle("Nomimas");
             incompleteAlert.setHeaderText(null);
             incompleteAlert.setContentText(mensaje);
@@ -226,14 +225,13 @@ public class NominaEmpleadosController implements Initializable {
                     sueldo += conn.setResult.getFloat("DiaExtra");
                 }
                 cantidadMeta = conn.setResult.getInt("NumVentas");
-                if(cantidadproductos > cantidadMeta){
+                if(cantidadproductos >= cantidadMeta){
                     lblPorcentaje.setText(".04%");
                     sueldo = (totalvendido * conn.setResult.getFloat("ComisionMeta")) + sueldo;
-                    
                 }
                 else{
                     lblPorcentaje.setText(".02%");               
-                    sueldo = (totalvendido * conn.setResult.getFloat("ComisionBase"))+sueldo; 
+                    sueldo = (totalvendido * conn.setResult.getFloat("ComisionBase"))+sueldo;
                 }
                 sueldo = sueldo + conn.setResult.getFloat("Base");
                 sueldo = sueldo - descuento;
@@ -308,11 +306,10 @@ public class NominaEmpleadosController implements Initializable {
         TablaEmpleados.setOnMousePressed(new EventHandler<MouseEvent>() {
              @Override 
              public void handle(MouseEvent event) {
-                if (event.isPrimaryButtonDown() && event.getClickCount() == 1) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                     if(TablaEmpleados.getSelectionModel().getSelectedItem() != null ){
                         aux = TablaEmpleados.getSelectionModel().getSelectedItem();
                         try {
-                            
                             if(FechaInicial.getValue() == null && FechaFinal.getValue() == null){
                                 lblError.setText("Seleccione las fechas");
                             }
@@ -320,8 +317,10 @@ public class NominaEmpleadosController implements Initializable {
                                 lblError.setText("");
                                 TablaVentas.refresh();
                                 detalles.removeAll(detalles);
+                                cantidadproductos = 0;
+                                TotalVenta = 0;
+                                totalvendido = 0;
                                 TablaVentas.setItems(ObtenerDetalles());
-                               Salario(); 
                             }
                         } catch (SQLException ex) {
                             Logger.getLogger(ConsultasController.class.getName()).log(Level.SEVERE, null, ex);
@@ -352,7 +351,6 @@ public class NominaEmpleadosController implements Initializable {
         
     }//FIN INITIALIZE      
     
-        //FUNCIÓN PARA VALIDAR SI LOS DATOS INGRESADOS EN "MERCANCIA ENTRANTE, Y LOS 3 LOCALES SON NUMEROS
     boolean esnumero (String x)
     {  
         double number = 0;

@@ -79,6 +79,8 @@ public class AgregarProductoController implements Initializable {
     private JFXButton btnResetImagen;
     @FXML
     private JFXButton btnGalery;
+    @FXML
+    private JFXButton btnReiniciar;
     
     //Image View
     @FXML
@@ -395,6 +397,11 @@ public class AgregarProductoController implements Initializable {
         btnResetImagen.setOnAction((ActionEvent e) -> {       
             ResetImagen();
         });
+        
+        btnReiniciar.setOnAction((ActionEvent e) -> {       
+            inicializa();
+            ResetImagen();
+        });
 
         btnGalery.setOnAction((ActionEvent e) -> {       
             try {
@@ -462,7 +469,7 @@ public class AgregarProductoController implements Initializable {
                 //SI EL ID YA EXISTE EN LA BASE DE DATOS cancela el alta.
                 if(conn.setResult.first()) {
                     String mensaje = "¡El ID de Producto ya existe! \n";
-                    Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
+                    Alert incompleteAlert = new Alert(Alert.AlertType.ERROR);
                     incompleteAlert.setTitle("Gestión de Productos");
                     incompleteAlert.setHeaderText(null);
                     incompleteAlert.setContentText(mensaje);
@@ -522,11 +529,11 @@ public class AgregarProductoController implements Initializable {
                         incompleteAlert.setContentText(mensaje);
                         incompleteAlert.initOwner(Agregar.getScene().getWindow());
                         incompleteAlert.showAndWait();
-                        inicializa();
+                        //inicializa();
                         ResetImagen();
                     }else{
                         String mensaje = "Producto NO PUDO SER añadido \n";
-                        Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
+                        Alert incompleteAlert = new Alert(Alert.AlertType.ERROR);
                         incompleteAlert.setTitle("Gestión de Productos");
                         incompleteAlert.setHeaderText(null);
                         incompleteAlert.setContentText(mensaje);
@@ -596,7 +603,7 @@ public class AgregarProductoController implements Initializable {
     }
     
     private void inicializa(){
-        /*
+        
         txtCosto.setText("");
         txtDisponible.setText("");
         txtICodigo.setText("");
@@ -611,7 +618,7 @@ public class AgregarProductoController implements Initializable {
         TFL64.setText("");
         DescTxt.setText("");
         lblCantidadID.setText("");
-        txtICodigo.requestFocus();*/
+        txtICodigo.requestFocus();
     }
     
     private UnaryOperator<Change> getFilter() {
