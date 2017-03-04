@@ -37,6 +37,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import javax.imageio.ImageIO;
@@ -283,16 +284,16 @@ public class AltaEmpleadoController implements Initializable {
                 if(flag){       
                     AgregarSQL();
                 } else {
+                    incompleteAlert.setTitle("Error al agregar empleado");
+                    incompleteAlert.setHeaderText(null);
+                    incompleteAlert.initOwner(Agregar.getScene().getWindow());
+                    incompleteAlert.setContentText("Hubo un error al agregar empleado");
+                    incompleteAlert.showAndWait();
                     flag = true;
                 }
                     
             } catch (SQLException ex) {
                 Logger.getLogger(AltaEmpleadoController.class.getName()).log(Level.SEVERE, null, ex);
-                incompleteAlert.setTitle("Error al agregar empleado");
-                incompleteAlert.setHeaderText(null);
-                incompleteAlert.initOwner(Agregar.getScene().getWindow());
-                incompleteAlert.setContentText("Hubo un error al agregar empleado");
-                incompleteAlert.showAndWait();
             }
             //Stage stage;
             //stage = (Stage) Agregar.getScene().getWindow();
@@ -382,6 +383,7 @@ public class AltaEmpleadoController implements Initializable {
         else{
             alert.setTitle("Error");
             alert.setHeaderText("Error en la alta de Empleado");
+            alert.initOwner(Agregar.getScene().getWindow());
             alert.setContentText("El 'Número de Empleado' o el 'Nombre de Usuario' ya han sido registrados.");
             alert.showAndWait();
         }
