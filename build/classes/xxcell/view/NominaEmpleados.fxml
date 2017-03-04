@@ -32,11 +32,13 @@
          <bottom>
             <HBox prefHeight="34.0" prefWidth="600.0" BorderPane.alignment="CENTER">
                <children>
-                  <JFXButton fx:id="ObtenerSalario" text="Obtener Salario" />
-                  <JFXButton fx:id="ImprimirNomina" prefHeight="25.0" prefWidth="129.0" text="Imprimir Nomina" />
-                  <Label prefHeight="21.0" prefWidth="551.0" text="Nota: Debe seleccionar el día de descanso, sino se le pagará un día extra al trabajador." textFill="RED">
+                  <JFXButton fx:id="ObtenerSalario" prefWidth="300.0" style="-fx-background-color: #33ccff;" text="Obtener Salario">
                      <HBox.margin>
-                        <Insets left="200.0" top="5.0" />
+                        <Insets bottom="5.0" left="25.0" top="5.0" />
+                     </HBox.margin></JFXButton>
+                  <Label prefHeight="21.0" prefWidth="850.0" text="Nota: Debe seleccionar el día de descanso, sino se le pagará un día extra al trabajador." textFill="RED">
+                     <HBox.margin>
+                        <Insets left="50.0" top="5.0" />
                      </HBox.margin>
                      <font>
                         <Font size="14.0" />
@@ -83,8 +85,14 @@
          <top>
             <AnchorPane prefHeight="33.0" prefWidth="800.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label layoutX="269.0" layoutY="6.0" prefHeight="17.0" prefWidth="78.0" text="Fecha de  Hoy" />
-                  <Label fx:id="lblFechaFin" layoutX="387.0" layoutY="6.0" prefHeight="17.0" prefWidth="104.0" text="Final" />
+                  <Label layoutX="269.0" layoutY="6.0" prefHeight="20.0" prefWidth="109.0" text="Fecha de  Hoy" textAlignment="JUSTIFY">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Label>
+                  <Label fx:id="lblFechaFin" layoutX="387.0" layoutY="6.0" prefHeight="17.0" prefWidth="104.0" text="Final" textAlignment="JUSTIFY">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Label>
                </children>
             </AnchorPane>
          </top>

@@ -91,7 +91,8 @@ public class EstadisticasProductosController implements Initializable {
                 + "ON productos.ID = tblventadetalle.productoCodigo "
                 + "INNER JOIN tblventas "
                 + "ON tblventas.ventaFolio = tblventadetalle.ventaFolio "
-                + "WHERE tblventas.ventaFecha BETWEEN '"+FechaInit+"' and '"+FinalFecha.plusDays(1)+"'";
+                + "WHERE tblventas.ventaFecha BETWEEN '"+FechaInit+"' and '"+FinalFecha.plusDays(1)+"' "
+                + "ORDER BY tblventadetalle.ventaCantidad DESC ";
         System.out.println(STSQL);
         boolean acceselse, accesMarca, accessTipo;
         String Mod, Marc, DI, Nom, Tip;   
