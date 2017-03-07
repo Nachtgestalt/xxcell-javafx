@@ -1,6 +1,5 @@
 package xxcell.controller;
 
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -166,5 +165,4 @@ public class LoginController implements Initializable {
     public static Scene getScene() {
         return scene;
     }
-    
 }

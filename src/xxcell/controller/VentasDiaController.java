@@ -123,14 +123,17 @@ public class VentasDiaController implements Initializable {
     
     //Funcion usada para obtener los datos y llenar las tablas, 
     //localBtn - Se usa para saber desde que local se quiere acceder
+    //origen - Se usa para distinguir si se ocupa el llenado de la tabla detalles o la tabla descripcion
     public ObservableList<Detalles> ObtenerDetalles(String localBtn, boolean origen, int numFolio, LocalDate fechaSeleccionada) throws SQLException{
         String codigo, empleado = null, STSQL, TooltipText, Local;
         String fechaFormat = null;
         String hora = null;
         int folio = 0, cantidad, cantidadproductos = 0;
+        int cantidadTotal = 0;
         float total, totalvendido = 0;
         Timestamp fecha;
-                
+        
+        //Llena la tabla detalles
         if(!origen){
             if(localBtn.equals("1")){
                 Local = Variables_Globales.local; 
@@ -138,7 +141,12 @@ public class VentasDiaController implements Initializable {
                 Local = localBtn;
             }
             
-            STSQL = "SELECT * FROM tblventas ";
+            STSQL = "SELECT tblventas.ventaFolio, tblventas.NumEmpleado, "
+                    + "tblventadetalle.ventaCantidad, tblventas.ventaImporte, "
+                    + "tblventas.ventaFecha, tblventas.ventaProductos "
+                    + "FROM tblventas"
+                    +   " INNER JOIN tblventadetalle "
+                    +   "ON tblventadetalle.ventaFolio = tblventas.ventaFolio ";
             STSQL += "WHERE tblventas.ventaFecha > '"+fechaSeleccionada+"' ";
             STSQL += "AND tblventas.ventaFecha < '"+fechaSeleccionada.plusDays(1)+"'"
                     + "AND tblventas.NumLocal = '"+Local+"' ";
@@ -148,6 +156,7 @@ public class VentasDiaController implements Initializable {
                     folio = conn.setResult.getInt("ventaFolio");
                     empleado = conn.setResult.getString("NumEmpleado");
                     cantidad = conn.setResult.getInt("ventaProductos");
+                    cantidadTotal += conn.setResult.getInt("ventaCantidad");
                     total = (conn.setResult.getFloat("ventaImporte"));
                     fecha = conn.setResult.getTimestamp("ventaFecha");
                     Format horaformatter = new SimpleDateFormat("k:mm");
@@ -156,13 +165,13 @@ public class VentasDiaController implements Initializable {
                     totalvendido = totalvendido + total;
                     detalles.add(new Detalles(folio, null, empleado, cantidad, total, null,hora));
                 }
-                lblCantidad.setText(String.valueOf(cantidadproductos));
+                lblCantidad.setText(String.valueOf(cantidadTotal));
                 lblTotal.setText(String.valueOf("$ "+totalvendido));
                 formato = new SimpleDateFormat("EEEE d MMMM yyyy");
                 lblFecha.setText(Variables_Globales.local+" - "+formato.format(fechaHoy));
             }
             return detalles;
-        } else {
+        } else {    //Llena la tabla descripcion
             STSQL =  "SELECT tblventas.ventaFolio, tblventas.NumEmpleado,tblventas.ventaFecha, "
                     + "tblventas.ventaImporte, ";
             STSQL += "tblventadetalle.productoPrecio, tblventadetalle.ventaCantidad, ";

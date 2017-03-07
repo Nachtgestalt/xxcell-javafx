@@ -21,7 +21,7 @@ public class EnvioCorreo {
     String user = "noaydeh@gmail.com";
     String pass = "lacrimamosa123";
     String from = "noaydeh@gmail.com";
-    String destinatario = "nachtgestalt06@gmail.com";
+    String destinatario = "noaydeh@hotmail.com";
     
     long TInicio, TFin, tiempo; //Variables para determinar el tiempo de ejecución
     

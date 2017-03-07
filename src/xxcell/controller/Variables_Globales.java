@@ -12,7 +12,7 @@ public class Variables_Globales {
     static Productos producto;
     static Empleados empleado;
     static Distribuidores BusquedaDistribuidor = new Distribuidores();
-    static String local = "L127";
+    static String local = "L58";
     static String Columna;
-    public static String localPublico = "L127";
+    public static String localPublico = "L58";
 }

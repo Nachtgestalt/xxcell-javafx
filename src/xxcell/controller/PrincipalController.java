@@ -644,7 +644,7 @@ public class PrincipalController implements Initializable {
         if (result.get() == ButtonType.OK){
             obtenerParametros();
             if(cantidadproductos>0){
-                crearReporte();
+                //crearReporte();
                 sendMail.EnviarCorreo();
                 //sendMail.EnviarCorreoPDF();
             }
@@ -739,6 +739,7 @@ public class PrincipalController implements Initializable {
         SimpleDateFormat formato = new SimpleDateFormat("yy-MM-dd");
         Map parametro = new HashMap();
         Conexion conn = new Conexion();
+        String local = Variables_Globales.localPublico;
         
         //Parametros para llenar Jasper
         parametro.put("Local", Variables_Globales.local);
@@ -749,6 +750,6 @@ public class PrincipalController implements Initializable {
 
         JasperReport myreport = (JasperReport) JRLoader.loadObjectFromFile("src/xxcell/Reportes/ReporteDia.jasper");
         JasperPrint myPrint = JasperFillManager.fillReport(myreport, parametro, conn.JasperConexion());
-        JasperExportManager.exportReportToPdfFile(myPrint, "src/xxcell/Reportes/VentaDia_58_"+ formato.format(fechaHoy) +".pdf");
+        JasperExportManager.exportReportToPdfFile(myPrint, "src/xxcell/Reportes/VentaDia_"+local+"_"+ formato.format(fechaHoy) +".pdf");
     }
 }

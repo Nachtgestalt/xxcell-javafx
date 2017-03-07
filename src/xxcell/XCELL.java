@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package xxcell;
 
 import com.jfoenix.controls.JFXDecorator;
@@ -17,16 +12,13 @@ import javafx.stage.Stage;
 
 public class XCELL extends Application {
     private Stage primaryStage;
-
     private StackPane mainLayout;
     
     @Override
     public void start(Stage stage) throws Exception {
         this.primaryStage = stage;
         this.primaryStage.setTitle("XXCELL");
-
         showLoginView();        
-
     }
     
     private void showLoginView() throws IOException{
@@ -46,7 +38,4 @@ public class XCELL extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
-    
-    
 }
