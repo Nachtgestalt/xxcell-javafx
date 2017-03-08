@@ -11,7 +11,7 @@ public class EstadisticasUtilidadController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        
     }    
     
 }

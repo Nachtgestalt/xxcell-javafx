@@ -688,19 +688,19 @@ public class PrincipalController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.get() == ButtonType.OK){
-            TInicio = System.currentTimeMillis(); /*  Creación de Log en caso de fallo  */
-            obtenerParametros();
+            //TInicio = System.currentTimeMillis(); /*  Creación de Log en caso de fallo  */
+            //obtenerParametros();
             if(cantidadproductos>0){
-                crearReporte();
+                //crearReporte();
                 sendMail.EnviarCorreo();
                 //sendMail.EnviarCorreoPDF();
             }
             else
                 sendMail.EnviarCorreo();
-            TFin = System.currentTimeMillis();
+            /*TFin = System.currentTimeMillis();
             tiempo = TFin - TInicio;
             System.out.println("Tiempo de ejecución en milisegundos: " + tiempo);
-            borderPane.getScene().getWindow().hide();
+            borderPane.getScene().getWindow().hide();*/
         }         
     }
     

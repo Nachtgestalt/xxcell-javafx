@@ -95,7 +95,13 @@ public class Productos {
         this.Marca = new SimpleStringProperty(Marca);
         this.ventasTotales = new SimpleIntegerProperty(Ventas);
     }
-
+    
+    //Constructor para la Tabla AgregarPromociones del Promociones.fxml
+    public Productos(String Codigo, String Nombre){
+        this.ID = new SimpleStringProperty(Codigo);
+        this.Nombre = new SimpleStringProperty(Nombre);
+    }
+    
     public String getID() {
         return ID.get();
     }

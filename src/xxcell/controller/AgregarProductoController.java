@@ -230,7 +230,9 @@ public class AgregarProductoController implements Initializable {
         
         //Botón Reset imagen
         Cancelar.setOnAction((ActionEvent e) -> {       
-            ResetImagen();
+            Stage stage;
+            stage = (Stage) btnGalery.getScene().getWindow();
+            stage.close();
         }); 
         
         //Botón Agregar

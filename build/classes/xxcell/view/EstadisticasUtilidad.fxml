@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.AreaChart?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.NumberAxis?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
 
 
-<AreaChart fx:id="areaChartUtilidad" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xxcell.controller.EstadisticasUtilidadController">
-  <xAxis>
-    <CategoryAxis side="BOTTOM" />
-  </xAxis>
-  <yAxis>
-    <NumberAxis side="LEFT" />
-  </yAxis>
-</AreaChart>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #b9d3ee;" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <JFXDatePicker defaultColor="#001e8f" layoutX="14.0" layoutY="14.0" promptText="Fehcha Inicial" />
+      <JFXDatePicker defaultColor="#001e8f" layoutX="237.0" layoutY="14.0" />
+      <Label layoutX="18.0" layoutY="97.0" prefHeight="47.0" prefWidth="177.0" text="Label" />
+   </children>
+</AnchorPane>
