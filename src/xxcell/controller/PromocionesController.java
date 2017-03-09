@@ -22,7 +22,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import xxcell.Conexion.Conexion;
@@ -34,13 +36,13 @@ public class PromocionesController implements Initializable {
     Conexion conn = new Conexion();
     
     @FXML
-    private JFXTextField txtCodigo;
+    private JFXTextField txtCodigoPromo;
 
     @FXML
     private JFXTextField txtPrecio;
 
     @FXML
-    private JFXButton btnBuscar;
+    private JFXTextField txtCodigo;
 
     @FXML
     private JFXButton btnCancelar;
@@ -73,39 +75,11 @@ public class PromocionesController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
         TextFormatter<String> txtFormatterICodigo = new TextFormatter<>(getFilter());
-        txtCodigo.setTextFormatter(txtFormatterICodigo);
+        txtCodigoPromo.setTextFormatter(txtFormatterICodigo);
         
         tblProductos.setPlaceholder(new Label("---XXCELL---"));
         colCodigo.setCellValueFactory(cellData -> cellData.getValue().idProperty());
         colProducto.setCellValueFactory(cellData -> cellData.getValue().nombreProperty());
-        
-        btnBuscar.setOnAction((ActionEvent e) -> {
-            Parent principal;
-            String CodigoProducto, nombre;
-            try {
-                principal = FXMLLoader.load(getClass().getResource("/xxcell/view/BusquedaVenta.fxml"));
-                Stage principalStage = new Stage();
-                scene = new Scene(principal);
-                principalStage.getIcons().add(new Image("/xxcell/Images/XXCELL450.png"));
-                principalStage.setScene(scene);
-                principalStage.initModality(Modality.APPLICATION_MODAL);
-                principalStage.initOwner(btnAgregar.getScene().getWindow());
-                principalStage.showAndWait(); 
-                if(Variables_Globales.BusquedaVenta.getID() != null)
-                {
-                    CodigoProducto = Variables_Globales.BusquedaVenta.getID();
-                    nombre = Variables_Globales.BusquedaVenta.getMarca();
-                    nombre += " " + Variables_Globales.BusquedaVenta.getModelo();
-                    nombre += " " + Variables_Globales.BusquedaVenta.getTipo();
-                    nombre += " " + Variables_Globales.BusquedaVenta.getNombre();
-                    productos.add(new Productos (CodigoProducto, nombre));
-                    tblProductos.refresh();
-                    tblProductos.setItems(productos);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(PromocionesController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
         
         btnAgregar.setOnAction((ActionEvent e) -> {
             boolean flag = true;
@@ -118,7 +92,7 @@ public class PromocionesController implements Initializable {
             else
                 lblErrorPromo.setText("");
             
-            if(txtCodigo.getText().length() == 0 || txtCodigo.getText().length() > 15) {
+            if(txtCodigoPromo.getText().length() == 0 || txtCodigoPromo.getText().length() > 15) {
                 lblErrorPrecio.setText("Tipo debe ser mayor a 0 y Menor a 15 caracteres");
                 flag = false;
             }
@@ -132,7 +106,7 @@ public class PromocionesController implements Initializable {
             else
                 lblErrorTabla.setText("");
             
-            queryCodigoPromo = "Select * from promociones where CodigoPromocion = '"+txtCodigo.getText()+"'";
+            queryCodigoPromo = "Select * from promociones where CodigoPromocion = '"+txtCodigoPromo.getText()+"'";
             conn.QueryExecute(queryCodigoPromo);
             try {
                 if(conn.setResult.first()) {
@@ -171,7 +145,7 @@ public class PromocionesController implements Initializable {
             query = "INSERT INTO promociones "
                 + "(CodigoPromocion, PrecioPromocion, CodigoProducto) "
                 + "VALUES "
-                + "('"+ txtCodigo.getText() +"', '"+preciopromocion+"', '"+productos.get(i).getID()+"')";
+                + "('"+ txtCodigoPromo.getText() +"', '"+preciopromocion+"', '"+productos.get(i).getID()+"')";
             preciopromocion = 0;
             if(conn.QueryUpdate(query)){
                 accesosValidos++;
@@ -208,10 +182,65 @@ public class PromocionesController implements Initializable {
     }
     
     public void limpiarVentana(){
-        txtCodigo.clear();
+        txtCodigoPromo.clear();
         txtPrecio.clear();
         tblProductos.refresh();
         productos.removeAll(productos);
+    }
+    
+    @FXML
+    void MPressedTxtCodigo(MouseEvent event) throws IOException {
+        if (event.getClickCount() == 2) {
+            Parent principal;
+            String CodigoProducto, nombre;
+            principal = FXMLLoader.load(getClass().getResource("/xxcell/view/BusquedaVenta.fxml"));
+            Stage principalStage = new Stage();
+            scene = new Scene(principal);
+            principalStage.setScene(scene);
+            principalStage.initModality(Modality.APPLICATION_MODAL);
+            principalStage.initOwner(btnAgregar.getScene().getWindow());
+            principalStage.showAndWait(); 
+            if(Variables_Globales.BusquedaVenta.getID() != null){
+                CodigoProducto = Variables_Globales.BusquedaVenta.getID();
+                nombre = Variables_Globales.BusquedaVenta.getMarca();
+                nombre += " " + Variables_Globales.BusquedaVenta.getModelo();
+                nombre += " " + Variables_Globales.BusquedaVenta.getTipo();
+                nombre += " " + Variables_Globales.BusquedaVenta.getNombre();
+                productos.add(new Productos (CodigoProducto, nombre));
+                tblProductos.refresh();
+                tblProductos.setItems(productos);
+                Variables_Globales.BusquedaVenta = new Productos();
+            }
+        }
+    }
+        
+    @FXML
+    void KeyPressedTxtCodigo(KeyEvent event) throws IOException {       
+        if(event.getCode() == KeyCode.F10){
+            Parent principal;
+            String CodigoProducto, nombre;
+            principal = FXMLLoader.load(getClass().getResource("/xxcell/view/BusquedaVenta.fxml"));
+            Stage principalStage = new Stage();
+            scene = new Scene(principal);
+            principalStage.setScene(scene);
+            principalStage.initModality(Modality.APPLICATION_MODAL);
+            principalStage.initOwner(btnAgregar.getScene().getWindow());
+            principalStage.showAndWait(); 
+            if(Variables_Globales.BusquedaVenta.getID() != null){
+                CodigoProducto = Variables_Globales.BusquedaVenta.getID();
+                nombre = Variables_Globales.BusquedaVenta.getMarca();
+                nombre += " " + Variables_Globales.BusquedaVenta.getModelo();
+                nombre += " " + Variables_Globales.BusquedaVenta.getTipo();
+                nombre += " " + Variables_Globales.BusquedaVenta.getNombre();
+                productos.add(new Productos (CodigoProducto, nombre));
+                tblProductos.refresh();
+                tblProductos.setItems(productos);
+                Variables_Globales.BusquedaVenta = new Productos();
+            }
+        }
+        if(event.getCode() == KeyCode.ENTER){ 
+            
+        }
     }
     
     //FUNCIÓN PARA VALIDAR SI LOS DATOS INGRESADOS EN "MERCANCIA ENTRANTE, Y LOS 3 LOCALES SON NUMEROS

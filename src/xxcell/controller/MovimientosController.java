@@ -36,7 +36,7 @@ public class MovimientosController implements Initializable {
     private JFXButton btnSalidas;
     
      @FXML
-    private JFXButton btnMostrarPrestamos;
+    private JFXButton btnMostrarPromos;
 
     @FXML
     private JFXButton btnAgregarPromos;
@@ -76,7 +76,24 @@ public class MovimientosController implements Initializable {
                 Logger.getLogger(MovimientosController.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-        });  
+        }); 
+        
+        btnMostrarPromos.setOnAction((ActionEvent e) -> {       
+            Parent principal;
+            try {
+                principal = FXMLLoader.load(getClass().getResource("/xxcell/view/VerPromociones.fxml"));
+                Stage principalStage = new Stage();
+                scene = new Scene(principal);
+                principalStage.getIcons().add(new Image("/xxcell/Images/XXCELL450.png"));
+                principalStage.setScene(scene);
+                principalStage.initModality(Modality.APPLICATION_MODAL);
+                principalStage.initOwner(btnPrestamos.getScene().getWindow());
+                principalStage.showAndWait(); 
+            } catch (IOException ex) {
+                Logger.getLogger(MovimientosController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }); 
         
         btnSalidas.setOnAction((ActionEvent e) -> {       
             Parent principal;

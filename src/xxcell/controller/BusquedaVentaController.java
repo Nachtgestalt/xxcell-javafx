@@ -175,6 +175,7 @@ public class BusquedaVentaController implements Initializable {
         Platform.runLater(() -> {
             window = btnFiltrar.getScene().getWindow();             
             log = new LogReport(window);
+            txtModelo.requestFocus();
         });
         
         iniciarComboBox();

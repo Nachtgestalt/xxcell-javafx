@@ -102,6 +102,13 @@ public class Productos {
         this.Nombre = new SimpleStringProperty(Nombre);
     }
     
+    //Constructor para la Tabla Promos del VerPromociones.fxml
+    public Productos(String Codigo, String Nombre, double Precio){
+        this.ID = new SimpleStringProperty(Codigo);
+        this.Nombre = new SimpleStringProperty(Nombre);
+        this.PrecioPub = new SimpleDoubleProperty(Precio);
+    }
+    
     public String getID() {
         return ID.get();
     }

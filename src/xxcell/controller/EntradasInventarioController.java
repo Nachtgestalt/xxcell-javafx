@@ -26,7 +26,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyCode;
@@ -39,11 +38,7 @@ import xxcell.Conexion.Conexion;
 import static xxcell.controller.LoginController.scene;
 import xxcell.model.Productos;
 
-/**
- * FXML Controller class
- *
- * @author snak0
- */
+
 public class EntradasInventarioController implements Initializable {
    
     @FXML
@@ -142,8 +137,10 @@ public class EntradasInventarioController implements Initializable {
             principalStage.initModality(Modality.APPLICATION_MODAL);
             principalStage.initOwner(btnAgregar.getScene().getWindow());
             principalStage.showAndWait(); 
-            if(Variables_Globales.BusquedaVenta.getID() != null)
+            if(Variables_Globales.BusquedaVenta.getID() != null){
                 txtCodigo.setText(Variables_Globales.BusquedaVenta.getID());
+                Variables_Globales.BusquedaVenta = new Productos();
+            }
         }
     }
     
@@ -187,7 +184,7 @@ public class EntradasInventarioController implements Initializable {
                 Variables_Globales.BusquedaVenta = new Productos();
             }
         }
-        if(event.getCode() == KeyCode.ENTER){
+        if(event.getCode() == KeyCode.ENTER){ 
             query = "SELECT * FROM productos WHERE ID = '"+txtCodigo.getText()+"'";
             conn.QueryExecute(query);
             try {
