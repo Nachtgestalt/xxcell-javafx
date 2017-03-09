@@ -699,8 +699,8 @@ public class PrincipalController implements Initializable {
                 sendMail.EnviarCorreo();
             /*TFin = System.currentTimeMillis();
             tiempo = TFin - TInicio;
-            System.out.println("Tiempo de ejecución en milisegundos: " + tiempo);
-            borderPane.getScene().getWindow().hide();*/
+            System.out.println("Tiempo de ejecución en milisegundos: " + tiempo);*/
+            borderPane.getScene().getWindow().hide();
         }         
     }
     

@@ -40,8 +40,9 @@ import javafx.scene.input.MouseEvent;
 public class VentasDiaController implements Initializable {
 
     Conexion conn = new Conexion();
-    Date fechaHoy = new Date();
-    SimpleDateFormat formato;
+    Conexion connCuenta = new Conexion();
+    LocalDate fechaHoy =  LocalDate.now();
+    DateTimeFormatter formato;
     LocalDate today = LocalDate.now();
     LocalDate tomorrow = today.plusDays(1);
     String local = Variables_Globales.local;
@@ -128,7 +129,7 @@ public class VentasDiaController implements Initializable {
         String codigo, empleado = null, STSQL, TooltipText, Local;
         String fechaFormat = null;
         String hora = null;
-        int folio = 0, cantidad, cantidadproductos = 0;
+        int folio = 0, cantidad, cantidadDetalle, cantidadproductos = 0;
         int cantidadTotal = 0;
         float total, totalvendido = 0;
         Timestamp fecha;
@@ -149,26 +150,26 @@ public class VentasDiaController implements Initializable {
                     +   "ON tblventadetalle.ventaFolio = tblventas.ventaFolio ";
             STSQL += "WHERE tblventas.ventaFecha > '"+fechaSeleccionada+"' ";
             STSQL += "AND tblventas.ventaFecha < '"+fechaSeleccionada.plusDays(1)+"'"
-                    + "AND tblventas.NumLocal = '"+Local+"' ";
+                    + "AND tblventas.NumLocal = '"+Local+"' "
+                    + "GROUP BY ventaFolio";
             
             if(conn.QueryExecute(STSQL)) {
                 while (conn.setResult.next()) {
                     folio = conn.setResult.getInt("ventaFolio");
                     empleado = conn.setResult.getString("NumEmpleado");
                     cantidad = conn.setResult.getInt("ventaProductos");
-                    cantidadTotal += conn.setResult.getInt("ventaCantidad");
                     total = (conn.setResult.getFloat("ventaImporte"));
                     fecha = conn.setResult.getTimestamp("ventaFecha");
                     Format horaformatter = new SimpleDateFormat("k:mm");
                     hora = horaformatter.format(fecha);
-                    cantidadproductos = cantidadproductos + cantidad;
+                    cantidadTotal += getCantidadDetalle(folio);
                     totalvendido = totalvendido + total;
                     detalles.add(new Detalles(folio, null, empleado, cantidad, total, null,hora));
                 }
                 lblCantidad.setText(String.valueOf(cantidadTotal));
                 lblTotal.setText(String.valueOf("$ "+totalvendido));
-                formato = new SimpleDateFormat("EEEE d MMMM yyyy");
-                lblFecha.setText(Variables_Globales.local+" - "+formato.format(fechaHoy));
+                formato = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy");
+                lblFecha.setText(Local+" - "+formato.format(fechaSeleccionada));
             }
             return detalles;
         } else {    //Llena la tabla descripcion
@@ -218,6 +219,21 @@ public class VentasDiaController implements Initializable {
         }
     }
     
+    private int getCantidadDetalle(int folio) throws SQLException{
+        String query;
+        int cantidadDetalle = 0;
+        
+        query = "SELECT tblventadetalle.ventaCantidad FROM tblventadetalle "
+                + "WHERE tblventadetalle.ventaFolio = '"+folio+"' ";
+        
+        if(connCuenta.QueryExecute(query)) {
+            while (connCuenta.setResult.next()){
+                cantidadDetalle += connCuenta.setResult.getInt("ventaCantidad");
+            }
+        }
+        return cantidadDetalle;
+    }
+    
     
     
     @Override
@@ -253,7 +269,7 @@ public class VentasDiaController implements Initializable {
             btnL64.setDisable(true);
         }
         
-        formato = new SimpleDateFormat("EEEE d MMMM yyyy");
+        formato = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy");
         lblFecha.setText(Variables_Globales.local+" - "+formato.format(fechaHoy));
                 
         colCantidadDetalle.setCellValueFactory(cellData -> cellData.getValue().CantidadProperty());
@@ -294,7 +310,7 @@ public class VentasDiaController implements Initializable {
                 local = btnL64.getAccessibleText();
                 DateTimeFormatter dateFormato = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy");
                 LocalDate fechalocal = dateSeleccion.getValue();
-                lblFecha.setText("L64 "+" - "+dateFormato.format(fechalocal));
+                lblFecha.setText("L64"+" - "+dateFormato.format(fechalocal));
                 inicializar();
                 tblDescripcion.refresh();
                 descripcion.clear();
@@ -311,7 +327,7 @@ public class VentasDiaController implements Initializable {
                 local = btnL127.getAccessibleText();
                 DateTimeFormatter dateFormato = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy");
                 LocalDate fechalocal = dateSeleccion.getValue();
-                lblFecha.setText("L127 "+" - "+dateFormato.format(fechalocal));
+                lblFecha.setText("L127"+" - "+dateFormato.format(fechalocal));
                 inicializar();
                 tblDescripcion.refresh();
                 descripcion.clear();
@@ -351,7 +367,7 @@ public class VentasDiaController implements Initializable {
         descripcion.clear();
         tblDetalle.refresh();
         detalles.removeAll(detalles);
-        tblDetalle.setItems(ObtenerDetalles(local,false,0,dateSeleccion.getValue()));
+        tblDetalle.setItems(ObtenerDetalles("1",false,0,dateSeleccion.getValue()));
     }
     
     @FXML

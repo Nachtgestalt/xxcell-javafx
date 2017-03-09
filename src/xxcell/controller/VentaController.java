@@ -1016,7 +1016,7 @@ public class VentaController implements Initializable {
                         total = Double.valueOf(lblTotal.getText()) + Double.valueOf(importe);
                         lblTotal.setText(formateador.format(total));
                     }
-                } else {
+                } else { //Aqui va el query de busqueda en tblpromocions
                     alert = new Alert(AlertType.ERROR);
                     alert.setTitle("Producto no encontrado");
                     alert.setHeaderText(null);
