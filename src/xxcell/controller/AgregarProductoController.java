@@ -24,8 +24,10 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -693,114 +695,15 @@ public class AgregarProductoController implements Initializable {
     }
     
     public void MostrarGaleria() throws SQLException, IOException{
-
-        ScrollPane root = new ScrollPane();
-        TilePane tile = new TilePane();
-        tile.setPadding(new Insets(5, 5, 5, 5));
-        tile.setHgap(10);
-        tile.setVgap(10);
-        String query = "Select * from galeria";
-        
-        //Variables para las Imagenes
-        Blob blob;
-        byte[] data;
-        BufferedImage img;
-        WritableImage image;
-        String Nombre;
-        //*************************
-        
-        conn.QueryExecute(query);
-        while(conn.setResult.next()) {
-            blob = conn.setResult.getBlob("Imagen");
-            Nombre = conn.setResult.getString("NombreImagen");   
-            if(blob != null){
-                data = blob.getBytes(1, (int)blob.length());
-                try{
-                    img = ImageIO.read(new ByteArrayInputStream(data));
-                    image = SwingFXUtils.toFXImage(img, null);                   
-                    ImageView imageView = new ImageView(image);
-                    imageView.setId(Nombre);
-                    imageView.setImage(image);
-                    
-                    if(image.getHeight()>image.getWidth()){
-                        imageView.setFitWidth(100);
-                        imageView.setFitHeight(200);
-                    }
-                    if(image.getHeight()<image.getWidth()){
-                        imageView.setFitWidth(200);
-                        imageView.setFitHeight(100);
-                    }
-                    if(image.getHeight()==image.getWidth()){
-                        imageView.setFitWidth(200);
-                        imageView.setFitHeight(200);
-                    }
-                    String Name = Nombre;
-                    imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                        
-                        @Override
-                        public void handle(MouseEvent mouseEvent) {
-                            if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-                                
-                            }
-                        }
-                    });               
-                    tile.getChildren().add(imageView);
-                }catch(IOException ex){
-                    Logger.getLogger(ModificarEmpleadoController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-        
-       /* Button btnseleccionar = new Button("Seleccionar");
-        btnseleccionar.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
-        btnseleccionar.setTranslateX(10);
-        btnseleccionar.setTranslateY(20);
-        btnseleccionar.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-            }
-        });
-        
-        Button btneliminar = new Button("Eliminar");
-        btneliminar.setStyle("-fx-font: 22 arial; -fx-base: #9C2542;");
-        btnseleccionar.setTranslateX(10);
-        btnseleccionar.setTranslateY(20);
-        btneliminar.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                String mensaje;
-                Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
-                incompleteAlert.setTitle("Eliminar Producto");
-                incompleteAlert.setHeaderText(null);
-                String query = "DELETE FROM productos"
-                        + "WHERE NombreImagen = <Nombre>";
-                if(conn.QueryUpdate(query)){
-                    mensaje = "Imagen se ha eliminado \n";
-                    incompleteAlert.setContentText(mensaje);
-                    incompleteAlert.initOwner(btnGalery.getScene().getWindow());
-                    incompleteAlert.showAndWait();
-                }
-                else{
-                    mensaje = "Imagen no se ha podido eliminar \n";
-                    incompleteAlert.setContentText(mensaje);
-                    incompleteAlert.initOwner(btnGalery.getScene().getWindow());
-                    incompleteAlert.showAndWait();
-                }
-            }
-        });
-        tile.getChildren().add(btnseleccionar);
-        tile.getChildren().add(btneliminar);
-*/
-        root.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // Horizontal
-        root.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Vertical scroll bar
-        root.setFitToWidth(true);
-        root.setContent(tile);
-        
-        scene = new Scene(root);
+        Parent principal;
+        principal = FXMLLoader.load(getClass().getResource("/xxcell/view/Galery.fxml"));
+        Stage principalStage = new Stage();
+        principalStage.getIcons().add(new Image("/xxcell/Images/XXCELL450.png"));
+        scene = new Scene(principal);
         principalStage.setScene(scene);
-        principalStage.initModality(Modality.APPLICATION_MODAL);
-        principalStage.initOwner(btnGenerarCodigo.getScene().getWindow());
+        principalStage.initModality(Modality.WINDOW_MODAL);
+        principalStage.setResizable(false);
+        principalStage.initOwner(btnGalery.getScene().getWindow());
         principalStage.showAndWait(); 
     }
 }

@@ -7,7 +7,7 @@
    <children>
       <JFXButton fx:id="btnPrestamos" layoutX="55.0" layoutY="50.0" prefHeight="160.0" prefWidth="210.0" ripplerFill="#ffbf00" style="-fx-background-color: #F4BA51;" styleClass="text-button" stylesheets="@../resources/sidemenu.css" text="Prestamos" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="50.0" />
       <JFXButton fx:id="btnSalidas" accessibleText="Salidas" layoutX="284.0" layoutY="32.0" prefHeight="160.0" prefWidth="210.0" ripplerFill="#ffbf00" style="-fx-background-color: #b47360;" styleClass="text-button" stylesheets="@../resources/sidemenu.css" text="Salidas" AnchorPane.leftAnchor="350.0" AnchorPane.topAnchor="50.0" />
-      <JFXButton fx:id="btnMostrarPrestamos" layoutX="73.0" layoutY="270.0" prefHeight="160.0" prefWidth="210.0" style="-fx-background-color: #A17A74;" styleClass="text-button" stylesheets="@../resources/sidemenu.css" text="Mostrar Promociones" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="250.0" />
+      <JFXButton fx:id="btnMostrarPromos" layoutX="73.0" layoutY="270.0" prefHeight="160.0" prefWidth="210.0" style="-fx-background-color: #A17A74;" styleClass="text-button" stylesheets="@../resources/sidemenu.css" text="Mostrar Promociones" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="250.0" />
       <JFXButton fx:id="btnAgregarPromos" layoutX="350.0" layoutY="250.0" prefHeight="160.0" prefWidth="210.0" style="-fx-background-color: #E6BC5C;" styleClass="text-button" stylesheets="@../resources/sidemenu.css" text="Agregar promocion" AnchorPane.leftAnchor="350.0" AnchorPane.topAnchor="250.0" />
    </children>
 </AnchorPane>

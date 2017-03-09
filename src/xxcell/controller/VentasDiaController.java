@@ -143,11 +143,9 @@ public class VentasDiaController implements Initializable {
             }
             
             STSQL = "SELECT tblventas.ventaFolio, tblventas.NumEmpleado, "
-                    + "tblventadetalle.ventaCantidad, tblventas.ventaImporte, "
+                    + "tblventas.ventaImporte, "
                     + "tblventas.ventaFecha, tblventas.ventaProductos "
-                    + "FROM tblventas"
-                    +   " INNER JOIN tblventadetalle "
-                    +   "ON tblventadetalle.ventaFolio = tblventas.ventaFolio ";
+                    + "FROM tblventas ";
             STSQL += "WHERE tblventas.ventaFecha > '"+fechaSeleccionada+"' ";
             STSQL += "AND tblventas.ventaFecha < '"+fechaSeleccionada.plusDays(1)+"'"
                     + "AND tblventas.NumLocal = '"+Local+"' "

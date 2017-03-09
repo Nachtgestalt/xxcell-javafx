@@ -1,16 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #0081AB;" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xxcell.controller.GaleryController">
-   <children>
-      <ImageView fx:id="ImageCentral" fitHeight="210.0" fitWidth="315.0" layoutX="141.0" layoutY="14.0" pickOnBounds="true" smooth="false" AnchorPane.leftAnchor="140.0" AnchorPane.rightAnchor="145.0" AnchorPane.topAnchor="10.0" />
-      <ImageView fx:id="ImageUno" fitHeight="150.0" fitWidth="130.0" layoutX="112.0" layoutY="236.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" />
-      <ImageView fx:id="ImageDos" fitHeight="150.0" fitWidth="130.0" layoutX="221.0" layoutY="236.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="235.0" />
-      <ImageView fx:id="ImageTres" fitHeight="150.0" fitWidth="130.0" layoutX="343.0" layoutY="236.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="100.0" />
-      <Button fx:id="btnSiguiente" layoutX="522.0" layoutY="299.0" mnemonicParsing="false" text="Siguiente" AnchorPane.rightAnchor="20.0" />
-      <Button fx:id="btnAnterior" layoutX="27.0" layoutY="299.0" mnemonicParsing="false" text="Anterior" AnchorPane.leftAnchor="20.0" />
-   </children>
-</AnchorPane>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xxcell.controller.GaleryController">
+   <center>
+      <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #0081AB;" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="ImageCentral" fitHeight="400.0" fitWidth="350.0" layoutX="166.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" smooth="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="166.0" AnchorPane.rightAnchor="84.0" AnchorPane.topAnchor="10.0" />
+            <JFXButton fx:id="btnAbrirImagen" layoutX="14.0" layoutY="14.0" onAction="#abrirImagenAction" ripplerFill="BLACK" style="-fx-background-color: #BFAFB2;" text="Abrir imagen" AnchorPane.leftAnchor="20.0" />
+         </children>
+      </AnchorPane>
+   </center>
+   <left>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <TableView fx:id="tblImages" layoutX="-14.0" layoutY="47.0" onMousePressed="#TblMoussePressed" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <columns>
+                <TableColumn fx:id="colNombre" prefWidth="199.0" text="Imagenes" />
+              </columns>
+            </TableView>
+         </children>
+      </AnchorPane>
+   </left>
+   <bottom>
+      <AnchorPane prefHeight="86.0" prefWidth="780.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets right="20.0" />
+         </BorderPane.margin>
+         <children>
+            <ButtonBar buttonMinWidth="90.0" layoutX="550.0" layoutY="18.0" prefHeight="50.0" prefWidth="230.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="0.0">
+              <buttons>
+                <Button fx:id="btnEliminar" minHeight="50.0" minWidth="90.0" mnemonicParsing="false" onAction="#actionBtnEliminar" text="Eliminar" />
+                  <Button fx:id="btnAgregar" minHeight="50.0" minWidth="90.0" mnemonicParsing="false" onAction="#actionBtnAgregar" text="Agregar" />
+              </buttons>
+            </ButtonBar>
+            <JFXTextField fx:id="txtNameofImage" labelFloat="true" prefHeight="40.0" prefWidth="523.0" promptText="Nombre de la imagen" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
+         </children>
+      </AnchorPane>
+   </bottom>
+</BorderPane>

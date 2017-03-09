@@ -94,12 +94,12 @@ public class AlmacenController implements Initializable {
     @FXML
     void ActionGaleria(ActionEvent event) throws IOException {
         Parent principal;
-        principal = FXMLLoader.load(getClass().getResource("/xxcell/view/Backup.fxml"));
+        principal = FXMLLoader.load(getClass().getResource("/xxcell/view/Galery.fxml"));
         Stage principalStage = new Stage();
         principalStage.getIcons().add(new Image("/xxcell/Images/XXCELL450.png"));
         scene = new Scene(principal);
         principalStage.setScene(scene);
-        principalStage.initModality(Modality.APPLICATION_MODAL);
+        principalStage.initModality(Modality.WINDOW_MODAL);
         principalStage.setResizable(false);
         principalStage.initOwner(AgregProd.getScene().getWindow());
         principalStage.showAndWait(); 
