@@ -26,21 +26,16 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -75,8 +70,6 @@ public class AgregarProductoController implements Initializable {
     private JFXButton Cancelar;
     @FXML
     private JFXButton btnGenerarCodigo;
-    @FXML
-    private JFXButton btnImageProducto;
     @FXML
     private JFXButton btnResetImagen;
     @FXML
@@ -226,9 +219,6 @@ public class AgregarProductoController implements Initializable {
         TFL64.setTextFormatter(new TextFormatter<String>(formatter,"",filter));
         TFL58.setTextFormatter(new TextFormatter<String>(formatter,"",filter));
         txtDisponible.setTextFormatter(new TextFormatter<String>(formatter,"",filter));
-
-        //Botón Seleccionar Imagen
-        btnImageProducto.setOnAction(btnLoadEventListener);
         
         //Botón Reset imagen
         Cancelar.setOnAction((ActionEvent e) -> {       
@@ -631,61 +621,7 @@ public class AgregarProductoController implements Initializable {
             change.setText(text.toUpperCase());
             return change;
         };
-    }
-    
-    //Manejador de eventos para seleccion de imagen Foto
-    EventHandler<ActionEvent> btnLoadEventListener
-    = new EventHandler<ActionEvent>(){
- 
-        @Override
-        public void handle(ActionEvent t) {
-            FileChooser fileChooser = new FileChooser();
-             
-            //Set extension filter
-            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
-            FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
-            FileChooser.ExtensionFilter JPEG = new FileChooser.ExtensionFilter("JPEG files (*.jpeg)", "*.JPEG");
-            fileChooser.getExtensionFilters().addAll(JPEG, extFilterJPG, extFilterPNG);
-              
-            //Show open file dialog
-            file = fileChooser.showOpenDialog(Cancelar.getScene().getWindow());
-            if(file == null){
-                String mensaje = "No ha seleccionado ninguna Imagen/Foto \n";
-                Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
-                incompleteAlert.setTitle("Imagen de Producto");
-                incompleteAlert.setHeaderText(null);
-                incompleteAlert.setContentText(mensaje);
-                incompleteAlert.initOwner(Cancelar.getScene().getWindow());
-                incompleteAlert.showAndWait();
-            }
-            else {
-                try {
-                    fin = new FileInputStream(file);
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(AltaEmpleadoController.class.getName()).log(Level.SEVERE, null, ex);
-                    /*  Creación de Log en caso de fallo  */
-                    String msjHeader = "¡Error con Archivo! ¡Archivo no Encontrado!";
-                    String msjText = "Copiar y mandarlo por correo ó mensaje";
-                    log.SendLogReport(ex, msjHeader, msjText);
-                }         
-                BufferedImage bufferedImage = null;
-                try {
-                    bufferedImage = ImageIO.read(file);
-                } catch (IOException ex) {
-                    Logger.getLogger(AltaEmpleadoController.class.getName()).log(Level.SEVERE, null, ex);
-                    /*  Creación de Log en caso de fallo  */
-                    String msjHeader = "¡IO Exception / Buffered Image!";
-                    String msjText = "Copiar y mandarlo por correo ó mensaje";
-                    log.SendLogReport(ex, msjHeader, msjText);
-                }
-                WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
-                ImgViewProducto.autosize();
-                ImgViewProducto.setImage(image);
-                BanderaImagen = true;
-            }
-        }
-    };
-    
+    }    
     
     public void ResetImagen() {
         BanderaImagen = false;
@@ -695,8 +631,15 @@ public class AgregarProductoController implements Initializable {
     }
     
     public void MostrarGaleria() throws SQLException, IOException{
+        String nombre, query;
+        //Variables para las Imagenes
+        Blob blob;
+        byte[] data;
+        BufferedImage img;
+        WritableImage image;
+        
         Parent principal;
-        principal = FXMLLoader.load(getClass().getResource("/xxcell/view/Galery.fxml"));
+        principal = FXMLLoader.load(getClass().getResource("/xxcell/view/GaleriaAgregarProducto.fxml"));
         Stage principalStage = new Stage();
         principalStage.getIcons().add(new Image("/xxcell/Images/XXCELL450.png"));
         scene = new Scene(principal);
@@ -705,5 +648,24 @@ public class AgregarProductoController implements Initializable {
         principalStage.setResizable(false);
         principalStage.initOwner(btnGalery.getScene().getWindow());
         principalStage.showAndWait(); 
+        if(Variables_Globales.nameImage != null){
+            nombre = Variables_Globales.nameImage;
+            query = "Select galeria.Imagen FROM galeria "
+                        + "WHERE NombreImagen = '"+nombre+"'";
+            System.out.println(query);
+            if(conn.QueryExecute(query)){
+                System.out.println("Holis se hizo el query "+query);
+                while(conn.setResult.next()) {
+                    blob = conn.setResult.getBlob("Imagen");
+                    if(blob != null){
+                        data = blob.getBytes(1, (int)blob.length());
+                        img = ImageIO.read(new ByteArrayInputStream(data));
+                        image = SwingFXUtils.toFXImage(img, null);  
+                        ImgViewProducto.setImage(image);
+                        BanderaImagen = true;
+                    }
+                }
+            }    
+        }
     }
 }

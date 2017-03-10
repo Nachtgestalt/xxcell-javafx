@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xxcell.controller.GaleryController">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xxcell.controller.GaleriaAgregarProductoController">
    <center>
       <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #0081AB;" BorderPane.alignment="CENTER">
          <children>
@@ -39,8 +39,8 @@
          <children>
             <ButtonBar buttonMinWidth="90.0" layoutX="550.0" layoutY="18.0" prefHeight="50.0" prefWidth="230.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="0.0">
               <buttons>
-                <Button fx:id="btnEliminar" disable="true" minHeight="50.0" minWidth="90.0" mnemonicParsing="false" onAction="#actionBtnEliminar" text="Eliminar" />
-                  <Button fx:id="btnAgregar" disable="true" minHeight="50.0" minWidth="90.0" mnemonicParsing="false" onAction="#actionBtnAgregar" text="Agregar" />
+                  <Button fx:id="btnGuardarImagen" disable="true" minHeight="50.0" minWidth="90.0" mnemonicParsing="false" onAction="#actionBtnGuardarImagen" text="Guardar &#10;Imagen" />
+                  <Button fx:id="btnAceptar" disable="true" minHeight="50.0" minWidth="90.0" mnemonicParsing="false" onAction="#actionBtnAceptar" text="Aceptar" />
               </buttons>
             </ButtonBar>
             <JFXTextField fx:id="txtNameofImage" labelFloat="true" prefHeight="40.0" prefWidth="523.0" promptText="Nombre de la imagen" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />

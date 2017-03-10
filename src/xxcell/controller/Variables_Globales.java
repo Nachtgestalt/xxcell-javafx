@@ -1,5 +1,6 @@
 package xxcell.controller;
 
+import javafx.scene.image.Image;
 import xxcell.model.Distribuidores;
 import xxcell.model.Empleados;
 import xxcell.model.Productos;
@@ -15,4 +16,5 @@ public class Variables_Globales {
     static String local = "L58";
     static String Columna;
     public static String localPublico = "L58";
+    public static String nameImage;
 }

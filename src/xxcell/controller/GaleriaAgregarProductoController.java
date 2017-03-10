@@ -38,9 +38,8 @@ import javax.imageio.ImageIO;
 import xxcell.Conexion.Conexion;
 import xxcell.model.Imagenes;
 
-public class GaleryController implements Initializable {
-
-    Stage stage;
+public class GaleriaAgregarProductoController implements Initializable {
+Stage stage;
     Stage primaryStage;
     
     @FXML
@@ -53,10 +52,10 @@ public class GaleryController implements Initializable {
     private TableColumn<Imagenes, String> colNombre;
 
     @FXML
-    private Button btnEliminar;
+    private Button btnGuardarImagen;
 
     @FXML
-    private Button btnAgregar;
+    private Button btnAceptar;
     
     @FXML
     private JFXButton btnAbrirImagen;
@@ -85,6 +84,7 @@ public class GaleryController implements Initializable {
         
         try {
             tblImages.setItems(ObtenerImagenes());
+            //cargarGaleria();
         } catch (SQLException ex) {
             Logger.getLogger(GaleryController.class.getName()).log(Level.SEVERE, null, ex);
         }  
@@ -115,8 +115,8 @@ public class GaleryController implements Initializable {
         WritableImage image;
         
         if(event.isPrimaryButtonDown()) {
-            btnAgregar.setDisable(true);
-            btnEliminar.setDisable(false);
+            btnGuardarImagen.setDisable(true);
+            btnAceptar.setDisable(false);
             System.out.println("Holis apretaste el click");
             if(tblImages.getSelectionModel().getSelectedItem() != null ){
                 //ImageCentral = null;
@@ -146,6 +146,7 @@ public class GaleryController implements Initializable {
     void abrirImagenAction(ActionEvent event) {
         
         tblImages.getSelectionModel().clearSelection();
+        btnAceptar.setDisable(true);
         String query;
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter JPG = new FileChooser.ExtensionFilter("JPEG files (*.jpg)", "*.JPG");
@@ -154,17 +155,15 @@ public class GaleryController implements Initializable {
         WritableImage image = null;
         ImageCentral.setImage(image);
         
-        btnEliminar.setDisable(true);
-        
         //Show open file dialog
-        file = fileChooser.showOpenDialog(btnAgregar.getScene().getWindow());
+        file = fileChooser.showOpenDialog(btnAbrirImagen.getScene().getWindow());
         if(file == null){
             String mensaje = "No ha seleccionado ninguna Imagen/Foto \n";
             Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
             incompleteAlert.setTitle("Imagen de Producto");
             incompleteAlert.setHeaderText(null);
             incompleteAlert.setContentText(mensaje);
-            incompleteAlert.initOwner(btnAgregar.getScene().getWindow());
+            incompleteAlert.initOwner(btnAbrirImagen.getScene().getWindow());
             incompleteAlert.showAndWait();
         }
         else {
@@ -191,13 +190,13 @@ public class GaleryController implements Initializable {
             ImageCentral.autosize();
             ImageCentral.setImage(image);
             BanderaImagen = true;
-            btnAgregar.setDisable(false);
+            btnGuardarImagen.setDisable(false);
             txtNameofImage.requestFocus();
         }
     }
    
     @FXML
-    void actionBtnAgregar(ActionEvent event) throws SQLException {
+    void actionBtnGuardarImagen(ActionEvent event) throws SQLException {
         String nombre;
         String query;
         Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -232,33 +231,6 @@ public class GaleryController implements Initializable {
         }
     }
 
-    @FXML
-    void actionBtnEliminar(ActionEvent event) throws SQLException {
-        String nombre = "";
-        Imagenes images;
-        String query;
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        images = tblImages.getSelectionModel().getSelectedItem();
-        
-        if(images != null)
-            nombre = images.getName();
-        else{
-            alert.setHeaderText("No es posible eliminar");
-            alert.setContentText("No se ha seleccionado una imagen");
-            alert.initOwner(btnAgregar.getScene().getWindow());
-            alert.showAndWait();
-        }
-        
-        query = "DELETE FROM galeria WHERE NombreImagen = '"+nombre+"'";
-        if(conn.QueryUpdate(query)){
-            alert.setHeaderText("Eliminada");
-            alert.setContentText("Imagen eliminada");
-            alert.initOwner(btnAgregar.getScene().getWindow());
-            alert.showAndWait();
-            limpiarGaleria();
-        }
-    }
-
     private void limpiarGaleria() throws SQLException{
         tblImages.refresh();
         imagenes.removeAll(imagenes);
@@ -266,8 +238,22 @@ public class GaleryController implements Initializable {
         WritableImage image = null;
         ImageCentral.setImage(image);  
         txtNameofImage.setText("");
-        btnAgregar.setDisable(true);
-        btnEliminar.setDisable(true);
+        btnGuardarImagen.setDisable(true);
+    }
+    
+    @FXML
+    void actionBtnAceptar(ActionEvent event) {
+        Imagenes images;
+        String nombre;
+        if(tblImages.getSelectionModel().getSelectedItem() != null ){
+                //ImageCentral = null;
+            images = tblImages.getSelectionModel().getSelectedItem();
+            Variables_Globales.nameImage = images.getName();
+            Stage stage;
+            stage = (Stage) tblImages.getScene().getWindow();
+            stage.close();
+        }
+        
     }
     
     private void cargarGaleria() throws SQLException, IOException{
