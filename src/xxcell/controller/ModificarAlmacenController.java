@@ -938,6 +938,7 @@ public class ModificarAlmacenController implements Initializable {
         cmbMarca.getItems().clear();
         cmbTipo.getSelectionModel().clearSelection();
         cmbTipo.getItems().clear();
+        iniciarComboBox();
         
         IDTxt.setText("");
         MarcaTxt.setText("");

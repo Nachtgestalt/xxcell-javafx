@@ -563,6 +563,7 @@ public class VentaController implements Initializable {
                             Logger.getLogger(VentaController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
+                    conn.setResult.close();
                     tblProductos.setItems(ObtenerProd(flagDistribuidor));
                     Variables_Globales.BusquedaVenta = new Productos();
                 } catch (SQLException ex) {
@@ -611,11 +612,12 @@ public class VentaController implements Initializable {
                         + "\n Reinicie la venta e ingrese primero el codigo.");
                 alert.showAndWait();
             }
+            conn.setResult.close();
         } 
     }
         
     @FXML
-    void ActionIniciar(ActionEvent event) {
+    void ActionIniciar(ActionEvent event) throws SQLException {
         String qry;
         String cadena;
         TextInputDialog dialog = new TextInputDialog("Numero de Empleado");
@@ -652,7 +654,7 @@ public class VentaController implements Initializable {
             } else
                 System.out.println("No es número");
         }
-        
+        conn.setResult.close();      
     }
     
     @FXML
@@ -1061,7 +1063,6 @@ public class VentaController implements Initializable {
         } catch (SQLException e){
                 //JOptionPane.showMessageDialog(rootPane, "getFolioVenta: "+e.getMessage().toString());
         }
-
         return result;
     }
     

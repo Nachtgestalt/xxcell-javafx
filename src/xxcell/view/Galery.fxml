@@ -40,7 +40,7 @@
             <ButtonBar buttonMinWidth="90.0" layoutX="550.0" layoutY="18.0" prefHeight="50.0" prefWidth="230.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="0.0">
               <buttons>
                 <Button fx:id="btnEliminar" minHeight="50.0" minWidth="90.0" mnemonicParsing="false" onAction="#actionBtnEliminar" text="Eliminar" />
-                  <Button fx:id="btnAgregar" minHeight="50.0" minWidth="90.0" mnemonicParsing="false" onAction="#actionBtnAgregar" text="Agregar" />
+                  <Button fx:id="btnAgregar" disable="true" minHeight="50.0" minWidth="90.0" mnemonicParsing="false" onAction="#actionBtnAgregar" text="Agregar" />
               </buttons>
             </ButtonBar>
             <JFXTextField fx:id="txtNameofImage" labelFloat="true" prefHeight="40.0" prefWidth="523.0" promptText="Nombre de la imagen" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />

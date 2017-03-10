@@ -187,6 +187,7 @@ public class GaleryController implements Initializable {
                 ImageCentral.autosize();
                 ImageCentral.setImage(image);
                 BanderaImagen = true;
+                btnAgregar.setDisable(false);
             }
 
     }
@@ -204,6 +205,16 @@ public class GaleryController implements Initializable {
             conn.preparedStatement(query);
             conn.stmt.setString(1, nombre);
             conn.stmt.setBinaryStream(2, fin,(int)file.length());
+            int succes = conn.stmt.executeUpdate();
+            if(succes == 1){
+                String mensaje = "Imagen Añadida \n";
+                incompleteAlert.setTitle("Galeria de imagenes");
+                incompleteAlert.setHeaderText(null);
+                incompleteAlert.setContentText(mensaje);
+                incompleteAlert.initOwner(btnAbrirImagen.getScene().getWindow());
+                incompleteAlert.showAndWait();
+                limpiarGaleria();
+            }    
         }
         else{
             String mensaje = "Cargue una imagen y escriba un nombre para ella.\n";
@@ -214,17 +225,6 @@ public class GaleryController implements Initializable {
             incompleteAlert.showAndWait();
             txtNameofImage.requestFocus();
         }
-            
-        int succes = conn.stmt.executeUpdate();
-        if(succes == 1){
-            String mensaje = "Imagen Añadida \n";
-            incompleteAlert.setTitle("Galeria de imagenes");
-            incompleteAlert.setHeaderText(null);
-            incompleteAlert.setContentText(mensaje);
-            incompleteAlert.initOwner(btnAbrirImagen.getScene().getWindow());
-            incompleteAlert.showAndWait();
-            limpiarGaleria();
-        }    
     }
 
     @FXML
