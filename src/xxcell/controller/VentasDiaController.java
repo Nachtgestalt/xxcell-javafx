@@ -31,9 +31,9 @@ import java.util.Optional;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 
@@ -352,6 +352,24 @@ public class VentasDiaController implements Initializable {
                 tblDescripcion.setItems(ObtenerDetalles("", true,folio,today));
             else
                 tblDescripcion.setItems(ObtenerDetalles("", true,folio,dateSeleccion.getValue()));
+        }
+    }
+    
+    @FXML
+    void tblDetallesKeyPressed(KeyEvent event) throws SQLException {
+        int cantidad;
+        int folio; 
+        if(tblDetalle.getSelectionModel().getSelectedItem() != null){
+            if(event.getCode() == KeyCode.UP || event.getCode() == KeyCode.DOWN)
+                aux = tblDetalle.getSelectionModel().getSelectedItem();
+                folio = aux.getFolio();
+                cantidad = aux.getCantidad();
+                tblDescripcion.refresh();
+                descripcion.clear();
+                if(dateSeleccion.getValue().equals(today))
+                    tblDescripcion.setItems(ObtenerDetalles("", true,folio,today));
+                else
+                    tblDescripcion.setItems(ObtenerDetalles("", true,folio,dateSeleccion.getValue()));
         }
     }
     
