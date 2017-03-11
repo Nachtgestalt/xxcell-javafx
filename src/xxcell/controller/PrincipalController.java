@@ -692,11 +692,11 @@ public class PrincipalController implements Initializable {
             //obtenerParametros();
             if(cantidadproductos>0){
                 //crearReporte();
-                //sendMail.EnviarCorreo();
+                sendMail.EnviarCorreo();
                 //sendMail.EnviarCorreoPDF();
             }
             else
-                //sendMail.EnviarCorreo();
+                sendMail.EnviarCorreo();
             /*TFin = System.currentTimeMillis();
             tiempo = TFin - TInicio;
             System.out.println("Tiempo de ejecución en milisegundos: " + tiempo);*/

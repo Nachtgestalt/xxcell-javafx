@@ -38,18 +38,19 @@ public class PopUpImagenController implements Initializable {
         BufferedImage img;
         WritableImage image;
         //*************************
-        String query = "SELECT imagenProducto FROM productos WHERE ID = '"+Variables_Globales.producto.getID()+"'";
+        String query = "SELECT Imagen FROM galeria WHERE NombreImagen = '"+Variables_Globales.producto.getNombreImagen()+"'";
+        System.out.println(query);
         conn.QueryExecute(query);
         try {
             if(conn.setResult.first()) {
-                blob = conn.setResult.getBlob("ImagenProducto");
+                blob = conn.setResult.getBlob("Imagen");
                 if(blob != null){
                     data = blob.getBytes(1, (int)blob.length());
                     try{
                         img = ImageIO.read(new ByteArrayInputStream(data));
                         image = SwingFXUtils.toFXImage(img, null);
-                        pane.setPrefHeight(50);
-                        pane.setPrefWidth(50);
+                        pane.setPrefHeight(100);
+                        pane.setPrefWidth(100);
                         imageView.setImage(image);
                     }catch(IOException ex){
                         Logger.getLogger(ModificarEmpleadoController.class.getName()).log(Level.SEVERE, null, ex);
@@ -60,5 +61,4 @@ public class PopUpImagenController implements Initializable {
             Logger.getLogger(PopUpImagenController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }    
-    
 }

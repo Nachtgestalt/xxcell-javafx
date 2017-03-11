@@ -22,8 +22,7 @@ public class Productos {
     private IntegerProperty L127;
     private IntegerProperty ventasTotales;
     private DoubleProperty Costo;
-    
-    
+    private StringProperty nombreImagen;
 
     public Productos(){
         this(null,null,null,null,0,0,null,null,0,0,0,0);
@@ -45,6 +44,22 @@ public class Productos {
         this.L58 = new SimpleIntegerProperty(l58);
         this.L64 = new SimpleIntegerProperty(l64);
         this.L127 = new SimpleIntegerProperty(l127);
+    }
+    //Constructor para la tabla de ConsultasController en caso de tener imagen
+    public Productos(String ID, String Marca, String Modelo, String Nombre, double PrecioPub, double PrecioDist,String Tipo, String Descrip, int Dispon, int l58, int l64, int l127, String NombreImagen){
+        this.ID = new SimpleStringProperty(ID);
+        this.Marca = new SimpleStringProperty(Marca);
+        this.Modelo = new SimpleStringProperty(Modelo);
+        this.Nombre = new SimpleStringProperty(Nombre);
+        this.PrecioPub = new SimpleDoubleProperty(PrecioPub);
+        this.PrecioDist = new SimpleDoubleProperty(PrecioDist);
+        this.Tipo = new SimpleStringProperty(Tipo);
+        this.Descrip = new SimpleStringProperty(Descrip);
+        this.Dispon = new SimpleIntegerProperty(Dispon);
+        this.L58 = new SimpleIntegerProperty(l58);
+        this.L64 = new SimpleIntegerProperty(l64);
+        this.L127 = new SimpleIntegerProperty(l127);
+        this.nombreImagen = new SimpleStringProperty(NombreImagen);
     }
     
     public Productos(String ID, String Marca, String Modelo, String Nombre, double PrecioPub, double PrecioDist,String Tipo, String Descrip, int Dispon, int l58, int l64, int l127, float costo){
@@ -233,6 +248,10 @@ public class Productos {
     
     public double getCosto(){
         return Costo.get();
+    }
+    
+    public String getNombreImagen(){
+        return nombreImagen.get();
     }
     
     public void setventasTotales(int venta){

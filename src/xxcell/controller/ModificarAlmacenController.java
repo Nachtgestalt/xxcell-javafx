@@ -27,7 +27,10 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -41,11 +44,14 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import javax.imageio.ImageIO;
 import xxcell.Conexion.Conexion;
 import xxcell.model.Productos;
 import org.controlsfx.control.textfield.TextFields;
+import static xxcell.controller.LoginController.scene;
 import xxcell.model.LogReport;
 
 public class ModificarAlmacenController implements Initializable {
@@ -189,7 +195,7 @@ public class ModificarAlmacenController implements Initializable {
     
      //Función para llenar el TableView con los datos que el usuario indique
     public ObservableList<Productos> ObtenerProd(String STSQL) throws SQLException{
-        String Mod, Marc, DI, Nom, Tip, Dep;   
+        String Mod, Marc, DI, Nom, Tip, Dep, NombreImagen;   
         int Disp, L58,L64,L127;
         double PPub, PDist;
         if(conn.QueryExecute(STSQL))
@@ -208,7 +214,8 @@ public class ModificarAlmacenController implements Initializable {
                 L58 = conn.setResult.getInt("L58");
                 L64 = conn.setResult.getInt("L64");
                 L127 = conn.setResult.getInt("L127");
-                productos.add(new Productos(DI,Marc,Mod,Nom,PPub,PDist,Tip,Dep,Disp, L58,L64,L127));
+                NombreImagen = conn.setResult.getString("NombreImagen");
+                productos.add(new Productos(DI,Marc,Mod,Nom,PPub,PDist,Tip,Dep,Disp, L58,L64,L127, NombreImagen));
             }    
         }
         return productos;
@@ -792,7 +799,7 @@ public class ModificarAlmacenController implements Initializable {
         if(BanderaImagen){
             query =  "Update productos set ID = ?, Modelo = ?, Identificador = ?, PrecPub = ?, "
             + "Marca = ?, Tipo = ?, PrecDist = ?, ";
-            query += "Descrip = ?, L58 = ?, L64 = ?, L127 = ?, imagenProducto = ? "
+            query += "Descrip = ?, L58 = ?, L64 = ?, L127 = ?, NombreImagen = ? "
             + "WHERE ID = '"+Prod.getID()+"'";
             if(BanDeleteImage){
                 conn.preparedStatement(query);
@@ -807,7 +814,7 @@ public class ModificarAlmacenController implements Initializable {
                 conn.stmt.setInt(9, l58);
                 conn.stmt.setInt(10, l64);
                 conn.stmt.setInt(11, l127);   
-                conn.stmt.setNull(12, java.sql.Types.BLOB);
+                conn.stmt.setString(12, null);
             }else{
                 conn.preparedStatement(query);
                 conn.stmt.setString(1, IDTxt.getText());
@@ -821,9 +828,8 @@ public class ModificarAlmacenController implements Initializable {
                 conn.stmt.setInt(9, l58);
                 conn.stmt.setInt(10, l64);
                 conn.stmt.setInt(11, l127);
-                conn.stmt.setBinaryStream(12, fin,(int)file.length());    
+                conn.stmt.setString(12, Variables_Globales.nameImage);    
             }
-            
         }else{
             query =  "Update productos set ID = ?, Modelo = ?, Identificador = ?, PrecPub = ?, "
                     + "Marca = ?, Tipo = ?, PrecDist = ?, ";
@@ -869,18 +875,19 @@ public class ModificarAlmacenController implements Initializable {
     public void llenado(Productos Prod)
     {
         //Variables para las Imagenes
+        Conexion conTemporal = new Conexion(); 
         Blob blob = null;
-        double height, width;
         byte[] data = null;
         BufferedImage img = null;
         WritableImage image = null;
-        //*************************
-        String query = "Select imagenProducto FROM productos WHERE ID = '"+Prod.getID()+"'";
-        conn.QueryExecute(query);
-        try {
-            if(conn.setResult.first()) {
-                if(conn.setResult.getBlob("ImagenProducto") != null){
-                    blob = conn.setResult.getBlob("ImagenProducto");
+        String ImageQuery;
+        
+        if(Prod.getNombreImagen() != null){
+            ImageQuery = "Select Imagen from galeria where NombreImagen = '"+Prod.getNombreImagen()+"'";
+            conn.QueryExecute(ImageQuery);
+            try {
+                if(conn.setResult.first()){
+                    blob = conn.setResult.getBlob("Imagen");
                     BanHasImage = true;
                     data = blob.getBytes(1, (int)blob.length());
                     try{
@@ -890,20 +897,20 @@ public class ModificarAlmacenController implements Initializable {
                     }catch(IOException ex){
                         Logger.getLogger(ModificarEmpleadoController.class.getName()).log(Level.SEVERE, null, ex);
                         String msjHeader = "¡ERROR IO! <Modificar Almacen>";
-                    String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
-                    log.SendLogReport(ex, msjHeader, msjText);
+                        String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                        log.SendLogReport(ex, msjHeader, msjText);
                     }
-                }else{
-                    BanHasImage = false;
-                    ResetImagen();
-                }   
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(PopUpImagenController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(PopUpImagenController.class.getName()).log(Level.SEVERE, null, ex);
-            String msjHeader = "¡ERROR de SQL! <Modificar Almacen>";
-            String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
-            log.SendLogReport(ex, msjHeader, msjText);
+        }else{
+            ResetImagen();
         }
+        
         habilitar();
         String cadena;
         IDTxt.setText(Prod.getID());
@@ -1003,56 +1010,52 @@ public class ModificarAlmacenController implements Initializable {
  
         @Override
         public void handle(ActionEvent t) {
-            FileChooser fileChooser = new FileChooser();
-             
-            //Set extension filter
-            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
-            FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
-            FileChooser.ExtensionFilter extFilterJPEG = new FileChooser.ExtensionFilter("JPEG files (*.jpeg)", "*.JPEG");
-            FileChooser.ExtensionFilter JPEG = new FileChooser.ExtensionFilter("JPEG files (*.jpeg)", "*.JPEG");
-            fileChooser.getExtensionFilters().addAll(JPEG, extFilterJPG, extFilterPNG);
-              
-            //Show open file dialog
-            file = fileChooser.showOpenDialog(btnAddFoto.getScene().getWindow());
-            if(file == null){
-                String mensaje = "No ha seleccionado ninguna Imagen/Foto \n";
-                Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);
-                incompleteAlert.setTitle("Imagen de Producto");
-                incompleteAlert.setHeaderText(null);
-                incompleteAlert.setContentText(mensaje);
-                incompleteAlert.initOwner(btnAddFoto.getScene().getWindow());
-                incompleteAlert.showAndWait();
-            }
-            else {
-                try {
-                    fin = new FileInputStream(file);
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(AltaEmpleadoController.class.getName()).log(Level.SEVERE, null, ex);
-                    String msjHeader = "¡File not Found! <Modificar Almacen>";
-                    String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
-                    log.SendLogReport(ex, msjHeader, msjText);
-                }
-                catch( Error e){
-                    String msjHeader = "¡ERROR e! <Modificar Almacen>";
-                    String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
-                    log.SendLogReport(e, msjHeader, msjText);
-                }          
-                BufferedImage bufferedImage = null;
-                try {
-                    bufferedImage = ImageIO.read(file);
-                } catch (IOException ex) {
-                    Logger.getLogger(AltaEmpleadoController.class.getName()).log(Level.SEVERE, null, ex);
-                    String msjHeader = "¡ERROR IO! <Modificar Almacen>";
-                    String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
-                    log.SendLogReport(ex, msjHeader, msjText);
-                }
-                WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
-                imageViewFoto.autosize();
-                imageViewFoto.setImage(image);
-                BanderaImagen = true;
+            try {
+                MostrarGaleria();
+            } catch (SQLException ex) {
+                Logger.getLogger(AgregarProductoController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(AgregarProductoController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     };
+    
+    public void MostrarGaleria() throws SQLException, IOException{
+        String nombre, query;
+        //Variables para las Imagenes
+        Blob blob;
+        byte[] data;
+        BufferedImage img;
+        WritableImage image;
+        
+        Parent principal;
+        principal = FXMLLoader.load(getClass().getResource("/xxcell/view/GaleriaAgregarProducto.fxml"));
+        Stage principalStage = new Stage();
+        principalStage.getIcons().add(new Image("/xxcell/Images/XXCELL450.png"));
+        scene = new Scene(principal);
+        principalStage.setScene(scene);
+        principalStage.initModality(Modality.WINDOW_MODAL);
+        principalStage.setResizable(false);
+        principalStage.initOwner(btnAddFoto.getScene().getWindow());
+        principalStage.showAndWait(); 
+        if(Variables_Globales.nameImage != null){
+            nombre = Variables_Globales.nameImage;
+            query = "Select galeria.Imagen FROM galeria "
+                        + "WHERE NombreImagen = '"+nombre+"'";
+            if(conn.QueryExecute(query)){
+                while(conn.setResult.next()) {
+                    blob = conn.setResult.getBlob("Imagen");
+                    if(blob != null){
+                        data = blob.getBytes(1, (int)blob.length());
+                        img = ImageIO.read(new ByteArrayInputStream(data));
+                        image = SwingFXUtils.toFXImage(img, null);  
+                        imageViewFoto.setImage(image);
+                        BanderaImagen = true;
+                    }
+                }
+            }    
+        }
+    }
     
     public void ResetImagen() {
         if(BanHasImage == false){

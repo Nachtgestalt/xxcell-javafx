@@ -105,7 +105,7 @@ public class ConsultasController implements Initializable {
      
      //Función para llenar el TableView con los datos que el usuario indique
     public ObservableList<Productos> ObtenerProd(String STSQL) throws SQLException{
-        String Mod, Marc, DI, Nom, Tip, Dep;   
+        String Mod, Marc, DI, Nom, Tip, Dep, NomImagen;   
         int Disp, l58, l64, l127;
         double PPub, PDist;
         if(conn.QueryExecute(STSQL))
@@ -124,7 +124,8 @@ public class ConsultasController implements Initializable {
                 l58 = conn.setResult.getInt("L58");
                 l64 = conn.setResult.getInt("L64");
                 l127 = conn.setResult.getInt("L127");
-                productos.add(new Productos(DI,Marc,Mod,Nom,PPub,PDist,Tip,Dep,Disp,l58,l64,l127));
+                NomImagen = conn.setResult.getString("NombreImagen");
+                productos.add(new Productos(DI,Marc,Mod,Nom,PPub,PDist,Tip,Dep,Disp,l58,l64,l127, NomImagen));
             }    
         }
         return productos;
@@ -548,11 +549,11 @@ public class ConsultasController implements Initializable {
     
     public void mostrarImagen() throws IOException{
         Variables_Globales.producto = aux;
-        String query = "SELECT imagenProducto FROM productos WHERE ID = '"+aux.getID()+"'";
+        String query = "SELECT Imagen FROM galeria WHERE NombreImagen = '"+aux.getNombreImagen()+"'";
         conn.QueryExecute(query);
         try {
             if(conn.setResult.first()) {
-                if(conn.setResult.getBlob("ImagenProducto") != null){
+                if(conn.setResult.getBlob("Imagen") != null){
                     try {
                         Parent principal;
                         principal = FXMLLoader.load(getClass().getResource("/xxcell/view/PopUpImagen.fxml"));

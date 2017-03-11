@@ -474,7 +474,7 @@ public class AgregarProductoController implements Initializable {
                 else {
                     if(BanderaImagen){
                         query =  "INSERT INTO productos (ID, Modelo, Identificador, PrecPub, Costo, Marca, Tipo, PrecDist, ";
-                        query += "Descrip, CantidadActual, Entradas, Salidas, L58, L64, L127, imagenProducto) ";
+                        query += "Descrip, CantidadActual, Entradas, Salidas, L58, L64, L127, NombreImagen) ";
                         query += "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         conn.preparedStatement(query);
                         conn.stmt.setString(1, txtICodigo.getText());
@@ -492,7 +492,7 @@ public class AgregarProductoController implements Initializable {
                         conn.stmt.setInt(13, l58);
                         conn.stmt.setInt(14, l64);
                         conn.stmt.setInt(15, l127);
-                        conn.stmt.setBinaryStream(16, fin,(int)file.length());    
+                        conn.stmt.setString(16, Variables_Globales.nameImage);
                     }else{
                         query =  "INSERT INTO productos (ID, Modelo, Identificador, PrecPub, Costo, Marca, Tipo, PrecDist, ";
                         query += "Descrip, CantidadActual, Entradas, Salidas, L58, L64, L127) ";
@@ -652,9 +652,7 @@ public class AgregarProductoController implements Initializable {
             nombre = Variables_Globales.nameImage;
             query = "Select galeria.Imagen FROM galeria "
                         + "WHERE NombreImagen = '"+nombre+"'";
-            System.out.println(query);
             if(conn.QueryExecute(query)){
-                System.out.println("Holis se hizo el query "+query);
                 while(conn.setResult.next()) {
                     blob = conn.setResult.getBlob("Imagen");
                     if(blob != null){
