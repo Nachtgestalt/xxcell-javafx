@@ -47,6 +47,8 @@ public class NominaEmpleadosController implements Initializable {
     
     //textfield
     @FXML
+    private JFXTextField txtExtra;
+    @FXML
     private JFXTextField txtDescuento;
     
     // Labels
@@ -185,7 +187,7 @@ public class NominaEmpleadosController implements Initializable {
     
     public void Salario() throws SQLException{
         int cantidadMeta, faltas;
-        float descuento = 0, sueldo = 0, txtdescuento;
+        float descuentofaltas = 0, sueldo = 0, txtdescuento=0, txtaumento = 0;
         boolean flag = true;
         String mensaje = "";
         
@@ -206,20 +208,28 @@ public class NominaEmpleadosController implements Initializable {
             incompleteAlert.initOwner(ObtenerSalario.getScene().getWindow());
             incompleteAlert.showAndWait();
         }
-       if(flag){
+        if(flag){
             String qrySueldo = "SELECT * FROM sueldos where Nivel = '"+aux.getNivel()+"'";
             conn.QueryExecute(qrySueldo);
             if(conn.setResult.first()){
                 faltas = obtenerFaltas();
                 if(txtDescuento.getText().length() == 0){
-                        txtdescuento = 0;
-                    }
+                    txtdescuento = 0;
+                }
                 else{
                     txtdescuento = Float.valueOf(txtDescuento.getText());
                 }
+                
+                if(txtExtra.getText().length() == 0){
+                    txtaumento = 0;
+                }
+                else{
+                    txtaumento = Float.valueOf(txtExtra.getText());
+                }
+                
                 if(faltas>1){
                     faltas--;
-                    descuento = faltas * conn.setResult.getFloat("DescuentoFalta");
+                    descuentofaltas = faltas * conn.setResult.getFloat("DescuentoFalta");
                 }
                 if(faltas == 0){
                     sueldo += conn.setResult.getFloat("DiaExtra");
@@ -234,7 +244,8 @@ public class NominaEmpleadosController implements Initializable {
                     sueldo = (totalvendido * conn.setResult.getFloat("ComisionBase"))+sueldo;
                 }
                 sueldo = sueldo + conn.setResult.getFloat("Base");
-                sueldo = sueldo - descuento;
+                sueldo = sueldo - descuentofaltas;
+                sueldo = sueldo + txtaumento;
                 sueldo = sueldo - txtdescuento;
                 lblSueldo.setText(Float.toString(sueldo));
             } 
@@ -330,8 +341,18 @@ public class NominaEmpleadosController implements Initializable {
             }
         });
         
-        ObtenerSalario.setOnAction((ActionEvent e) -> {  
-            if(esnumero(txtDescuento.getText())){
+        ObtenerSalario.setOnAction((ActionEvent e) -> {
+            boolean ban = true;
+            String error = "";
+            if(!esnumero(txtDescuento.getText())){
+                ban = false;
+                error = "El Descuento debe ser Numero";
+            }
+            if(!esnumero(txtExtra.getText())){
+                ban = false;
+                error = "El pago Extra debe ser Numero";
+            }
+            if(ban){
                 try {
                     Salario();
                 } catch (SQLException ex) {
@@ -339,11 +360,10 @@ public class NominaEmpleadosController implements Initializable {
                 }
             }
             else{
-                String mensaje = "¡Debe ingresar un número! \n";
                 Alert incompleteAlert = new Alert(Alert.AlertType.ERROR);
                 incompleteAlert.setTitle("Nomina");
                 incompleteAlert.setHeaderText(null);
-                incompleteAlert.setContentText(mensaje);
+                incompleteAlert.setContentText(error);
                 incompleteAlert.initOwner(ObtenerSalario.getScene().getWindow());
                 incompleteAlert.showAndWait();
             }

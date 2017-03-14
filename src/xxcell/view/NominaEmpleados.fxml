@@ -17,7 +17,7 @@
    <children>
       <BorderPane layoutX="14.0" layoutY="14.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <TableView fx:id="TablaVentas" prefHeight="605.0" prefWidth="314.0" BorderPane.alignment="CENTER">
+            <TableView fx:id="TablaVentas" prefHeight="605.0" prefWidth="314.0" style="-fx-background-color: #4997D0;" BorderPane.alignment="CENTER">
               <columns>
                 <TableColumn fx:id="Folio" prefWidth="75.0" text="Folio" />
                 <TableColumn fx:id="colCodigo" prefWidth="157.33331298828125" text="Codigo de Producto" />
@@ -48,7 +48,7 @@
             </HBox>
          </bottom>
          <left>
-            <TableView fx:id="TablaEmpleados" prefHeight="766.0" prefWidth="203.0" BorderPane.alignment="CENTER">
+            <TableView fx:id="TablaEmpleados" prefHeight="766.0" prefWidth="203.0" style="-fx-background-color: #93CCEA;" BorderPane.alignment="CENTER">
               <columns>
                 <TableColumn fx:id="Nombre" prefWidth="101.99999237060547" text="Nombre" />
                   <TableColumn fx:id="Apellido" prefWidth="100.0" text="Apellido" />
@@ -58,27 +58,30 @@
          <right>
             <AnchorPane prefHeight="605.0" prefWidth="189.0" style="-fx-background-color: #a4d2e0;" BorderPane.alignment="CENTER">
                <children>
-                  <Label fx:id="NombreEmpleado" layoutX="51.0" layoutY="14.0" prefHeight="17.0" prefWidth="126.0" />
-                  <Label fx:id="NumeroEmpleado" layoutX="7.0" layoutY="14.0" prefHeight="17.0" prefWidth="35.0" />
-                  <Label layoutX="14.0" layoutY="47.0" prefHeight="20.0" prefWidth="110.0" text="Número de Ventas" AnchorPane.leftAnchor="25.0" />
-                  <Label fx:id="lblCantidad" layoutX="55.0" layoutY="75.0" prefHeight="17.0" prefWidth="118.0" />
-                  <Label layoutX="14.0" layoutY="105.0" prefHeight="17.0" prefWidth="142.0" text="Porcentaje de Comisión" AnchorPane.leftAnchor="15.0" />
-                  <Label fx:id="lblPorcentaje" layoutX="54.0" layoutY="129.0" prefHeight="17.0" prefWidth="107.0" />
-                  <JFXCheckBox fx:id="Lunes" layoutX="30.0" layoutY="295.0" text="Lunes" AnchorPane.leftAnchor="30.0" />
-                  <JFXCheckBox fx:id="Martes" layoutX="30.0" layoutY="315.0" text="Martes" AnchorPane.leftAnchor="30.0" />
-                  <JFXCheckBox fx:id="Miercoles" layoutX="30.0" layoutY="335.0" text="Miercoles" AnchorPane.leftAnchor="30.0" />
-                  <JFXCheckBox fx:id="Jueves" layoutX="30.0" layoutY="355.0" text="Jueves" AnchorPane.leftAnchor="30.0" />
-                  <Label layoutX="15.0" layoutY="509.0" prefHeight="17.0" prefWidth="116.0" text="Sueldo:" AnchorPane.leftAnchor="15.0" />
-                  <Label fx:id="lblSueldo" layoutX="26.0" layoutY="533.0" prefHeight="36.0" prefWidth="137.0" style="-fx-background-color: #b4e2d5;" text="---Sueldo---" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
-                  <Label layoutX="12.0" layoutY="275.0" prefHeight="17.0" prefWidth="103.0" text="Faltas:" AnchorPane.leftAnchor="15.0" />
-                  <JFXCheckBox fx:id="Viernes" layoutX="30.0" layoutY="375.0" text="Viernes" AnchorPane.leftAnchor="30.0" />
-                  <JFXCheckBox fx:id="Sabado" layoutX="30.0" layoutY="395.0" text="Sabado" AnchorPane.leftAnchor="30.0" />
-                  <JFXCheckBox fx:id="Domingo" layoutX="35.0" layoutY="415.0" text="Domingo" AnchorPane.leftAnchor="30.0" />
-                  <JFXDatePicker fx:id="FechaInicial" layoutX="16.0" layoutY="182.0" prefHeight="30.0" prefWidth="150.0" promptText="Inicio Semana" AnchorPane.leftAnchor="15.0" />
-                  <JFXDatePicker fx:id="FechaFinal" layoutX="22.0" layoutY="224.0" prefHeight="30.0" prefWidth="150.0" promptText="Final de Semana" AnchorPane.leftAnchor="15.0" />
-                  <Label fx:id="lblError" layoutX="14.0" layoutY="254.0" prefHeight="17.0" prefWidth="161.0" textFill="RED" />
-                  <Label layoutX="14.0" layoutY="448.0" prefHeight="17.0" prefWidth="65.0" text="Descuentos:" AnchorPane.leftAnchor="15.0" />
-                  <JFXTextField fx:id="txtDescuento" layoutX="20.0" layoutY="472.0" AnchorPane.leftAnchor="15.0" />
+                  <Label layoutX="35.0" layoutY="6.0" prefHeight="27.0" prefWidth="110.0" text="Número de Ventas: " textFill="#2e5894" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="6.0" />
+                  <Label fx:id="lblCantidad" layoutX="21.0" layoutY="33.0" prefHeight="35.0" prefWidth="118.0" AnchorPane.leftAnchor="15.0" />
+                  <Label layoutX="29.0" layoutY="68.0" prefHeight="24.0" prefWidth="142.0" text="Porcentaje de Comisión:" textFill="#2e5894" AnchorPane.leftAnchor="15.0" />
+                  <Label fx:id="lblPorcentaje" layoutX="36.0" layoutY="97.0" prefHeight="29.0" prefWidth="107.0" AnchorPane.leftAnchor="15.0" />
+                  <JFXCheckBox fx:id="Lunes" checkedColor="#2e5894" layoutX="27.0" layoutY="333.0" text="Lunes" AnchorPane.bottomAnchor="395.0" AnchorPane.leftAnchor="15.0" />
+                  <JFXCheckBox fx:id="Martes" checkedColor="#2e5894" layoutX="89.0" layoutY="359.0" text="Martes" AnchorPane.bottomAnchor="365.0" AnchorPane.leftAnchor="70.0" />
+                  <JFXCheckBox fx:id="Miercoles" checkedColor="#2e5894" layoutX="16.0" layoutY="376.0" text="Miercoles" AnchorPane.bottomAnchor="335.0" AnchorPane.leftAnchor="15.0" />
+                  <JFXCheckBox fx:id="Jueves" checkedColor="#2e5894" layoutX="82.0" layoutY="393.0" text="Jueves" AnchorPane.bottomAnchor="305.0" AnchorPane.leftAnchor="70.0" />
+                  <Label layoutX="15.0" layoutY="509.0" prefHeight="17.0" prefWidth="116.0" text="Sueldo:" textFill="#2e5894" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="15.0" />
+                  <Label fx:id="lblSueldo" layoutX="25.0" layoutY="635.0" prefHeight="36.0" prefWidth="137.0" style="-fx-background-color: #2e5894;" text="---Sueldo---" textFill="WHITE" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Label>
+                  <Label layoutX="56.0" layoutY="203.0" prefHeight="17.0" prefWidth="49.0" text="Faltas:" textFill="#2e5894" AnchorPane.leftAnchor="56.0" />
+                  <JFXCheckBox fx:id="Viernes" checkedColor="#2e5894" layoutX="22.0" layoutY="410.0" text="Viernes" AnchorPane.bottomAnchor="275.0" AnchorPane.leftAnchor="15.0" />
+                  <JFXCheckBox fx:id="Sabado" checkedColor="#2e5894" layoutX="79.0" layoutY="438.0" text="Sabado" AnchorPane.bottomAnchor="245.0" AnchorPane.leftAnchor="70.0" />
+                  <JFXCheckBox fx:id="Domingo" checkedColor="#2e5894" layoutX="17.0" layoutY="467.0" text="Domingo" AnchorPane.bottomAnchor="215.0" AnchorPane.leftAnchor="15.0" />
+                  <JFXDatePicker fx:id="FechaInicial" defaultColor="#2e5894" layoutX="14.0" layoutY="126.0" prefHeight="30.0" prefWidth="150.0" promptText="Inicio Semana" AnchorPane.leftAnchor="15.0" />
+                  <JFXDatePicker fx:id="FechaFinal" defaultColor="#2e5894" layoutX="11.0" layoutY="156.0" prefHeight="30.0" prefWidth="150.0" promptText="Final de Semana" AnchorPane.leftAnchor="15.0" />
+                  <Label fx:id="lblError" layoutX="71.0" layoutY="220.0" prefHeight="17.0" prefWidth="108.0" textFill="RED" AnchorPane.leftAnchor="71.0" />
+                  <Label layoutX="2.0" layoutY="501.0" prefHeight="17.0" prefWidth="65.0" text="Descuentos:" textFill="#2e5894" AnchorPane.bottomAnchor="190.0" AnchorPane.leftAnchor="15.0" />
+                  <JFXTextField fx:id="txtDescuento" layoutX="16.0" layoutY="509.0" AnchorPane.bottomAnchor="160.0" AnchorPane.leftAnchor="16.0" />
+                  <Label layoutX="30.0" layoutY="547.0" text="Pago Extra:" textFill="#2e5894" AnchorPane.bottomAnchor="135.0" AnchorPane.leftAnchor="15.0" />
+                  <JFXTextField fx:id="txtExtra" layoutX="15.0" layoutY="561.0" AnchorPane.bottomAnchor="105.0" AnchorPane.leftAnchor="15.0" />
                </children>
             </AnchorPane>
          </right>
@@ -93,6 +96,8 @@
                      <font>
                         <Font size="14.0" />
                      </font></Label>
+                  <Label fx:id="NombreEmpleado" layoutX="731.0" layoutY="-6.0" prefHeight="23.0" prefWidth="257.0" style="-fx-background-color: #2E5894;" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="5.0" />
+                  <Label fx:id="NumeroEmpleado" layoutX="602.0" layoutY="8.0" prefHeight="17.0" prefWidth="35.0" style="-fx-background-color: #2E5894;" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="5.0" />
                </children>
             </AnchorPane>
          </top>
