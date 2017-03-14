@@ -8,10 +8,15 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="XXCELL.jar" size="1059991" download="eager" />
-    <jar href="lib\avalon-framework-4.2.0.jar" size="86038" download="eager" />
+    <jar href="XXCELL.jar" size="1059708" download="eager" />
+    <jar href="lib\barcode4j-fop-ext-0.20.5-complete.jar" size="282237" download="eager" />
+    <jar href="lib\barcode4j-fop-ext-0.20.5.jar" size="15864" download="eager" />
+    <jar href="lib\barcode4j-fop-ext-complete.jar" size="298488" download="eager" />
+    <jar href="lib\barcode4j-fop-ext.jar" size="32115" download="eager" />
+    <jar href="lib\barcode4j-light.jar" size="230538" download="eager" />
+    <jar href="lib\barcode4j-xgc.jar" size="22109" download="eager" />
+    <jar href="lib\barcode4j.jar" size="274404" download="eager" />
     <jar href="lib\commons-beanutils-1.9.0.jar" size="230951" download="eager" />
-    <jar href="lib\commons-cli-1.0.jar" size="30117" download="eager" />
     <jar href="lib\commons-codec-1.5.jar" size="73098" download="eager" />
     <jar href="lib\commons-collections-3.2.1.jar" size="575389" download="eager" />
     <jar href="lib\commons-digester-2.1.jar" size="196768" download="eager" />
@@ -23,18 +28,13 @@
     <jar href="lib\java-mail-1.4.jar" size="356519" download="eager" />
     <jar href="lib\javax.persistence_2.1.0.v201304241213.jar" size="164637" download="eager" />
     <jar href="lib\jcommon-1.0.24.jar" size="330507" download="eager" />
-    <jar href="lib\jdom-1.0.jar" size="153253" download="eager" />
     <jar href="lib\jfoenix.jar" size="1909314" download="eager" />
     <jar href="lib\jfreechart-1.0.19.jar" size="1565065" download="eager" />
     <jar href="lib\joda-time-2.1.jar" size="570478" download="eager" />
     <jar href="lib\mysql-connector-java-5.0.8-bin.jar" size="540852" download="eager" />
     <jar href="lib\poi-3.10.1.jar" size="1949542" download="eager" />
-    <jar href="lib\serializer-2.7.0.jar" size="188993" download="eager" />
-    <jar href="lib\servlet-2.2.jar" size="39553" download="eager" />
     <jar href="lib\spring-beans-4.3.6.RELEASE.jar" size="762701" download="eager" />
     <jar href="lib\spring-core-4.3.6.RELEASE.jar" size="1117842" download="eager" />
-    <jar href="lib\xalan-2.7.0.jar" size="3078601" download="eager" />
-    <jar href="lib\xml-apis-1.3.04.jar" size="194354" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="XXCELL" >
     <param name="requiredFXVersion" value="8.0+"/>

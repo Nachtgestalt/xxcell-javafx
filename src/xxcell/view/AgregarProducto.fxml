@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="671.0" prefWidth="615.0" style="-fx-background-color: #93DFB8;" stylesheets="@../resources/AgregarProducto.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xxcell.controller.AgregarProductoController">
+<AnchorPane fx:id="btnCodBarras" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="671.0" prefWidth="615.0" style="-fx-background-color: #93DFB8;" stylesheets="@../resources/AgregarProducto.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xxcell.controller.AgregarProductoController">
    <children>
       <JFXButton fx:id="Agregar" layoutX="145.0" layoutY="600.0" prefHeight="45.0" prefWidth="75.0" style="-fx-background-color: #01786F;" styleClass="text-button" text="Agregar" textFill="#f2f2f2" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="145.0" />
       <JFXButton fx:id="Cancelar" layoutX="372.0" layoutY="611.0" prefHeight="45.0" prefWidth="75.0" style="-fx-background-color: #FD5B78;" styleClass="text-button" text="Cancelar" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="375.0" />

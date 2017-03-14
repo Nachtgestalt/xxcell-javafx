@@ -8,7 +8,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.sql.Blob;
 import java.sql.SQLException;
@@ -22,7 +24,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -36,7 +37,6 @@ import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -46,8 +46,13 @@ import xxcell.Conexion.Conexion;
 import static xxcell.controller.LoginController.scene;
 import xxcell.model.GeneraCodigos;
 import xxcell.model.LogReport;
+import org.krysalis.barcode4j.impl.code39.Code39Bean;
+import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
+import org.krysalis.barcode4j.tools.UnitConv;
 
 public class AgregarProductoController implements Initializable {
+
+    
     
     //Para Masonry
     Stage principalStage = new Stage();
@@ -378,7 +383,11 @@ public class AgregarProductoController implements Initializable {
                 lblESum.setText("");
             if(ban)
             {
-                AgregarSQL();
+                try {
+                    AgregarSQL();
+                } catch (IOException ex) {
+                    Logger.getLogger(AgregarProductoController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }           
         });
         
@@ -446,7 +455,7 @@ public class AgregarProductoController implements Initializable {
     }
     
     //Funcion para agregar a la base de datos el producto que desee
-    public void AgregarSQL() {
+    public void AgregarSQL() throws IOException {
         int ProductoDisponible = Integer.parseInt(txtDisponible.getText());
         double PrecioPublico = Double.parseDouble(txtPrecioPublico.getText());
         double PrecioDistribuidor = Double.parseDouble(txtPrecioDistribuidor.getText());
@@ -524,6 +533,7 @@ public class AgregarProductoController implements Initializable {
                         incompleteAlert.initOwner(Agregar.getScene().getWindow());
                         incompleteAlert.showAndWait();
                         //inicializa();
+                        generaCodigoBarras();
                         ResetImagen();
                     }else{
                         String mensaje = "Producto NO PUDO SER añadido \n";
@@ -664,6 +674,37 @@ public class AgregarProductoController implements Initializable {
                     }
                 }
             }    
+        }
+    }
+    
+    public void generaCodigoBarras() throws FileNotFoundException, IOException{
+        Code39Bean bean = new Code39Bean();
+        final int dpi = 150;
+        
+        String producto = txtMarca.getText() + "_" + txtModelo.getText() + "_" + txtTipo.getText() + "_" + txtIdentificador.getText() + ".png";
+ 
+        //Configure the barcode generator
+        bean.setModuleWidth(UnitConv.in2mm(1.0f / dpi)); //makes the narrow bar, width exactly one pixel
+        bean.setWideFactor(3);
+        bean.doQuietZone(false);
+ 
+        //Open output file
+        File outputFile = new File("C:\\"+producto);
+        OutputStream out = new FileOutputStream(outputFile);
+ 
+        try {
+ 
+            //Set up the canvas provider for monochrome PNG output
+            BitmapCanvasProvider canvas = new BitmapCanvasProvider(
+                out, "image/x-png", dpi, BufferedImage.TYPE_BYTE_BINARY, false, 0);
+ 
+            //Generate the barcode
+            bean.generateBarcode(canvas, txtICodigo.getText());
+ 
+            //Signal end of generation
+            canvas.finish();
+        } finally {
+            out.close();
         }
     }
 }

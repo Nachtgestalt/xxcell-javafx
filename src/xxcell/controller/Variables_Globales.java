@@ -1,6 +1,5 @@
 package xxcell.controller;
 
-import javafx.scene.image.Image;
 import xxcell.model.Distribuidores;
 import xxcell.model.Empleados;
 import xxcell.model.Productos;
