@@ -532,8 +532,8 @@ public class AgregarProductoController implements Initializable {
                         incompleteAlert.setContentText(mensaje);
                         incompleteAlert.initOwner(Agregar.getScene().getWindow());
                         incompleteAlert.showAndWait();
-                        //inicializa();
                         generaCodigoBarras();
+                        //inicializa();
                         ResetImagen();
                     }else{
                         String mensaje = "Producto NO PUDO SER añadido \n";
@@ -689,6 +689,8 @@ public class AgregarProductoController implements Initializable {
         bean.doQuietZone(false);
  
         //Open output file
+        //Dirección Imagenes local 58 : C:\Users\XXCELL_L127\Pictures\Codigo de Barras
+        //Dirección Imagenes Local 64 : C:\Users\User\Pictures\Codigo de Barras
         File outputFile = new File("C:\\"+producto);
         OutputStream out = new FileOutputStream(outputFile);
  

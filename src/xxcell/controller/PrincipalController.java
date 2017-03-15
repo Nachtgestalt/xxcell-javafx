@@ -644,7 +644,7 @@ public class PrincipalController implements Initializable {
         if (result.get() == ButtonType.OK){
             obtenerParametros();
             if(cantidadproductos>0){
-                //crearReporte();
+                crearReporte();
                 sendMail.EnviarCorreo();
                 //sendMail.EnviarCorreoPDF();
             }
@@ -688,18 +688,17 @@ public class PrincipalController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.get() == ButtonType.OK){
-            //TInicio = System.currentTimeMillis(); /*  Creación de Log en caso de fallo  */
-            //obtenerParametros();
+            TInicio = System.currentTimeMillis(); /*  Creación de Log en caso de fallo  */
+            obtenerParametros();
             if(cantidadproductos>0){
-                //crearReporte();
+                crearReporte();
                 sendMail.EnviarCorreo();
-                //sendMail.EnviarCorreoPDF();
             }
             else
                 sendMail.EnviarCorreo();
-            /*TFin = System.currentTimeMillis();
+            TFin = System.currentTimeMillis();
             tiempo = TFin - TInicio;
-            System.out.println("Tiempo de ejecución en milisegundos: " + tiempo);*/
+            System.out.println("Tiempo de ejecución en milisegundos: " + tiempo);
             borderPane.getScene().getWindow().hide();
         }         
     }
@@ -750,6 +749,9 @@ public class PrincipalController implements Initializable {
 
         JasperReport myreport = (JasperReport) JRLoader.loadObjectFromFile("src/xxcell/Reportes/ReporteDia.jasper");
         JasperPrint myPrint = JasperFillManager.fillReport(myreport, parametro, conn.JasperConexion());
+        //Dirección Computadora Dranias : src/xxcell/Reportes/
+        //Dirección Computadora Local 58 : C:\Users\XXCELL_L127\Google Drive
+        //Dirección omputadora Local 64: C:\Users\User\Google Drive
         JasperExportManager.exportReportToPdfFile(myPrint, "src/xxcell/Reportes/VentaDia_"+local+"_"+ formato.format(fechaHoy) +".pdf");
     }
 }

@@ -117,7 +117,7 @@ public class AlmacenController implements Initializable {
     
     @FXML
     void GeneraTodo(ActionEvent event) throws IOException, SQLException {
-        Conexion conn = new Conexion();
+        /*Conexion conn = new Conexion();
         String query = "Select * from productos";
         String nombre, codigo;
         int conta = 0;
@@ -133,7 +133,7 @@ public class AlmacenController implements Initializable {
                 System.out.println(conta);
                 conta++;
             }
-        }
+        }*/
     }
     
     public void crearCodigo(String producto, String codigo) throws FileNotFoundException, IOException{
