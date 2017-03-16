@@ -647,7 +647,7 @@ public class VentaController implements Initializable {
 
                         lblUsuario.setText("Vendedor: " + cadena);
                         HabilitaVenta(true);
-                        txtCodDistribuidor.requestFocus();
+                        txtCodigoBarras.requestFocus();
                     } else {
                         alert.setHeaderText(null);
                         alert.setContentText("Usuario no valido");
@@ -1053,7 +1053,7 @@ public class VentaController implements Initializable {
                                     continuar = false;
                                 }
                                 if (continuar) {
-                                    codigo = connPromos.setResult.getString("CodigoPromocion");
+                                    codigo = connPromos.setResult.getString("ID");
                                     nombre = connPromos.setResult.getString("Identificador");
                                     nombre += " - " + connPromos.setResult.getString("Tipo");
                                     modelo = connPromos.setResult.getString("Modelo");
