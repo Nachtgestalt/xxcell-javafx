@@ -34,7 +34,6 @@ import javafx.stage.Stage;
 import xxcell.Conexion.Conexion;
 import static xxcell.controller.LoginController.scene;
 import xxcell.model.Salidas;
-import xxcell.model.Transaccion;
 
 public class SalidasPendientesController implements Initializable {
 

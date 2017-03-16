@@ -691,11 +691,12 @@ public class PrincipalController implements Initializable {
             TInicio = System.currentTimeMillis(); /*  Creación de Log en caso de fallo  */
             obtenerParametros();
             if(cantidadproductos>0){
-                crearReporte();
-                sendMail.EnviarCorreo();
+                //crearReporte();
+                //sendMail.EnviarCorreo();
             }
-            else
-                sendMail.EnviarCorreo();
+            else{
+             //   sendMail.EnviarCorreo();
+            }
             TFin = System.currentTimeMillis();
             tiempo = TFin - TInicio;
             System.out.println("Tiempo de ejecución en milisegundos: " + tiempo);
