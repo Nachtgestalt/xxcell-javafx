@@ -690,7 +690,7 @@ public class AgregarProductoController implements Initializable {
  
         //Open output file
         //Dirección Imagenes local 58 : C:\Users\XXCELL_L127\Pictures\Codigo de Barras
-        //Dirección Imagenes Local 64 : C:\Users\User\Pictures\Codigo de Barras
+        //Dirección Imagenes Local 127 : C:\Users\User\Pictures\Codigo de Barras
         File outputFile = new File("C:\\"+producto);
         OutputStream out = new FileOutputStream(outputFile);
  

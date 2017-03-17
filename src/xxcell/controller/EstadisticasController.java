@@ -5,8 +5,10 @@
  */
 package xxcell.controller;
 
+import com.jfoenix.controls.JFXButton;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 /**
@@ -16,12 +18,21 @@ import javafx.fxml.Initializable;
  */
 public class EstadisticasController implements Initializable {
 
-    /**
-     * Initializes the controller class.
-     */
+    @FXML
+    private JFXButton btnEstadisticaProducto;
+    @FXML
+    private JFXButton btnEstadisticaCosto;
+    @FXML
+    private JFXButton btnEstadisticaUtilidad;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        if(!Variables_Globales.Rol.equals("0")){
+            btnEstadisticaCosto.setDisable(true);
+            btnEstadisticaCosto.setVisible(false);
+            btnEstadisticaUtilidad.setDisable(true);
+            btnEstadisticaUtilidad.setVisible(false);
+        }
     }    
     
 }

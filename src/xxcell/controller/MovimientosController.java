@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package xxcell.controller;
 
 import com.jfoenix.controls.JFXButton;
@@ -22,11 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import static xxcell.controller.LoginController.scene;
 
-/**
- * FXML Controller class
- *
- * @author Adrián Pérez
- */
+
 public class MovimientosController implements Initializable {
 
     @FXML
@@ -44,6 +35,12 @@ public class MovimientosController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        if(!Variables_Globales.Rol.equals("0")){
+            btnAgregarPromos.setDisable(true);
+            btnAgregarPromos.setVisible(false);
+        }
+        
         btnPrestamos.setOnAction((ActionEvent e) -> {       
             Parent principal;
             try {

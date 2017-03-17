@@ -691,15 +691,14 @@ public class PrincipalController implements Initializable {
             TInicio = System.currentTimeMillis(); /*  Creación de Log en caso de fallo  */
             obtenerParametros();
             if(cantidadproductos>0){
-                //crearReporte();
-                //sendMail.EnviarCorreo();
+                crearReporte();
+                sendMail.EnviarCorreo();
             }
             else{
-             //   sendMail.EnviarCorreo();
+                sendMail.EnviarCorreo();
             }
             TFin = System.currentTimeMillis();
             tiempo = TFin - TInicio;
-            System.out.println("Tiempo de ejecución en milisegundos: " + tiempo);
             borderPane.getScene().getWindow().hide();
         }         
     }
@@ -752,7 +751,7 @@ public class PrincipalController implements Initializable {
         JasperPrint myPrint = JasperFillManager.fillReport(myreport, parametro, conn.JasperConexion());
         //Dirección Computadora Dranias : src/xxcell/Reportes/
         //Dirección Computadora Local 58 : C:\Users\XXCELL_L127\Google Drive
-        //Dirección omputadora Local 64: C:\Users\User\Google Drive
+        //Dirección omputadora Local 127: C:\Users\User\Google Drive
         JasperExportManager.exportReportToPdfFile(myPrint, "src/xxcell/Reportes/VentaDia_"+local+"_"+ formato.format(fechaHoy) +".pdf");
     }
 }

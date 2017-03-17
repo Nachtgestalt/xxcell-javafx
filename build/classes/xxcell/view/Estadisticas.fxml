@@ -5,8 +5,8 @@
 
 <AnchorPane id="AnchorPane" prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: #FDD7E4;" stylesheets="@../resources/sidemenu.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xxcell.controller.EstadisticasController">
    <children>
-      <JFXButton accessibleText="deProducto" layoutX="27.0" layoutY="109.0" prefHeight="160.0" prefWidth="210.0" style="-fx-background-color: #c405a7;" styleClass="text-button" text="Estadisticas de &#10;Producto" textAlignment="CENTER" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="200.0" />
-      <JFXButton accessibleText="deCostos" layoutX="274.0" layoutY="84.0" prefHeight="160.0" prefWidth="210.0" style="-fx-background-color: #6b005b;" styleClass="text-button" text="Estadisticas de &#10;costo" textAlignment="CENTER" AnchorPane.leftAnchor="400.0" AnchorPane.topAnchor="350.0" />
-      <JFXButton accessibleText="deUtilidad" layoutX="593.0" layoutY="26.0" prefHeight="160.0" prefWidth="210.0" style="-fx-background-color: #E936A7;" text="Estadisticas de Utilidad" textFill="WHITE" AnchorPane.leftAnchor="700.0" AnchorPane.topAnchor="200.0" />
+      <JFXButton fx:id="btnEstadisticaProducto" accessibleText="deProducto" layoutX="65.0" layoutY="40.0" prefHeight="160.0" prefWidth="210.0" style="-fx-background-color: #c405a7;" styleClass="text-button" text="Estadisticas de &#10;Producto" textAlignment="CENTER" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="30.0" />
+      <JFXButton fx:id="btnEstadisticaCosto" accessibleText="deCostos" layoutX="80.0" layoutY="269.0" prefHeight="160.0" prefWidth="210.0" style="-fx-background-color: #6b005b;" styleClass="text-button" text="Estadisticas de &#10;costo" textAlignment="CENTER" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="270.0" />
+      <JFXButton fx:id="btnEstadisticaUtilidad" accessibleText="deUtilidad" layoutX="462.0" layoutY="30.0" prefHeight="160.0" prefWidth="210.0" style="-fx-background-color: #E936A7;" text="Estadisticas de Utilidad" textFill="WHITE" AnchorPane.leftAnchor="400.0" AnchorPane.topAnchor="30.0" />
    </children>
 </AnchorPane>
