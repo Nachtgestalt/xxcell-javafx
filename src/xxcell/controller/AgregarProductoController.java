@@ -689,13 +689,21 @@ public class AgregarProductoController implements Initializable {
         bean.doQuietZone(false);
  
         //Open output file
-        //Dirección Imagenes local 58 : C:\Users\XXCELL_L127\Pictures\Codigo de Barras
-        //Dirección Imagenes Local 127 : C:\Users\User\Pictures\Codigo de Barras
+        //Local 58
+        //File outputFile = new File("C:\\Users\\XXCELL_L127\\Pictures\\Codigo de Barras\\"+producto);
+        
+        //Local64
+        //File outputFile = new File("C:\\Users\\Hp\\Pictures\\Codigo de barras\\"+producto);
+        
+        //Local 127
+        //File outputFile = new File("C:\\Users\\User\\Pictures\\Codigo de Barras\\"+producto);
+        
+        //Local
         File outputFile = new File("C:\\"+producto);
+        
         OutputStream out = new FileOutputStream(outputFile);
  
         try {
- 
             //Set up the canvas provider for monochrome PNG output
             BitmapCanvasProvider canvas = new BitmapCanvasProvider(
                 out, "image/x-png", dpi, BufferedImage.TYPE_BYTE_BINARY, false, 0);

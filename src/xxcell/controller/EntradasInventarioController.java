@@ -366,6 +366,10 @@ public class EntradasInventarioController implements Initializable {
         int l64 = Integer.valueOf(txtLocal64.getText());
         int sumaLocales = l127 + l58 + l64;
         
+        if(txtCosto.getText().isEmpty()){
+            txtCosto.setText(lblCostoActual.getText());
+        }
+        
         return sumaLocales <= totalCantidad;
     }
     

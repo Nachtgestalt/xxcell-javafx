@@ -54,7 +54,7 @@ public class EnvioCorreo {
             // Quien envia el correo
             message.setFrom(new InternetAddress(from));
             // A quien va dirigido
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));
+            //message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));
             //message.addRecipient(Message.RecipientType.TO, new InternetAddress("doktortrash@gmail.com"));
             //message.addRecipient(Message.RecipientType.TO, new InternetAddress("heynalle@gmail.com"));
             message.setSubject("Cierre de Local " + Variables_Globales.localPublico);

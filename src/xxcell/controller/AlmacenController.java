@@ -24,7 +24,6 @@ import javafx.stage.Stage;
 import org.krysalis.barcode4j.impl.code39.Code39Bean;
 import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 import org.krysalis.barcode4j.tools.UnitConv;
-import xxcell.Conexion.Conexion;
 import static xxcell.controller.LoginController.scene;
 
 public class AlmacenController implements Initializable {
@@ -113,55 +112,5 @@ public class AlmacenController implements Initializable {
         principalStage.setResizable(false);
         principalStage.initOwner(AgregProd.getScene().getWindow());
         principalStage.showAndWait(); 
-    }
-    
-    @FXML
-    void GeneraTodo(ActionEvent event) throws IOException, SQLException {
-        /*Conexion conn = new Conexion();
-        String query = "Select * from productos";
-        String nombre, codigo;
-        int conta = 0;
-        if(conn.QueryExecute(query)){
-            while(conn.setResult.next()){
-                codigo = conn.setResult.getString("ID");
-                nombre = conn.setResult.getString("Marca") + " ";
-                nombre += conn.setResult.getString("Modelo") + " ";
-                nombre += conn.setResult.getString("Tipo") + " ";
-                nombre += conn.setResult.getString("Identificador") + ".png";
-
-                crearCodigo(nombre, codigo);
-                System.out.println(conta);
-                conta++;
-            }
-        }*/
-    }
-    
-    public void crearCodigo(String producto, String codigo) throws FileNotFoundException, IOException{
-        Code39Bean bean = new Code39Bean();
-        final int dpi = 150;
-
-        //Configure the barcode generator
-        bean.setModuleWidth(UnitConv.in2mm(1.0f / dpi)); //makes the narrow bar, width exactly one pixel
-        bean.setWideFactor(3);
-        bean.doQuietZone(false);
- 
-        //Open output file
-        File outputFile = new File("E:\\"+producto);
-        OutputStream out = new FileOutputStream(outputFile);
- 
-        try {
- 
-            //Set up the canvas provider for monochrome PNG output
-            BitmapCanvasProvider canvas = new BitmapCanvasProvider(
-                out, "image/x-png", dpi, BufferedImage.TYPE_BYTE_BINARY, false, 0);
- 
-            //Generate the barcode
-            bean.generateBarcode(canvas, codigo);
- 
-            //Signal end of generation
-            canvas.finish();
-        } finally {
-            out.close();
-        }
     }
 }

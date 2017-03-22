@@ -61,12 +61,13 @@ public class VerPromocionesController implements Initializable {
             {
                 codigodeComparacion = conn.setResult.getString("CodigoPromocion");
                 if(codigodeComparacion.equals(conn.setResult.getString("CodigoPromocion"))){
-                    precio = precio + conn.setResult.getDouble("PrecioPromocion");;
+                    precio = precio + conn.setResult.getDouble("PrecioPromocion");
                     Nombre = conn.setResult.getString("Marca") + " "; 
                     Nombre += conn.setResult.getString("Modelo") + " ";
                     Nombre += conn.setResult.getString("Tipo")+ " ";
                     Nombre += conn.setResult.getString("Identificador");
                     productos.add(new Productos(conn.setResult.getString("CodigoPromocion"), Nombre, precio));
+                    precio = 0;
                 }else
                     precio = 0;       
             }
@@ -76,6 +77,12 @@ public class VerPromocionesController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        if(Variables_Globales.Rol != "0"){
+            btnEliminar.setDisable(true);
+            btnEliminar.setVisible(false);
+        }
+        
         tblPromos.setPlaceholder(new Label("---XXCELL---"));
         colCodigo.setCellValueFactory(cellData -> cellData.getValue().idProperty());
         colProducto.setCellValueFactory(cellData -> cellData.getValue().nombreProperty());

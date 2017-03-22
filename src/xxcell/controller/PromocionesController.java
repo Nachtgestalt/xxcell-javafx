@@ -215,7 +215,9 @@ public class PromocionesController implements Initializable {
     }
         
     @FXML
-    void KeyPressedTxtCodigo(KeyEvent event) throws IOException {       
+    void KeyPressedTxtCodigo(KeyEvent event) throws IOException {  
+        ObservableList<Productos> productoSeleccionado,todosProductos;
+        
         if(event.getCode() == KeyCode.F10){
             Parent principal;
             String CodigoProducto, nombre;
@@ -238,8 +240,14 @@ public class PromocionesController implements Initializable {
                 Variables_Globales.BusquedaVenta = new Productos();
             }
         }
-        if(event.getCode() == KeyCode.ENTER){ 
+        if(event.getCode() == KeyCode.DELETE){ 
+            System.out.println("HE dado delete");
+            productoSeleccionado = tblProductos.getSelectionModel().getSelectedItems();
+            todosProductos = tblProductos.getItems();
+            productoSeleccionado.forEach(todosProductos::remove);
             
+            tblProductos.refresh();
+            tblProductos.setItems(todosProductos);
         }
     }
     

@@ -147,6 +147,20 @@ public class ConsultasController implements Initializable {
                 log.SendLogReport(ex, msjHeader, msjText);
             }
         }
+
+        query = "SELECT DISTINCT ID FROM productos WHERE ID LIKE '%" + buscar.getText() + "%'";
+        if(conn.QueryExecute(query)){
+            try {
+                while(conn.setResult.next()){
+                    HSAutocomplete.add(conn.setResult.getString("ID"));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ConsultasController.class.getName()).log(Level.SEVERE, null, ex);
+                String msjHeader = "¡Error!";
+                String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
+                log.SendLogReport(ex, msjHeader, msjText);
+            }
+        }
     }    
      //Inicia los elementos de los ComboBox para las Marcas y los tipos de Objetos
     public void iniciarComboBox()
@@ -513,7 +527,7 @@ public class ConsultasController implements Initializable {
         //Función para el autocompletado del Textfield Buscar
         buscar.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             StmtSq = "Select * FROM productos ";
-            StmtSq += "WHERE Modelo = '"+buscar.getText()+"'";
+            StmtSq += "WHERE Modelo = '"+buscar.getText()+"' OR ID = '"+buscar.getText()+"'";
             try {   
                 Tabla.refresh();
                 productos.removeAll(productos);

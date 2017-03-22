@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="XXCELL.jar" size="1060963" download="eager" />
+    <jar href="XXCELL.jar" size="1060790" download="eager" />
     <jar href="lib\barcode4j-fop-ext-0.20.5-complete.jar" size="282237" download="eager" />
     <jar href="lib\barcode4j-fop-ext-0.20.5.jar" size="15864" download="eager" />
     <jar href="lib\barcode4j-fop-ext-complete.jar" size="298488" download="eager" />

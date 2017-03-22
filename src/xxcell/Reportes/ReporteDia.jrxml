@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bf40dcd3-2c42-4ebe-9c1f-4e7283eff953">
 	<property name="ireport.zoom" value="1.4641000000000013"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="1"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="Local" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -58,6 +58,7 @@ AND tblventas.ventaFecha < $P{Tomorrow}]]>
 	<field name="Identificador" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="Local" class="java.lang.String"/>
 	<group name="ventaFolio">
 		<groupExpression><![CDATA[$F{ventaFolio}]]></groupExpression>
 	</group>
@@ -76,10 +77,6 @@ AND tblventas.ventaFecha < $P{Tomorrow}]]>
 					<reportElement x="16" y="12" width="237" height="31" uuid="7630db12-06a4-4b39-aefa-0326d177e785"/>
 					<text><![CDATA[Reporte de Ventas del Día]]></text>
 				</staticText>
-				<staticText>
-					<reportElement x="16" y="56" width="97" height="20" uuid="f420b4a8-a272-4b67-8bdf-9da1d7c6b864"/>
-					<text><![CDATA[Local 58]]></text>
-				</staticText>
 				<textField pattern="EEEEE dd MMMMM yyyy">
 					<reportElement x="130" y="56" width="165" height="20" uuid="a365f3f6-1416-4579-bfe8-7fc640defb90"/>
 					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
@@ -87,6 +84,10 @@ AND tblventas.ventaFecha < $P{Tomorrow}]]>
 				<line>
 					<reportElement x="0" y="0" width="555" height="1" uuid="d199b1e9-eabd-48cb-9a8e-14876a03239c"/>
 				</line>
+				<textField>
+					<reportElement x="16" y="56" width="100" height="20" uuid="1b8b1adc-68d8-4836-b90d-f77b567a6ab6"/>
+					<textFieldExpression><![CDATA[$F{Local}]]></textFieldExpression>
+				</textField>
 			</frame>
 		</band>
 	</title>

@@ -31,7 +31,9 @@ public class Conexion {
             //CONEXIÓN LOCAL 58
         //this.jasperconexion = DriverManager.getConnection("jdbc:mysql://192.168.1.64:3306/xxcell","Local58","xxcell");
             //CONEXIÓN LOCAL 127
-        //this.jasperconexion = DriverManager.getConnection("jdbc:mysql://192.168.1.64:3306/xxcell","Local58","xxcell");    
+        //this.jasperconexion = DriverManager.getConnection("jdbc:mysql://192.168.1.64:3306/xxcell","Local127","xxcell");
+        //CONEXIÓN LOCAL 64
+        //this.jasperconexion = DriverManager.getConnection("jdbc:mysql://192.168.1.64:3306/xxcell","Local64","xxcell");
         return jasperconexion;
     }
     
@@ -47,6 +49,7 @@ public class Conexion {
             conexion = DriverManager.getConnection("jdbc:mysql://localhost/xxcell","root","");
             //conexion = DriverManager.getConnection("jdbc:mysql://192.168.1.64:3306/xxcell","Local58","xxcell");
             //conexion = DriverManager.getConnection("jdbc:mysql://192.168.1.64:3306/xxcell","Local127","xxcell");
+            //conexion = DriverManager.getConnection("jdbc:mysql://192.168.1.64:3306/xxcell","Local64","xxcell");
             return true;
         } catch(Exception e){
             System.out.println(e.getMessage());

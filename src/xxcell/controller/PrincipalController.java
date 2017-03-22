@@ -749,9 +749,17 @@ public class PrincipalController implements Initializable {
 
         JasperReport myreport = (JasperReport) JRLoader.loadObjectFromFile("src/xxcell/Reportes/ReporteDia.jasper");
         JasperPrint myPrint = JasperFillManager.fillReport(myreport, parametro, conn.JasperConexion());
-        //Dirección Computadora Dranias : src/xxcell/Reportes/
-        //Dirección Computadora Local 58 : C:\Users\XXCELL_L127\Google Drive
-        //Dirección omputadora Local 127: C:\Users\User\Google Drive
+        
+        //Local
         JasperExportManager.exportReportToPdfFile(myPrint, "src/xxcell/Reportes/VentaDia_"+local+"_"+ formato.format(fechaHoy) +".pdf");
+        
+        //Local 58
+        //JasperExportManager.exportReportToPdfFile(myPrint, "C:\\Users\\XXCELL_L127\\Google Drive\\VentaDia_"+local+"_"+ formato.format(fechaHoy) +".pdf");
+        
+        //Local 64
+        //JasperExportManager.exportReportToPdfFile(myPrint, "C:\\Users\\XXCELL_L127\\Google Drive\\VentaDia_"+local+"_"+ formato.format(fechaHoy) +".pdf");
+        
+        //Local 127
+        //JasperExportManager.exportReportToPdfFile(myPrint, "C:\\Users\\User\\Google Drive\\VentaDia_"+local+"_"+ formato.format(fechaHoy) +".pdf");
     }
 }

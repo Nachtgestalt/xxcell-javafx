@@ -27,6 +27,5 @@
          </font>
       </JFXButton>
       <JFXButton fx:id="btnGaleria" accessibleText="Galeria" layoutX="360.0" layoutY="310.0" onAction="#ActionGaleria" prefHeight="160.0" prefWidth="210.0" style="-fx-background-color: #E97451;" styleClass="text-button" text="Galeria" AnchorPane.leftAnchor="350.0" AnchorPane.topAnchor="310.0" />
-      <JFXButton fx:id="btnGeneratodo" layoutX="682.0" layoutY="354.0" onAction="#GeneraTodo" prefHeight="38.0" prefWidth="179.0" text="Genera" />
    </children>
 </AnchorPane>
