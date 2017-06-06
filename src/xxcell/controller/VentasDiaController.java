@@ -35,6 +35,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import xxcell.model.PrinterService;
 
 
 public class VentasDiaController implements Initializable {
@@ -336,6 +337,84 @@ public class VentasDiaController implements Initializable {
                 Logger.getLogger(ConsultasController.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+        
+        btnImprimirCopia.setOnAction((ActionEvent e) -> {
+            Conexion conection = new Conexion();
+            Conexion conectionID = new Conexion();
+            String query, mensaje, IDproducto, nombreProducto;
+            int cantidad;
+            float precio, total = 0;
+            Alert incompleteAlert = new Alert(Alert.AlertType.ERROR);
+            incompleteAlert.setTitle("Imprimir Copia");
+            incompleteAlert.setHeaderText(null);
+            
+            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd H:mm:ss");
+            Date fechaHoy = new Date();
+            String fecha = formato.format(fechaHoy);
+            PrinterService printerService = new PrinterService();
+            
+            if(tblDetalle.getSelectionModel().isEmpty()){
+                mensaje = "No se ha seleccionado ningun folio. \n";
+                incompleteAlert.setContentText(mensaje);
+                incompleteAlert.initOwner(btnImprimirCopia.getScene().getWindow());
+                incompleteAlert.showAndWait();
+            }else{
+                aux = tblDetalle.getSelectionModel().getSelectedItem();
+                query = "SELECT * from tblventadetalle WHERE ventaFolio = '"+aux.getFolio()+"'";
+                //System.out.println(aux.getFolio());
+                if(conection.QueryExecute(query)){
+                    try {
+                        printerService.printString("EPSON TM-T20II Receipt", "                       COPIA  \n");
+                        printerService.printString("EPSON TM-T20II Receipt", "          XXCELL - Reparación y Accesorios \n");
+                        printerService.printString("EPSON TM-T20II Receipt", "       10 poniente y 5 de Mayo Col. Centro \n");
+                        printerService.printString("EPSON TM-T20II Receipt", "               "+fecha+" \n");
+                        printerService.printString("EPSON TM-T20II Receipt", "  ---------------------------------------------\n");
+                        printerService.printString("EPSON TM-T20II Receipt", " Cantidad           Producto            Precio\n");
+                        printerService.printString("EPSON TM-T20II Receipt", "  ---------------------------------------------\n");
+                        while(conection.setResult.next()){
+                            try {
+                                nombreProducto = "";
+                                IDproducto = conection.setResult.getString("productoCodigo");
+                                cantidad = conection.setResult.getInt("ventaCantidad");
+                                precio = conection.setResult.getFloat("productoPrecio");
+                                total += precio;
+                                query = "SELECT Marca, Modelo, Tipo, Identificador FROM productos WHERE ID = '"+IDproducto+"'";
+                                if(conectionID.QueryExecute(query)){
+                                    if(conectionID.setResult.first()){
+                                        nombreProducto += conectionID.setResult.getString("Marca") + " ";
+                                        nombreProducto += conectionID.setResult.getString("Modelo") + " ";
+                                        nombreProducto += conectionID.setResult.getString("Tipo") + " ";
+                                        nombreProducto += conectionID.setResult.getString("Identificador") + " ";
+                                    }
+                                }
+                                printerService.printString("EPSON TM-T20II Receipt", "\n    "+ cantidad+ "       "
+                                                                      + nombreProducto);
+                                printerService.printString("EPSON TM-T20II Receipt", "\n Código: " + IDproducto + 
+                                                                            "                  $"+precio+"\n");
+                                /*System.out.println("Cantidad: " + cantidad);
+                                System.out.println("Producto: " + nombreProducto);
+                                System.out.println("Precio: " + precio);*/
+                            } catch (SQLException ex) {
+                                Logger.getLogger(VentasDiaController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        printerService.printString("EPSON TM-T20II Receipt", "    ------------------------------------------\n");
+                        printerService.printString("EPSON TM-T20II Receipt", "  Total:                               $"+total+"\n");
+                        printerService.printString("EPSON TM-T20II Receipt", "    ------------------------------------------\n");
+                        printerService.printString("EPSON TM-T20II Receipt", "             Gracias por su preferencia \n ");
+                        printerService.printString("EPSON TM-T20II Receipt", "                              LOF"+ aux.getFolio() +"PMExxCO"+Variables_Globales.local+" \n\n\n\n");
+                        //System.out.println("Total: " + total);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(VentasDiaController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }else{
+                    mensaje = "Verifique conexión con la base de datos. \n";
+                    incompleteAlert.setContentText(mensaje);
+                    incompleteAlert.initOwner(btnImprimirCopia.getScene().getWindow());
+                    incompleteAlert.showAndWait();
+                }
+            }
+        });
     }   
     
     @FXML
@@ -575,5 +654,5 @@ public class VentasDiaController implements Initializable {
             result = true;
         return result;                
     }
-
+   
 }

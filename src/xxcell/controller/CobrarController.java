@@ -88,15 +88,18 @@ public class CobrarController implements Initializable {
 			pagar = Double.valueOf(lblCobrarView.getText());
 			
 			recibida = Double.valueOf(txtCantidad.getText());
-			
+			Variables_Globales.recibida = recibida;
 			if(recibida>=pagar){
 				cambio = recibida-pagar;
+                                Variables_Globales.cambio = cambio;
 				lblCambioView.setText(formato.format(cambio));
                                 cambioletras();
 				//lblViewcambio.setText(String.format("%5.2f", cambio));
 			}
-			else
+                        else{
 				lblCambioView.setText("0.00");
+                                Variables_Globales.cambio = 0.00;
+                        }
 		} else if(txtCantidad.getText().length()==0)
                     lblCantidadLetra.setText(null);
 	}
@@ -107,7 +110,6 @@ public class CobrarController implements Initializable {
             alert.setHeaderText("Error al cobrar");
             alert.setContentText("La cantidad ingresada debe ser mayor o igual al total");
             alert.initOwner(btnAceptar.getScene().getWindow());
-            
             boolean result=true;
             if(txtCantidad.getText().length() > 0){
                 if(Double.valueOf(txtCantidad.getText()) < Double.valueOf(lblCobrarView.getText())){

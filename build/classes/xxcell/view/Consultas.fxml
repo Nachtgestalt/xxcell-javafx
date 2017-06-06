@@ -32,6 +32,7 @@
       <JFXButton fx:id="reset" layoutX="225.0" layoutY="118.0" prefHeight="29.0" prefWidth="150.0" style="-fx-background-color: #BC317D;" styleClass="text-button" text="Reiniciar" textFill="WHITE" AnchorPane.leftAnchor="425.0" AnchorPane.rightAnchor="425.0" />
       <JFXComboBox fx:id="cmbModelo" layoutX="34.0" layoutY="120.0" prefWidth="150.0" promptText="Modelo" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="120.0" />
       <JFXComboBox fx:id="cmbIdentificador" layoutX="410.0" layoutY="120.0" prefWidth="150.0" promptText="Identificador" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="120.0" />
+      <JFXButton fx:id="btnimprimirCodigo" layoutX="28.0" layoutY="742.0" onAction="#ActionImprimir" prefHeight="25.0" prefWidth="44.0" text="." />
    </children>
    <stylesheets>
       <URL value="@../resources/ConsultasTheme.css" />

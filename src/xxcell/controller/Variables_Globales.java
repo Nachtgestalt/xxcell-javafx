@@ -16,4 +16,9 @@ public class Variables_Globales {
     static String Columna;
     public static String localPublico = "L58";
     public static String nameImage;
+    static double recibida;
+    static double cambio;
+    //Impresión de Codigo de Barras
+    public static String RutaImagenes = "E:\\Codigos\\";
+    public static String CodigoProducto = "";
 }

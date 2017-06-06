@@ -29,21 +29,28 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javax.swing.ImageIcon;
 import xxcell.Conexion.Conexion;
 import xxcell.model.Productos;
 import org.controlsfx.control.textfield.TextFields;
 import static xxcell.controller.LoginController.scene;
 import xxcell.model.LogReport;
+import xxcell.model.PrintImage;
+import xxcell.model.generaCodigoBarras;
 
 
 public class ConsultasController implements Initializable {
     Conexion conn = new Conexion();   
     Productos aux = new Productos();
+    generaCodigoBarras codigoBarras;
     
     String sqlStmt = "SELECT * FROM productos";
     String StmtSq;
@@ -67,6 +74,8 @@ public class ConsultasController implements Initializable {
     private JFXButton filtrar;
     @FXML
     private JFXButton reset;
+    @FXML
+    private JFXButton btnimprimirCodigo;
     
     //Variables para la Tabla creada
     @FXML
@@ -340,6 +349,13 @@ public class ConsultasController implements Initializable {
             L58Col.prefWidthProperty().bind(Tabla.widthProperty().divide(14)); // w * 1/5
             L64Col.prefWidthProperty().bind(Tabla.widthProperty().divide(14)); // w * 1/5
             L127Col.prefWidthProperty().bind(Tabla.widthProperty().divide(14)); // w * 1/5
+            //Función para mandar a imprimir Ticket
+            btnimprimirCodigo.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN), new Runnable() {
+                @Override
+                public void run() {
+                    btnimprimirCodigo.fire();
+                }
+            });
         });
         iniciarComboBox();
         Tabla.setPlaceholder(new Label("No hay Coincidencias en la busqueda"));
@@ -487,7 +503,7 @@ public class ConsultasController implements Initializable {
                 }
             }
         });
-        
+
         //Función para el comboBox Marca; Esté llenara el TableView dependiendo la Opción que el usuario Ingrese
         Marca.setOnAction(e -> {
             buscar.clear();
@@ -592,6 +608,18 @@ public class ConsultasController implements Initializable {
             String msjHeader = "¡Error!";
             String msjText = "Copiar y mandarlo por correo a noaydeh@hotmail.com";
             log.SendLogReport(ex, msjHeader, msjText); 
+        }
+    }
+    
+    @FXML
+        void ActionImprimir(ActionEvent event) throws SQLException, Exception {
+        Productos auxiliar = Tabla.getSelectionModel().getSelectedItem();
+        Variables_Globales.CodigoProducto = auxiliar.getMarca() + " " + auxiliar.getModelo() + " " + auxiliar.getTipo() + " " + auxiliar.getNombre() + ".png";
+        ImageIcon printImage = new javax.swing.ImageIcon(Variables_Globales.RutaImagenes+""+Variables_Globales.CodigoProducto);
+        if(printImage.getIconWidth() <= 0){
+          codigoBarras.createBarCode128(Variables_Globales.CodigoProducto, auxiliar.getID());
+        }else{
+            PrintImage printimage = new PrintImage();
         }
     }
 }

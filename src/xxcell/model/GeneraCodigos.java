@@ -7,6 +7,10 @@
  */
 package xxcell.model;
 
+import java.sql.SQLException;
+import java.util.Random;
+import xxcell.Conexion.Conexion;
+
 public class GeneraCodigos {
 
     String codigo;
@@ -177,5 +181,412 @@ public class GeneraCodigos {
            }
         } 
         return cadena;
+    }
+    
+    public void GeneraCodigoNumerico() throws SQLException{
+        String cadena = "";
+        
+        //Vector de Letras
+        
+        char [] letras = {'A','B','C','D','E','F','G','H','I','J','K','L','M',
+                          'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+                          '1','2','3','4','5','6','7','8','9','0','-','&'};
+        
+        int cuantasLetras, menor = 100;
+        String query = "SELECT ID FROM productos";
+        String ID;
+        char auxiliar;
+        Conexion conn = new Conexion();
+        int suma=0;
+        
+        if(conn.QueryExecute(query)){
+            while(conn.setResult.next()){
+                cadena = "";
+                ID = conn.setResult.getString("ID");
+                if(!esnumero(ID)){
+                    System.out.println("ID = " + ID);
+                    cuantasLetras = ID.length();
+                    //Si cumple con los requisitos de 13 letras
+                    if(cuantasLetras == 13){
+                        suma=0;
+                        for(int i = 0 ; i<3 ; i++){
+                            auxiliar = ID.charAt(i);
+                            for(int j = 0; j<38;j++){
+                                if(auxiliar == letras[j]){
+                                    suma = suma+j;
+                                }
+                            }
+                        }
+                        cadena += String.valueOf(suma);
+                        /*System.out.println(ID);
+                        System.out.println("Suma 1: " + suma);*/
+                        suma = 0;
+                        for(int i = 3; i<7 ; i++){
+                            auxiliar = ID.charAt(i);
+                            for(int j = 0; j<38;j++){
+                                if(auxiliar == letras[j]){
+                                    suma = suma+j;
+                                }
+                            }
+                        }
+                        //System.out.println("Suma 2: " + suma);
+                        cadena += String.valueOf(suma);
+                        suma = 0;
+                        for(int i = 7; i<11 ; i++){
+                            auxiliar = ID.charAt(i);
+                            for(int j = 0; j<38;j++){
+                                if(auxiliar == letras[j]){
+                                    suma = suma+j;
+                                }
+                            }
+                        }
+                        //System.out.println("Suma 3: " + suma);
+                        cadena += String.valueOf(suma);
+                        suma = 0;
+                        for(int i = 10; i<cuantasLetras; i++){
+                            auxiliar = ID.charAt(i);
+                            for(int j = 0; j<38;j++){
+                                if(auxiliar == letras[j]){
+                                    suma = suma+j;
+                                }
+                            }
+                        }
+                        cadena += String.valueOf(suma);
+                        //System.out.println("Suma 4: " + suma);
+                    }
+                    
+//******************************* de 7 a 12 ******************************
+                    if(cuantasLetras > 8 && cuantasLetras < 13){
+                        suma=0;
+                        for(int i = 0 ; i<3 ; i++){
+                            auxiliar = ID.charAt(i);
+                            for(int j = 0; j<38;j++){
+                                if(auxiliar == letras[j]){
+                                    suma = suma+j;
+                                }
+                            }
+                        }
+                        cadena += String.valueOf(suma);
+                        /*System.out.println(ID);
+                        System.out.println("Suma 1: " + suma);*/
+                        suma = 0;
+                        for(int i = 3; i<6 ; i++){
+                            auxiliar = ID.charAt(i);
+                            for(int j = 0; j<38;j++){
+                                if(auxiliar == letras[j]){
+                                    suma = suma+j;
+                                }
+                            }
+                        }
+                        //System.out.println("Suma 2: " + suma);
+                        cadena += String.valueOf(suma);
+                        suma = 0;
+                        for(int i = 6; i<8 ; i++){
+                            auxiliar = ID.charAt(i);
+                            for(int j = 0; j<38;j++){
+                                if(auxiliar == letras[j]){
+                                    suma = suma+j;
+                                }
+                            }
+                        }
+                        //System.out.println("Suma 3: " + suma);
+                        cadena += String.valueOf(suma);
+                        suma = 0;
+                        for(int i = 8; i<cuantasLetras; i++){
+                            auxiliar = ID.charAt(i);
+                            for(int j = 0; j<38;j++){
+                                if(auxiliar == letras[j]){
+                                    suma = suma+j;
+                                }
+                            }
+                        }
+                        cadena += String.valueOf(suma);
+                        //System.out.println("Suma 4: " + suma);
+                    }
+                    
+//******************************* de 7 a 12 ******************************
+                    
+                    if(cuantasLetras > 6 && cuantasLetras < 9){
+                        suma=0;
+                        for(int i = 0 ; i<3 ; i++){
+                            auxiliar = ID.charAt(i);
+                            for(int j = 0; j<38;j++){
+                                if(auxiliar == letras[j]){
+                                    suma = suma+j;
+                                }
+                            }
+                        }
+                        cadena += String.valueOf(suma);
+                        /*System.out.println(ID);
+                        System.out.println("Suma 1: " + suma);*/
+                        suma = 0;
+                        for(int i = 3; i<6 ; i++){
+                            auxiliar = ID.charAt(i);
+                            for(int j = 0; j<38;j++){
+                                if(auxiliar == letras[j]){
+                                    suma = suma+j;
+                                }
+                            }
+                        }
+                        //System.out.println("Suma 2: " + suma);
+                        cadena += String.valueOf(suma);
+                        suma = 0;
+                        for(int i = 6; i<cuantasLetras ; i++){
+                            auxiliar = ID.charAt(i);
+                            for(int j = 0; j<38;j++){
+                                if(auxiliar == letras[j]){
+                                    suma = suma+j;
+                                }
+                            }
+                        }
+                        cadena += String.valueOf(suma);
+                        //System.out.println("Suma 4: " + suma);
+                    }
+                    System.out.println(cadena);
+                    ValidacionCadena(ID, cadena);
+                    System.out.println("*********");
+                }
+            }
+        }
+    }
+    
+    public String GeneraCodigoNumericoAgregar(String CodigoAlfa) throws SQLException{
+        String cadena = "";
+        
+        //Vector de Letras
+        
+        char [] letras = {'A','B','C','D','E','F','G','H','I','J','K','L','M',
+                          'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+                          '1','2','3','4','5','6','7','8','9','0','-','&'};
+        
+        int cuantasLetras, menor = 100;
+        char auxiliar;
+        Conexion conn = new Conexion();
+        int suma=0;
+        cadena = "";
+        if(!esnumero(CodigoAlfa)){
+            System.out.println("ID = " + CodigoAlfa);
+            cuantasLetras = CodigoAlfa.length();
+            //Si cumple con los requisitos de 13 letras
+            if(cuantasLetras == 13){
+                suma=0;
+                for(int i = 0 ; i<3 ; i++){
+                    auxiliar = CodigoAlfa.charAt(i);
+                    for(int j = 0; j<38;j++){
+                        if(auxiliar == letras[j]){
+                            suma = suma+j;
+                        }
+                    }
+                }
+                cadena += String.valueOf(suma);
+                /*System.out.println(ID);
+                System.out.println("Suma 1: " + suma);*/
+                suma = 0;
+                for(int i = 3; i<7 ; i++){
+                    auxiliar = CodigoAlfa.charAt(i);
+                    for(int j = 0; j<38;j++){
+                        if(auxiliar == letras[j]){
+                            suma = suma+j;
+                        }
+                    }
+                }
+                //System.out.println("Suma 2: " + suma);
+                cadena += String.valueOf(suma);
+                suma = 0;
+                for(int i = 7; i<11 ; i++){
+                    auxiliar = CodigoAlfa.charAt(i);
+                    for(int j = 0; j<38;j++){
+                        if(auxiliar == letras[j]){
+                            suma = suma+j;
+                        }
+                    }
+                }
+                //System.out.println("Suma 3: " + suma);
+                cadena += String.valueOf(suma);
+                suma = 0;
+                for(int i = 10; i<cuantasLetras; i++){
+                    auxiliar = CodigoAlfa.charAt(i);
+                    for(int j = 0; j<38;j++){
+                        if(auxiliar == letras[j]){
+                            suma = suma+j;
+                        }
+                    }
+                }
+                cadena += String.valueOf(suma);
+                //System.out.println("Suma 4: " + suma);
+            }
+
+//******************************* de 7 a 12 ******************************
+            if(cuantasLetras > 8 && cuantasLetras < 13){
+                suma=0;
+                for(int i = 0 ; i<3 ; i++){
+                    auxiliar = CodigoAlfa.charAt(i);
+                    for(int j = 0; j<38;j++){
+                        if(auxiliar == letras[j]){
+                            suma = suma+j;
+                        }
+                    }
+                }
+                cadena += String.valueOf(suma);
+                /*System.out.println(ID);
+                System.out.println("Suma 1: " + suma);*/
+                suma = 0;
+                for(int i = 3; i<6 ; i++){
+                    auxiliar = CodigoAlfa.charAt(i);
+                    for(int j = 0; j<38;j++){
+                        if(auxiliar == letras[j]){
+                            suma = suma+j;
+                        }
+                    }
+                }
+                //System.out.println("Suma 2: " + suma);
+                cadena += String.valueOf(suma);
+                suma = 0;
+                for(int i = 6; i<8 ; i++){
+                    auxiliar = CodigoAlfa.charAt(i);
+                    for(int j = 0; j<38;j++){
+                        if(auxiliar == letras[j]){
+                            suma = suma+j;
+                        }
+                    }
+                }
+                //System.out.println("Suma 3: " + suma);
+                cadena += String.valueOf(suma);
+                suma = 0;
+                for(int i = 8; i<cuantasLetras; i++){
+                    auxiliar = CodigoAlfa.charAt(i);
+                    for(int j = 0; j<38;j++){
+                        if(auxiliar == letras[j]){
+                            suma = suma+j;
+                        }
+                    }
+                }
+                cadena += String.valueOf(suma);
+                //System.out.println("Suma 4: " + suma);
+            }
+
+//******************************* de 7 a 12 ******************************
+
+            if(cuantasLetras > 6 && cuantasLetras < 9){
+                suma=0;
+                for(int i = 0 ; i<3 ; i++){
+                    auxiliar = CodigoAlfa.charAt(i);
+                    for(int j = 0; j<38;j++){
+                        if(auxiliar == letras[j]){
+                            suma = suma+j;
+                        }
+                    }
+                }
+                cadena += String.valueOf(suma);
+                /*System.out.println(ID);
+                System.out.println("Suma 1: " + suma);*/
+                suma = 0;
+                for(int i = 3; i<6 ; i++){
+                    auxiliar = CodigoAlfa.charAt(i);
+                    for(int j = 0; j<38;j++){
+                        if(auxiliar == letras[j]){
+                            suma = suma+j;
+                        }
+                    }
+                }
+                //System.out.println("Suma 2: " + suma);
+                cadena += String.valueOf(suma);
+                suma = 0;
+                for(int i = 6; i<cuantasLetras ; i++){
+                    auxiliar = CodigoAlfa.charAt(i);
+                    for(int j = 0; j<38;j++){
+                        if(auxiliar == letras[j]){
+                            suma = suma+j;
+                        }
+                    }
+                }
+                cadena += String.valueOf(suma);
+                //System.out.println("Suma 4: " + suma);
+            }
+            System.out.println(cadena);
+            //ValidacionCadena(ID, cadena);
+            System.out.println("*********");
+        }
+        return cadena;
+    }
+    
+    public void ValidacionCadena(String CodigoAlfa, String CodigoNumerico) throws SQLException{
+        Conexion conn = new Conexion();   
+        Conexion conexion = new Conexion();
+        boolean bandera;
+        int random = 1000, max = 0;
+        Random rnd = new Random();
+        String query = "SELECT ID FROM productos WHERE ID = '"+CodigoNumerico+"'";
+        String CodigoRespaldo;
+        
+        if(conn.QueryExecute(query)){
+            if(conn.setResult.first()){
+                System.out.println("Ya existe");
+                do{
+                    bandera = true;
+                    CodigoRespaldo = CodigoNumerico;
+                    CodigoRespaldo += String.valueOf((int) (rnd.nextDouble() * 9 + 0));
+                    query = "SELECT ID FROM productos WHERE ID = '"+CodigoRespaldo+"'";
+                    System.out.println(query);
+                    conexion.QueryExecute(query);
+                    if(!conexion.setResult.first()){
+                       bandera = false;
+                       query = "UPDATE productos SET ID = '" + CodigoRespaldo + "' WHERE ID = '" + CodigoAlfa + "'";
+                       conexion.QueryUpdate(query);
+                    }
+                }while(bandera);
+                System.out.println("Salio el chido : " + CodigoRespaldo);
+            }else{
+                query = "UPDATE productos SET ID = '" + CodigoNumerico + "' WHERE ID = '" + CodigoAlfa + "'";
+                System.out.println(query);
+                conexion.QueryUpdate(query);
+            }
+        }
+    }
+    
+    public String ValidacionCadenaAgregar(String CodigoAlfa, String CodigoNumerico) throws SQLException{
+        Conexion conn = new Conexion();   
+        Conexion conexion = new Conexion();
+        boolean bandera;
+        int random = 1000, max = 0;
+        Random rnd = new Random();
+        String query = "SELECT ID FROM productos WHERE ID = '"+CodigoNumerico+"'";
+        String CodigoRespaldo;
+        
+        CodigoRespaldo = CodigoNumerico;
+        if(conn.QueryExecute(query)){
+            if(conn.setResult.first()){
+                do{
+                    bandera = true;
+                    CodigoRespaldo = CodigoNumerico;
+                    CodigoRespaldo += String.valueOf((int) (rnd.nextDouble() * 9 + 0));
+                    query = "SELECT ID FROM productos WHERE ID = '"+CodigoRespaldo+"'";
+                    conexion.QueryExecute(query);
+                    if(!conexion.setResult.first()){
+                       bandera = false;
+                       CodigoRespaldo = CodigoNumerico;
+                    }
+                }while(bandera);
+            }
+        }
+        return CodigoRespaldo;
+    }
+    
+    boolean esnumero (String x)
+    {
+        double number = 0;
+        if(x.isEmpty())
+        {
+            return true;
+        }
+        else
+        {
+            try {
+                number = Long.parseLong(x);
+                return true;
+            } catch (NumberFormatException ex) {
+                return false;
+            }
+        }
     }
 }

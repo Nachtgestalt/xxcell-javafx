@@ -848,7 +848,7 @@ public class ModificarAlmacenController implements Initializable {
             conn.stmt.setInt(10, l64);
             conn.stmt.setInt(11, l127);
         }
-        int succes = conn.stmt.executeUpdate();
+            int succes = conn.stmt.executeUpdate();
         if(succes == 1){
             String mensaje = "Producto Modificado \n";
             Alert incompleteAlert = new Alert(Alert.AlertType.INFORMATION);

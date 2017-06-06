@@ -45,6 +45,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import xxcell.Conexion.Conexion;
 import static xxcell.controller.LoginController.scene;
+import xxcell.model.PrinterService;
 import xxcell.model.ProductoVenta;
 import xxcell.model.Productos;
 
@@ -974,8 +975,10 @@ public class VentaController implements Initializable {
                     }
                     if (continuar && flagDistribuidor) {
                         codigo = conn.setResult.getString("ID");
-                        nombre = conn.setResult.getString("Identificador");
-                        nombre += " - " + conn.setResult.getString("Tipo");
+                        nombre = conn.setResult.getString("Marca");
+                        nombre += " " + conn.setResult.getString("Modelo");
+                        nombre += " " + conn.setResult.getString("Tipo");
+                        nombre += " " + conn.setResult.getString("Identificador");
                         modelo = conn.setResult.getString("Modelo");
                         cantidad = "1";
                         descuento = txtDescuento.getText();
@@ -999,8 +1002,10 @@ public class VentaController implements Initializable {
                         lblTotal.setText(formateador.format(total));
                     } else if (continuar && !flagDistribuidor) {
                         codigo = conn.setResult.getString("ID");
-                        nombre = conn.setResult.getString("Identificador");
-                        nombre += " - " + conn.setResult.getString("Tipo");
+                        nombre = conn.setResult.getString("Marca");
+                        nombre += " " + conn.setResult.getString("Modelo");
+                        nombre += " " + conn.setResult.getString("Tipo");
+                        nombre += " " + conn.setResult.getString("Identificador");
                         modelo = conn.setResult.getString("Modelo");
                         cantidad = "1";
                         descuento = txtDescuento.getText();
@@ -1165,6 +1170,7 @@ public class VentaController implements Initializable {
                 if (ActualizaFolioVenta()) {
                     alert.setContentText("Venta realizada con exito");
                     alert.showAndWait();
+                    imprimetTicket();
                     commit = true;
                 }
             }
@@ -1364,5 +1370,41 @@ public class VentaController implements Initializable {
         }
 
         return result;
+    }
+    
+    public void imprimetTicket() {
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd H:mm:ss");
+        Date fechaHoy = new Date();
+        String fecha = formato.format(fechaHoy);
+        PrinterService printerService = new PrinterService();
+        String Nombre;
+
+        //print some stuff EPSON TM-T20II Receipt   EPSON-TM-T20II
+        printerService.printString("EPSON TM-T20II Receipt", "          XXCELL - Reparación y Accesorios \n");
+        printerService.printString("EPSON TM-T20II Receipt", "       10 poniente y 5 de Mayo Col. Centro \n");
+        printerService.printString("EPSON TM-T20II Receipt", "               "+fecha+" \n");
+        printerService.printString("EPSON TM-T20II Receipt", "  ---------------------------------------------\n");
+        printerService.printString("EPSON TM-T20II Receipt", " Cantidad           Producto            Precio\n");
+        printerService.printString("EPSON TM-T20II Receipt", "  ---------------------------------------------\n");
+        for (int fila = 0; fila < productosVenta.size(); fila++) {
+            printerService.printString("EPSON TM-T20II Receipt", "\n    "+ productosVenta.get(fila).getCantidad()+ "       "
+                                                                      + productosVenta.get(fila).getNombre());
+            printerService.printString("EPSON TM-T20II Receipt", "\n Código: " + productosVenta.get(fila).getCodigo() + 
+                                                                            "                  $"+productosVenta.get(fila).getImporte()+"\n");
+        }
+        printerService.printString("EPSON TM-T20II Receipt", "    ------------------------------------------\n");
+        printerService.printString("EPSON TM-T20II Receipt", "  Total:                               $"+lblTotal.getText()+"\n");
+        printerService.printString("EPSON TM-T20II Receipt", "  Recibimos:                           $"+Variables_Globales.recibida+"\n");
+        printerService.printString("EPSON TM-T20II Receipt", "  Cambio:                              $"+Variables_Globales.cambio+"\n");
+        printerService.printString("EPSON TM-T20II Receipt", "    ------------------------------------------\n");
+        printerService.printString("EPSON TM-T20II Receipt", "             Gracias por su preferencia \n ");
+        printerService.printString("EPSON TM-T20II Receipt", "                              LOF"+ spnFolio.getValue().toString() +"PME"+usuario+"CO"+Variables_Globales.local+" \n\n\n\n");
+        //printerService.printString("EPSON TM-T20II Receipt", "\n\n testing testing 1 2 3eeeee \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+        // cut that paper!
+        byte[] cutP = new byte[] { 0x1d, 'V', 1 };
+
+        printerService.printBytes("EPSON TM-T20II Receipt", cutP);
+	
     }
 }

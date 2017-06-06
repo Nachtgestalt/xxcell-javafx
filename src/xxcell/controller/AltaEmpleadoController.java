@@ -37,7 +37,6 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import javax.imageio.ImageIO;
@@ -407,7 +406,6 @@ public class AltaEmpleadoController implements Initializable {
             //Set extension filter 0442228297092
             FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
             FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
-            FileChooser.ExtensionFilter extFilterJPEG = new FileChooser.ExtensionFilter("JPEG files (*.jpeg)", "*.JPEG");
             FileChooser.ExtensionFilter JPEG = new FileChooser.ExtensionFilter("JPEG files (*.jpeg)", "*.JPEG");
             fileChooser.getExtensionFilters().addAll(JPEG, extFilterJPG, extFilterPNG);
               

@@ -1,15 +1,12 @@
 package xxcell.controller;
 
 import com.jfoenix.controls.JFXButton;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,10 +18,10 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.krysalis.barcode4j.impl.code39.Code39Bean;
-import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
-import org.krysalis.barcode4j.tools.UnitConv;
+import xxcell.Conexion.Conexion;
 import static xxcell.controller.LoginController.scene;
+import xxcell.model.GeneraCodigos;
+import xxcell.model.generaCodigoBarras;
 
 public class AlmacenController implements Initializable {
     
@@ -37,6 +34,12 @@ public class AlmacenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        GeneraCodigos generador = new GeneraCodigos();
+        try {
+            generador.GeneraCodigoNumerico();
+        } catch (SQLException ex) {
+            Logger.getLogger(AlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }    
     
     @FXML
@@ -112,5 +115,39 @@ public class AlmacenController implements Initializable {
         principalStage.setResizable(false);
         principalStage.initOwner(AgregProd.getScene().getWindow());
         principalStage.showAndWait(); 
+    }
+    
+    @FXML
+    void ActionGenerarCodigos(ActionEvent event) throws IOException {
+        Parent principal;
+        principal = FXMLLoader.load(getClass().getResource("/xxcell/view/Galery.fxml"));
+        Stage principalStage = new Stage();
+        principalStage.getIcons().add(new Image("/xxcell/Images/XXCELL450.png"));
+        scene = new Scene(principal);
+        principalStage.setScene(scene);
+        principalStage.initModality(Modality.WINDOW_MODAL);
+        principalStage.setResizable(false);
+        principalStage.initOwner(AgregProd.getScene().getWindow());
+        principalStage.showAndWait(); 
+    }
+    
+    @FXML
+    void CrearCodigosPng(ActionEvent event) throws IOException, SQLException {
+        Conexion conn = new Conexion();
+        generaCodigoBarras codigoBarras = new generaCodigoBarras();
+        String query = "SELECT ID, Marca, Modelo, Tipo, Identificador FROM productos";
+        String producto, codigo;
+        if(conn.QueryExecute(query))
+        {
+            while (conn.setResult.next())
+            {
+                codigo = conn.setResult.getString("ID");
+                producto = conn.setResult.getString("Marca") + " ";
+                producto += conn.setResult.getString("Modelo") + " ";
+                producto += conn.setResult.getString("Tipo") + " ";
+                producto += conn.setResult.getString("Identificador") + ".png";
+                codigoBarras.createBarCode128(producto, codigo);
+            }    
+        }
     }
 }

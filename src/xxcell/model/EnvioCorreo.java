@@ -13,13 +13,13 @@ public class EnvioCorreo {
     Window window; 
     
     Date fechaHoy = new Date();
-    SimpleDateFormat formato = new SimpleDateFormat("ddd-MM-yyyy");
+    SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
     SimpleDateFormat formatohora = new SimpleDateFormat("hh:mm aa");
     
     String host ="smtp.gmail.com" ;
     String user = "mensajeriaxxcell@gmail.com";
     String pass = "xxcellmensajeria";
-    String from = "noaydeh@gmail.com";
+    String from = "mensajeriaxxcell@gmail.com";
     String destinatario = "noaydeh@hotmail.com";
     
     long TInicio, TFin, tiempo; //Variables para determinar el tiempo de ejecución
@@ -54,7 +54,7 @@ public class EnvioCorreo {
             // Quien envia el correo
             message.setFrom(new InternetAddress(from));
             // A quien va dirigido
-            //message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));
             //message.addRecipient(Message.RecipientType.TO, new InternetAddress("doktortrash@gmail.com"));
             //message.addRecipient(Message.RecipientType.TO, new InternetAddress("heynalle@gmail.com"));
             message.setSubject("Cierre de Local " + Variables_Globales.localPublico);

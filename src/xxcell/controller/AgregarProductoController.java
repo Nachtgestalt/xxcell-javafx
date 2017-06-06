@@ -7,10 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
 import java.sql.Blob;
 import java.sql.SQLException;
@@ -46,9 +43,7 @@ import xxcell.Conexion.Conexion;
 import static xxcell.controller.LoginController.scene;
 import xxcell.model.GeneraCodigos;
 import xxcell.model.LogReport;
-import org.krysalis.barcode4j.impl.code39.Code39Bean;
-import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
-import org.krysalis.barcode4j.tools.UnitConv;
+import xxcell.model.generaCodigoBarras;
 
 public class AgregarProductoController implements Initializable {
 
@@ -67,6 +62,7 @@ public class AgregarProductoController implements Initializable {
     //Funciones
     Funciones func = new Funciones();
     GeneraCodigos generaCodigo = new GeneraCodigos();
+    generaCodigoBarras codigoBarras = new generaCodigoBarras();
     
     //BOTONES 
     @FXML
@@ -465,8 +461,17 @@ public class AgregarProductoController implements Initializable {
         int l127 = Integer.parseInt(TFL127.getText());
         int entradas = Integer.parseInt(lblVistaEntradas.getText());
         int salidas = Integer.parseInt(lblVistaSalidas.getText());
-        
-        String query = "SELECT * FROM productos WHERE ID='"+txtICodigo.getText()+"'";
+        String ID, CodigoAlfa;
+        GeneraCodigos generador = new GeneraCodigos();
+        ID = "";
+        try {
+            CodigoAlfa = txtICodigo.getText();
+            ID = generador.GeneraCodigoNumericoAgregar(txtICodigo.getText());
+            ID = generador.ValidacionCadenaAgregar(CodigoAlfa, ID);
+        } catch (SQLException ex) {
+            Logger.getLogger(AlmacenController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String query = "SELECT * FROM productos WHERE ID='"+ID+"'";
         conn.QueryExecute(query);
             try {
                 //SI EL ID YA EXISTE EN LA BASE DE DATOS cancela el alta.
@@ -486,7 +491,7 @@ public class AgregarProductoController implements Initializable {
                         query += "Descrip, CantidadActual, Entradas, Salidas, L58, L64, L127, NombreImagen) ";
                         query += "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         conn.preparedStatement(query);
-                        conn.stmt.setString(1, txtICodigo.getText());
+                        conn.stmt.setString(1, ID);
                         conn.stmt.setString(2, txtModelo.getText());
                         conn.stmt.setString(3, txtIdentificador.getText());
                         conn.stmt.setDouble(4, PrecioPublico);
@@ -507,7 +512,7 @@ public class AgregarProductoController implements Initializable {
                         query += "Descrip, CantidadActual, Entradas, Salidas, L58, L64, L127) ";
                         query += "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         conn.preparedStatement(query);
-                        conn.stmt.setString(1, txtICodigo.getText());
+                        conn.stmt.setString(1, ID);
                         conn.stmt.setString(2, txtModelo.getText());
                         conn.stmt.setString(3, txtIdentificador.getText());
                         conn.stmt.setDouble(4, PrecioPublico);
@@ -532,7 +537,9 @@ public class AgregarProductoController implements Initializable {
                         incompleteAlert.setContentText(mensaje);
                         incompleteAlert.initOwner(Agregar.getScene().getWindow());
                         incompleteAlert.showAndWait();
-                        generaCodigoBarras();
+                        String producto = txtMarca.getText() + " " + txtModelo.getText() + " " + txtTipo.getText() + " " + txtIdentificador.getText() + ".png";
+                        System.out.println("ID: " + ID + " Producto " + producto);
+                        codigoBarras.createBarCode128(producto, ID);
                         //inicializa();
                         ResetImagen();
                     }else{
@@ -674,47 +681,6 @@ public class AgregarProductoController implements Initializable {
                     }
                 }
             }    
-        }
-    }
-    
-    public void generaCodigoBarras() throws FileNotFoundException, IOException{
-        Code39Bean bean = new Code39Bean();
-        final int dpi = 150;
-        
-        String producto = txtMarca.getText() + "_" + txtModelo.getText() + "_" + txtTipo.getText() + "_" + txtIdentificador.getText() + ".png";
- 
-        //Configure the barcode generator
-        bean.setModuleWidth(UnitConv.in2mm(1.0f / dpi)); //makes the narrow bar, width exactly one pixel
-        bean.setWideFactor(3);
-        bean.doQuietZone(false);
- 
-        //Open output file
-        //Local 58
-        //File outputFile = new File("C:\\Users\\XXCELL_L127\\Pictures\\Codigo de Barras\\"+producto);
-        
-        //Local64
-        //File outputFile = new File("C:\\Users\\Hp\\Pictures\\Codigo de barras\\"+producto);
-        
-        //Local 127
-        //File outputFile = new File("C:\\Users\\User\\Pictures\\Codigo de Barras\\"+producto);
-        
-        //Local
-        File outputFile = new File("C:\\"+producto);
-        
-        OutputStream out = new FileOutputStream(outputFile);
- 
-        try {
-            //Set up the canvas provider for monochrome PNG output
-            BitmapCanvasProvider canvas = new BitmapCanvasProvider(
-                out, "image/x-png", dpi, BufferedImage.TYPE_BYTE_BINARY, false, 0);
- 
-            //Generate the barcode
-            bean.generateBarcode(canvas, txtICodigo.getText());
- 
-            //Signal end of generation
-            canvas.finish();
-        } finally {
-            out.close();
         }
     }
 }
